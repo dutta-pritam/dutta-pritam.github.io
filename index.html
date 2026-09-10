@@ -18,6 +18,8 @@
       --border: #eaeaea;
       --accent: #4c6a86;
       --accent-soft: rgba(76, 106, 134, 0.08);
+      --parallax-x: 0px;
+      --parallax-y: 0px;
     }
 
     * { box-sizing: border-box; }
@@ -43,17 +45,20 @@
       overflow-x: hidden;
     }
 
-    /* Calm, slow-drifting ambient backdrop — sits behind everything, never draws the eye on its own */
+    /* Calm, slow-drifting ambient backdrop — sits behind everything, never draws the eye on its own.
+       Nudged very slightly by scroll position (--parallax-x/y) for a faint sense of depth. */
     body::before {
       content: "";
       position: fixed;
       inset: -10%;
-      z-index: -3;
+      z-index: -4;
       pointer-events: none;
       background:
         radial-gradient(circle at 18% 14%, rgba(76, 106, 134, 0.05), transparent 38%),
         radial-gradient(circle at 82% 68%, rgba(76, 106, 134, 0.045), transparent 42%);
+      transform: translate(var(--parallax-x), var(--parallax-y));
       animation: drift 26s ease-in-out infinite alternate;
+      transition: transform 0.6s ease-out;
     }
 
     /* Faint dot grid for quiet texture, evoking graph paper / a plotted field */
@@ -78,6 +83,106 @@
       height: 100vh;
       pointer-events: none;
       display: block;
+    }
+
+    /* Three faint elliptical orbit paths, anchored behind the header, rotating at
+       different, very slow speeds — a quiet nod to orbital mechanics / N-body work.
+       Kept to a hairline stroke and low opacity so it reads as texture, not decoration. */
+    #orbit-field {
+      position: fixed;
+      top: -14vw;
+      right: -14vw;
+      width: 50vw;
+      height: 50vw;
+      min-width: 380px;
+      min-height: 380px;
+      z-index: -3;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    #orbit-field svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    #orbit-field .ring {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1;
+      transform-origin: 50% 50%;
+    }
+
+    #orbit-field .ring--a { stroke-opacity: 0.28; animation: spin 60s linear infinite; }
+    #orbit-field .ring--b { stroke-opacity: 0.20; animation: spin 95s linear infinite reverse; }
+    #orbit-field .ring--c { stroke-opacity: 0.14; animation: spin 150s linear infinite; }
+
+    #orbit-field .body {
+      fill: var(--accent);
+      opacity: 0.4;
+    }
+
+    /* A visible planet traveling the outer ring's path, trailing a soft comet tail */
+    #orbit-field .satellite-track {
+      transform-origin: 50% 50%;
+      animation: spin 60s linear infinite;
+    }
+
+    #orbit-field .satellite {
+      fill: var(--accent);
+      opacity: 0.85;
+    }
+
+    #orbit-field .satellite-tail {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      opacity: 0.3;
+      stroke-dasharray: 14 190;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* A soft radar-style signal pulse beside the subtitle — a nod to the
+       radio-astronomy work, and the one clearly "always on" visible motion. */
+    .signal {
+      position: relative;
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      vertical-align: middle;
+      opacity: 0.75;
+    }
+
+    .signal::before,
+    .signal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      animation: ping 2.8s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+    }
+
+    .signal::after {
+      animation-delay: 1.4s;
+    }
+
+    @keyframes ping {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(6); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .signal::before, .signal::after { animation: none; opacity: 0; }
     }
 
     @keyframes drift {
@@ -152,6 +257,24 @@
       margin: 0 -12px;
       border-radius: 6px;
       transition: background-color 0.35s ease, transform 0.35s ease;
+    }
+
+    /* Rows animate in as they're scrolled into view, each slightly later than
+       the last within its section — visible motion tied to the act of scrolling,
+       not just the initial page load. */
+    .row.reveal-init {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    .row.reveal-in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s cubic-bezier(0.2, 0.6, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .row.reveal-init { opacity: 1; transform: none; }
     }
 
     /* A quiet accent bar that grows in from the left on hover, rather than a generic shadow/card */
@@ -256,17 +379,30 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      body::before { animation: none; }
+      body::before { animation: none; transform: none !important; }
+      #orbit-field .ring { animation: none; }
     }
   </style>
 </head>
 
 <body>
+  <div id="orbit-field" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <ellipse class="ring ring--a" cx="100" cy="100" rx="90" ry="58" />
+      <ellipse class="ring ring--b" cx="100" cy="100" rx="65" ry="65" />
+      <ellipse class="ring ring--c" cx="100" cy="100" rx="120" ry="80" />
+      <circle class="body" cx="100" cy="100" r="2.5" />
+      <g class="satellite-track">
+        <path class="satellite-tail" d="M 190 100 A 90 58 0 0 0 87.2 45.9" />
+        <circle class="satellite" cx="190" cy="100" r="3" />
+      </g>
+    </svg>
+  </div>
   <canvas id="side-field" aria-hidden="true"></canvas>
   <main>
     <header class="page-header">
       <h1>Pritam Dutta</h1>
-      <p class="subtitle">BS-MS · Indian Association for the Cultivation of Science</p>
+      <p class="subtitle"><span class="signal" aria-hidden="true"></span>BS-MS · Indian Association for the Cultivation of Science</p>
     </header>
     
     <p class="intro">
@@ -419,10 +555,11 @@
   <script>
     // A small, physically-simulated gas of particles, confined to a box in each
     // side margin — they drift, bounce off the walls, and collide elastically
-    // with each other, but never cross into the reading column. A soft trailing
-    // fade (rather than a hard clear) makes the collisions easier to read.
-    // Pauses for reduced-motion and hidden tabs, and switches off entirely
-    // when there's no gutter to show it in.
+    // with each other, and now also draw thin "mesh" links to nearby neighbors
+    // (a quiet nod to the N-body / LoRa-mesh work), fading in and out as pairs
+    // drift in and out of range. A soft trailing fade (rather than a hard clear)
+    // makes the motion easier to read. Pauses for reduced-motion and hidden tabs,
+    // and switches off entirely when there's no gutter to show it in.
     (function () {
       var canvas = document.getElementById('side-field');
       if (!canvas || !canvas.getContext) return;
@@ -434,6 +571,7 @@
       var MIN_GUTTER = 90;      // below this, there's no room to draw calmly — stay off
       var DOT_COLOR = '76, 106, 134';
       var SPEED = 0.35;
+      var LINK_DIST = 130;      // particles closer than this get a connecting line
 
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
@@ -526,6 +664,26 @@
             }
           }
 
+          // Mesh links: thin lines between nearby same-side particles, opacity
+          // scaled by proximity so links fade in/out rather than snapping on.
+          ctx.lineWidth = 1;
+          for (var m = 0; m < particles.length; m++) {
+            for (var n = m + 1; n < particles.length; n++) {
+              var pm = particles[m], pn = particles[n];
+              if (pm.side !== pn.side) continue;
+              var ddx = pm.x - pn.x, ddy = pm.y - pn.y;
+              var d = Math.sqrt(ddx * ddx + ddy * ddy);
+              if (d < LINK_DIST) {
+                var alpha = (1 - d / LINK_DIST) * 0.22;
+                ctx.strokeStyle = 'rgba(' + DOT_COLOR + ', ' + alpha.toFixed(3) + ')';
+                ctx.beginPath();
+                ctx.moveTo(pm.x, pm.y);
+                ctx.lineTo(pn.x, pn.y);
+                ctx.stroke();
+              }
+            }
+          }
+
           for (var k = 0; k < particles.length; k++) {
             var pt = particles[k];
             ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.4)';
@@ -552,6 +710,69 @@
 
       layout();
       requestAnimationFrame(step);
+    })();
+
+    // Faint scroll-linked parallax on the ambient backdrop gradients — a couple
+    // of pixels of drift, throttled to one update per frame, so depth is felt
+    // rather than seen. Skipped entirely under reduced-motion.
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var root = document.documentElement;
+      var ticking = false;
+      function apply() {
+        var y = window.scrollY || window.pageYOffset || 0;
+        var shiftY = Math.max(-24, Math.min(24, y * 0.04));
+        var shiftX = Math.max(-10, Math.min(10, y * 0.015));
+        root.style.setProperty('--parallax-y', shiftY.toFixed(1) + 'px');
+        root.style.setProperty('--parallax-x', shiftX.toFixed(1) + 'px');
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          requestAnimationFrame(apply);
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+
+    // Scroll-triggered reveal: each project/experience row fades and lifts in
+    // as it enters the viewport, staggered within its own section, so scrolling
+    // down the page itself feels animated rather than the motion being confined
+    // to the initial load.
+    (function () {
+      var rows = document.querySelectorAll('.list .row');
+      if (!rows.length) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      rows.forEach(function (row) { row.classList.add('reveal-init'); });
+      if (reduceMotion) return;
+
+      if (!('IntersectionObserver' in window)) {
+        rows.forEach(function (row) { row.classList.add('reveal-in'); });
+        return;
+      }
+
+      var groups = new Map();
+      rows.forEach(function (row) {
+        var parent = row.closest('.list');
+        if (!groups.has(parent)) groups.set(parent, []);
+        groups.get(parent).push(row);
+      });
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var row = entry.target;
+          var siblings = groups.get(row.closest('.list')) || [row];
+          var index = siblings.indexOf(row);
+          setTimeout(function () {
+            row.classList.add('reveal-in');
+          }, Math.max(index, 0) * 70);
+          observer.unobserve(row);
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      rows.forEach(function (row) { observer.observe(row); });
     })();
   </script>
 </body>
