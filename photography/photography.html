@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A collection of my photography and captured moments.">
+  <title>Photography — Pritam Dutta</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    .meta, figcaption {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    /* Photography Grid Styling */
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .photo-gallery figure {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .photo-gallery img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+      object-fit: cover;
+      aspect-ratio: 4 / 3; /* Keeps all photos uniform, adjust as needed */
+      background-color: #f0f0f0; /* Placeholder background color */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="ripple" aria-hidden="true"></canvas>
+
+  <main>
+    <a class="back" href="../index.html">Pritam Dutta</a>
+
+    <header class="page-header project-header">
+      <h1>Photography</h1>
+      <p class="meta">A collection of moments and visual stories.</p>
+    </header>
+
+    <div class="project-body">
+      <p>Here is a selection of my favorite clicked photos.</p>
+
+      <div class="photo-gallery">
+        <!-- Photo 1 -->
+        <figure>
+          <img src="../assets/photos/photo-1.jpg" alt="Description of the first photo" loading="lazy">
+          <figcaption>Location or Title — Date</figcaption>
+        </figure>
+
+        <!-- Photo 2 -->
+        <figure>
+          <img src="../assets/photos/photo-2.jpg" alt="Description of the second photo" loading="lazy">
+          <figcaption>Location or Title — Date</figcaption>
+        </figure>
+
+        <!-- Photo 3 -->
+        <figure>
+          <img src="../assets/photos/photo-3.jpg" alt="Description of the third photo" loading="lazy">
+          <figcaption>Location or Title — Date</figcaption>
+        </figure>
+        
+        <!-- Photo 4 -->
+        <figure>
+          <img src="../assets/photos/photo-4.jpg" alt="Description of the fourth photo" loading="lazy">
+          <figcaption>Location or Title — Date</figcaption>
+        </figure>
+        
+        <!-- Add more <figure> blocks here as you click more photos -->
+      </div>
+    </div>
+
+    <nav class="project-footer-nav">
+      <a href="../index.html">All projects</a>
+    </nav>
+  </main>
+
+  <script src="../assets/ripple.js"></script>
+</body>
+</html>
