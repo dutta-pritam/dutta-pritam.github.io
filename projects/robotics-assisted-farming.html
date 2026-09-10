@@ -3,14 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A robotics-assisted farming project combining embedded hardware, sensing, and automation.">
-  <title>Robotics-Assisted Farming — Pritam Dutta</title>
+  <meta name="description" content="The Robotics Assisted Farming Model enables the usage of aeroponics as well as hydroponics with the assistance of automation and artificial intelligence.">
+  <title>Robotics Assisted Farming — Pritam Dutta</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    .meta, figcaption {
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
   <canvas id="ripple" aria-hidden="true"></canvas>
@@ -19,12 +35,50 @@
     <a class="back" href="../index.html">Pritam Dutta</a>
 
     <header class="page-header project-header">
-      <h1>Robotics-Assisted Farming</h1>
-      <p class="meta">2025–present, Robotics, Embedded systems, Automation</p>
+      <h1>Robotics Assisted Farming</h1>
+      <p class="meta">Automation, Artificial Intelligence, Embedded Systems</p>
     </header>
 
     <div class="project-body">
-      <p>Designed and implemented a robotics-assisted farming project, combining embedded hardware, sensing, and automation.</p>
+      <p>The Robotics Assisted Farming Model enables the usage of aeroponics as well as hydroponics with the assistance of automation and artificial intelligence. The whole process is made successful with the usage of ATMEGA2560 & Broadcom BCM2711 & (SoC) ESP8266 Microcontrollers and many more sensors.</p>
+      <img src="ras.jpg" alt="The Physical Model.">
+      <h3>Key Features</h3>
+      <ul>
+        <li><strong>Dual Systems:</strong> Enables the usage of hydroponics by using centrifugal pumps and a reliable water drainage system, alongside an aeroponic system equipped with a water mist creating mechanism.</li>
+        <li><strong>Auto Seeding:</strong> Utilizes an x and y axis moving mechanism with BO motors with accuracy more than 85%.</li>
+        <li><strong>Plant Disease Detection:</strong> Uses a Convolutional Neural Network and Normalized Difference Vegetation index in Python with OPENCV and TensorFlow to identify plant diseases.</li>
+        <li><strong>Auto Nutritional Maintenance:</strong> Equipped with ph, tds, humidity and temperature sensors to identify and provide nutrition at an equilibrium state using peristaltic pumps.</li>
+        <li><strong>Mobile Based UI:</strong> A user-friendly mobile application provides real-time information, live farm footage, and suggestive measures.</li>
+      </ul>
+
+      <h3>System Environments & Operations</h3>
+      <p>The system is highly versatile and targeted for use in Agricultural Farms, Farming Research Labs, and at Home. To maintain optimal growing conditions, it includes an Inbuilt Lighting System and an Auto Cooling System, while utilizing a dedicated Database to securely store all operational data.</p>
+
+      <h3>Technical Specifications</h3>
+      <ul>
+        <li><strong>Microcontrollers:</strong> Atmega 2560, Esp8266 (SOC), BSM2711.</li>
+        <li><strong>Sensors:</strong> DS18B20, DHT11, LIQUID PH SENSOR, TDS SENSOR.</li>
+        <li><strong>Dimensions:</strong> Height 28.5 inch, Width 15 inch, Length 20 inch.</li>
+      </ul>
+
+      <h3>Connectivity & Peripherals</h3>
+      <ul>
+        <li><strong>Network:</strong> Fully supported via WIFI 802.11N IEEE.</li>
+        <li><strong>Actuators & Hardware:</strong> The model operates using a built-in camera, peristaltic pumps, BO motors, centrifugal pumps, and servo motors.</li>
+      </ul>
+
+      <h3>Control Interface</h3>
+      <p>The manual control board consists of six primary buttons for quick system overrides and mode switching:</p>
+      <ul>
+        <li><strong>Button 1:</strong> Reset</li>
+        <li><strong>Button 2:</strong> Aeroponics Mode</li>
+        <li><strong>Button 3:</strong> Hydroponics Mode</li>
+        <li><strong>Button 4:</strong> Sowing Mode</li>
+        <li><strong>Button 5:</strong> Plant 1 (Low Nutri)</li>
+        <li><strong>Button 6:</strong> Plant 2 (High Nutri)</li>
+      </ul>
+
+      <p>For more detailed technical data, pinouts, and hardware configurations, please refer to the Robotics- Assisted-Farming-datasheet.pdf.</p>
     </div>
 
     <nav class="project-footer-nav">
