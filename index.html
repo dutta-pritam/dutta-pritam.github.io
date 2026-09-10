@@ -18,6 +18,8 @@
       --border: #eaeaea;
       --accent: #4c6a86;
       --accent-soft: rgba(76, 106, 134, 0.08);
+      --surface: rgba(255,255,255,0.78);
+      --shadow: 0 8px 24px rgba(17,17,17,0.10);
       --parallax-x: 0px;
       --parallax-y: 0px;
     }
@@ -394,6 +396,85 @@
       font-variant-numeric: tabular-nums;
     }
 
+
+    /* Profile / utility upgrades */
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .profile-wrap { position: relative; flex: 0 0 auto; }
+    .profile-photo {
+      width: 76px; height: 76px; object-fit: cover;
+      object-position: 50% 35%; border-radius: 50%; display: block;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(17, 17, 17, 0.10);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .profile-photo:hover {
+      transform: translateY(-3px) rotate(1deg);
+      box-shadow: 0 12px 30px rgba(76, 106, 134, 0.18);
+    }
+    .profile-status {
+      position: absolute; right: 3px; bottom: 3px;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: var(--accent); border: 3px solid var(--bg);
+      box-shadow: 0 0 0 1px var(--border);
+    }
+    .utility-bar {
+      display: flex; align-items: center; gap: 8px; margin-top: 18px;
+    }
+    .utility-button {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.72);
+      color: var(--text-muted); border-radius: 999px;
+      padding: 6px 10px; font: inherit; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
+    .utility-button:hover {
+      color: var(--accent); border-color: var(--accent-soft);
+      transform: translateY(-1px);
+    }
+    :root.theme-dark {
+      color-scheme: dark;
+      --bg: #111315; --text-main: #eeeeee;
+      --text-muted: #a4a8ad; --border: #292d31;
+      --accent: #7d9ebe;
+      --accent-soft: rgba(125, 158, 190, 0.14);
+      --surface: rgba(25,28,31,0.78);
+      --shadow: 0 8px 24px rgba(0,0,0,0.28);
+    }
+    :root:not(.theme-dark) { color-scheme: light; }
+    :root.theme-dark .utility-button { background: var(--surface); }
+    :root.theme-dark a.row:hover { background-color: #181b1e; }
+    :root.theme-dark .profile-status { border-color: var(--bg); }
+    body { transition: background-color .35s ease, color .35s ease; }
+    .utility-button, .row { transition: background-color .35s ease, color .35s ease, border-color .35s ease, transform .25s ease; }
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; width: 0%; height: 2px;
+      background: var(--accent); z-index: 1000;
+      transition: width 0.08s linear;
+    }
+    .visitor-module {
+      cursor: default; padding: 5px 8px; border-radius: 6px;
+      transition: background 0.25s ease;
+    }
+    .visitor-module:hover { background: var(--accent-soft); }
+    #v-count { transition: opacity .3s ease; }
+    .visitor-module.updated #v-count { animation: counterPulse .5s ease; }
+    @keyframes counterPulse {
+      0% { opacity: .35; transform: translateY(2px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 520px) {
+      .header-top { align-items: flex-start; }
+      .profile-photo { width: 64px; height: 64px; }
+      .subtitle { max-width: 250px; }
+      .site-footer { align-items: flex-start; flex-direction: column; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -422,9 +503,25 @@
   </div>
   <canvas id="side-field" aria-hidden="true"></canvas>
   <main>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
     <header class="page-header">
-      <h1 id="decoder-text" data-value="Pritam Dutta">Pritam Dutta</h1>
-      <p class="subtitle"><span class="signal" aria-hidden="true"></span>BS-MS · Indian Association for the Cultivation of Science</p>
+      <div class="header-top">
+        <div>
+          <h1 id="decoder-text" data-value="Pritam Dutta">Pritam Dutta</h1>
+          <p class="subtitle"><span class="signal" aria-hidden="true"></span>BS-MS · Indian Association for the Cultivation of Science</p>
+        </div>
+        <div class="profile-wrap">
+          <img class="profile-photo" src="profile.jpg" alt="Pritam Dutta" loading="eager">
+          <span class="profile-status" title="Currently active"></span>
+        </div>
+      </div>
+
+      <div class="utility-bar" aria-label="Site controls">
+        <button class="utility-button" id="theme-toggle" type="button" aria-label="Toggle theme">◐ Theme</button>
+        <button class="utility-button" id="email-copy" type="button">Copy email</button>
+        <span class="utility-button" id="local-time" aria-live="polite" title="Your browser's local time">Local time</span>
+      </div>
     </header>
     
     <p class="intro">
@@ -561,10 +658,15 @@
       <a href="#" target="_blank" rel="noopener">CV</a>
     </nav>
 
+    <div style="margin-top:16px;">
+      <button class="utility-button" id="top-button" type="button">↑ Back to top</button>
+    </div>
+
     <footer class="site-footer">
       <span>© 2026 Pritam Dutta</span>
 
       <div class="visitor-module" title="Total Visits" aria-label="Total Visits">
+
         <svg xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 24 24"
              fill="none"
@@ -707,7 +809,8 @@
       }
 
       function step() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // slightly faster fade for dynamic trails
+        ctx.fillStyle = document.documentElement.classList.contains('theme-dark')
+          ? 'rgba(17, 19, 21, 0.20)' : 'rgba(255, 255, 255, 0.20)';
         ctx.fillRect(0, 0, w, h);
 
         if (active) {
@@ -856,30 +959,162 @@
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
-    // 5. REAL VISITOR COUNTER
-    // Counts page visits using CounterAPI. Each page load increments the counter.
+    // 5. GLOBAL VISITOR COUNTER
+    // CounterAPI is a third-party service. If it is unavailable, show a clear
+    // fallback instead of leaving a misleading permanent dash.
     (function () {
       var counterEl = document.getElementById('v-count');
       if (!counterEl) return;
 
-      var counterURL =
-        'https://api.counterapi.dev/v1/pritam-portfolio/visits/up';
+      var fallbackKey = 'portfolio-local-visit-count';
+      var shown = false;
 
-      fetch(counterURL, { cache: 'no-store' })
-        .then(function (response) {
-          if (!response.ok) throw new Error('Counter request failed');
-          return response.json();
-        })
-        .then(function (data) {
-          if (typeof data.count === 'number') {
-            counterEl.textContent = data.count.toLocaleString();
-          } else {
-            counterEl.textContent = '—';
-          }
-        })
-        .catch(function () {
-          counterEl.textContent = '—';
-        });
+      function showFallback() {
+        try {
+          var count = Number(localStorage.getItem(fallbackKey) || '0') + 1;
+          localStorage.setItem(fallbackKey, String(count));
+          counterEl.textContent = count.toLocaleString() + ' local';
+          counterEl.title = 'Local browser visits (global counter unavailable)';
+        } catch (e) {
+          counterEl.textContent = 'offline';
+          counterEl.title = 'Global visitor counter unavailable';
+        }
+      }
+
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js';
+      script.async = true;
+
+      script.onload = function () {
+        try {
+          if (typeof Counter !== 'function') throw new Error('CounterAPI client not loaded');
+          var counter = new Counter({ workspace: 'pritam-portfolio' });
+
+          counter.up('visits')
+            .then(function (result) {
+              if (result && typeof result.value === 'number') {
+                shown = true;
+                counterEl.textContent = result.value.toLocaleString();
+                counterEl.title = 'Global visits';
+              } else {
+                throw new Error('Invalid counter response');
+              }
+            })
+            .catch(function (error) {
+              console.warn('Global visitor counter unavailable:', error);
+              if (!shown) showFallback();
+            });
+        } catch (error) {
+          console.warn('Visitor counter initialization failed:', error);
+          showFallback();
+        }
+      };
+
+      script.onerror = function () {
+        showFallback();
+      };
+
+      document.head.appendChild(script);
+    })();
+
+    // 6. THEME TOGGLE
+    (function () {
+      var button = document.getElementById('theme-toggle');
+      if (!button) return;
+
+      var root = document.documentElement;
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function getMode() {
+        return localStorage.getItem('portfolio-theme') || 'system';
+      }
+
+      function applyMode(mode) {
+        root.classList.toggle('theme-dark',
+          mode === 'dark' || (mode === 'system' && media.matches));
+
+        if (mode === 'dark') button.textContent = '☀ Light';
+        else if (mode === 'light') button.textContent = '◐ System';
+        else button.textContent = '◐ Theme';
+
+        button.title = 'Theme: ' + mode + ' (click to change)';
+        button.setAttribute('aria-label', 'Theme: ' + mode + '. Click to change.');
+      }
+
+      function nextMode(mode) {
+        return mode === 'system' ? 'dark' : (mode === 'dark' ? 'light' : 'system');
+      }
+
+      applyMode(getMode());
+
+      media.addEventListener('change', function () {
+        if (getMode() === 'system') applyMode('system');
+      });
+
+      button.addEventListener('click', function () {
+        var mode = nextMode(getMode());
+        localStorage.setItem('portfolio-theme', mode);
+        applyMode(mode);
+      });
+    })();
+
+    // 7. COPY EMAIL
+    (function () {
+      var button = document.getElementById('email-copy');
+      if (!button) return;
+      var email = 'pritamdutta.pixel@gmail.com';
+
+      button.addEventListener('click', async function () {
+        try {
+          await navigator.clipboard.writeText(email);
+          var old = button.textContent;
+          button.textContent = '✓ Copied';
+          setTimeout(function () { button.textContent = old; }, 1400);
+        } catch (error) {
+          window.location.href = 'mailto:' + email;
+        }
+      });
+    })();
+
+    // 8. LIVE LOCAL TIME
+    (function () {
+      var el = document.getElementById('local-time');
+      if (!el) return;
+
+      function updateTime() {
+        el.textContent = new Intl.DateTimeFormat(undefined, {
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }).format(new Date());
+      }
+
+      updateTime();
+      setInterval(updateTime, 1000);
+    })();
+
+    // 8. SCROLL PROGRESS
+    (function () {
+      var progress = document.getElementById('scroll-progress');
+      if (!progress) return;
+
+      function updateProgress() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var percent = max > 0 ? (scrollTop / max) * 100 : 0;
+        progress.style.width = percent.toFixed(2) + '%';
+      }
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress);
+      updateProgress();
+    })();
+
+    // 9. BACK TO TOP
+    (function () {
+      var button = document.getElementById('top-button');
+      if (!button) return;
+      button.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     })();
 
   </script>
