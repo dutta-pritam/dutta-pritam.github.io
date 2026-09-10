@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Panda preview 2</title>
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #1c211d;
+    --moss: #3f6b4a;
+    --mist: #f4f7f3;
+    --line: rgba(28, 33, 29, 0.1);
+    --bamboo-a: #5c8f52;
+    --bamboo-b: #7ba86e;
+    --bamboo-dark: #2a4f35;
+  }
+  body {
+    margin: 0;
+    height: 100vh;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #panda-forest {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+  }
+
+  .tree {
+    position: absolute;
+    bottom: 0;
+    width: 0; height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+  }
+  .tree1 { left: 12%; border-bottom: 70px solid var(--moss); opacity: 0.75; }
+  .tree2 { left: 28%; border-bottom: 90px solid #2a4f35; opacity: 0.9; }
+  .tree3 { left: 82%; border-bottom: 60px solid var(--moss); opacity: 0.75; }
+
+  .bamboo-decor {
+    position: absolute;
+    bottom: 0;
+    left: 62%;
+    width: 6px;
+    height: 60px;
+    background: linear-gradient(90deg, var(--bamboo-a), var(--bamboo-b));
+    border-radius: 3px;
+    transform-origin: bottom center;
+    animation: bamboo-sway 5s ease-in-out infinite;
+  }
+  .bamboo-decor::before, .bamboo-decor::after {
+    content: "";
+    position: absolute;
+    left: -1px; right: -1px;
+    height: 3px;
+    background: var(--bamboo-dark);
+    opacity: 0.5;
+  }
+  .bamboo-decor::before { top: 28%; }
+  .bamboo-decor::after { top: 58%; }
+
+  @keyframes bamboo-sway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(1deg); }
+  }
+
+  /* Slow, single walking pass across the whole width */
+  .panda-walker {
+    position: absolute;
+    bottom: 6px;
+    left: -110px;
+    animation: walk-across 22s linear infinite;
+  }
+
+  @keyframes walk-across {
+    0%   { left: -110px; }
+    100% { left: 110%; }
+  }
+
+  .panda {
+    position: relative;
+    width: 92px;
+    height: 80px;
+    animation: gait-bob 1.1s ease-in-out infinite;
+  }
+
+  @keyframes gait-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.5px); }
+  }
+
+  .panda .body {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    width: 66px;
+    height: 52px;
+    background: var(--paper);
+    border: 2.5px solid var(--ink);
+    border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+  }
+
+  .panda .belly-patch {
+    position: absolute;
+    bottom: 4px;
+    left: 26px;
+    width: 34px;
+    height: 22px;
+    background: var(--paper);
+  }
+
+  .panda .leg {
+    position: absolute;
+    bottom: -1px;
+    width: 20px;
+    height: 14px;
+    background: var(--ink);
+    border-radius: 40%;
+  }
+  .panda .leg.leg-left { left: 10px; }
+  .panda .leg.leg-right { right: 12px; }
+
+  .panda .arm {
+    position: absolute;
+    width: 13px;
+    height: 30px;
+    background: var(--ink);
+    border-radius: 8px;
+    transform-origin: top center;
+  }
+  .panda .arm.arm-far {
+    bottom: 14px;
+    left: 6px;
+    transform: rotate(16deg);
+  }
+  .panda .arm.arm-near {
+    bottom: 16px;
+    left: 52px;
+    animation: chew 3.2s ease-in-out infinite;
+  }
+
+  @keyframes chew {
+    0%, 100% { transform: rotate(-36deg); }
+    50%      { transform: rotate(-48deg); }
+  }
+
+  .panda .bamboo-bite {
+    position: absolute;
+    width: 20px;
+    height: 5px;
+    background: linear-gradient(90deg, var(--bamboo-a), var(--bamboo-b));
+    border-radius: 3px;
+    bottom: 40px;
+    left: 60px;
+    transform-origin: left center;
+    animation: chew 3.2s ease-in-out infinite;
+  }
+
+  .panda .head {
+    position: absolute;
+    bottom: 40px;
+    left: 24px;
+    width: 46px;
+    height: 40px;
+    background: var(--paper);
+    border: 2.5px solid var(--ink);
+    border-radius: 50%;
+    animation: nibble 3.2s ease-in-out infinite;
+  }
+
+  @keyframes nibble {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(1px) rotate(-2deg); }
+  }
+
+  .panda .ear {
+    position: absolute;
+    top: -6px;
+    width: 13px;
+    height: 13px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .panda .ear.left { left: -3px; }
+  .panda .ear.right { right: -3px; }
+
+  .panda .patch {
+    position: absolute;
+    top: 10px;
+    width: 15px;
+    height: 12px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .panda .patch.left { left: 2px; transform: rotate(-12deg); }
+  .panda .patch.right { right: 2px; transform: rotate(12deg); }
+
+  .panda .eye {
+    position: absolute;
+    top: 15px;
+    width: 4px;
+    height: 5px;
+    background: var(--paper);
+    border-radius: 50%;
+    animation: blink 6s infinite;
+  }
+  .panda .eye.left { left: 8px; }
+  .panda .eye.right { right: 8px; }
+
+  @keyframes blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    96%           { transform: scaleY(0.15); }
+  }
+
+  .panda .nose {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    width: 6px;
+    height: 4px;
+    background: var(--ink);
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panda-walker, .panda, .panda .arm-near, .panda .bamboo-bite,
+    .panda .head, .panda .eye, .bamboo-decor {
+      animation: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div id="panda-forest" aria-hidden="true">
+    <div class="tree tree1"></div>
+    <div class="tree tree2"></div>
+    <div class="tree tree3"></div>
+    <div class="bamboo-decor"></div>
+
+    <div class="panda-walker">
+      <div class="panda">
+        <div class="body"></div>
+        <div class="belly-patch"></div>
+        <div class="leg leg-left"></div>
+        <div class="leg leg-right"></div>
+        <div class="arm arm-far"></div>
+        <div class="arm arm-near"></div>
+        <div class="bamboo-bite"></div>
+        <div class="head">
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="patch left"></div>
+          <div class="patch right"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="nose"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
