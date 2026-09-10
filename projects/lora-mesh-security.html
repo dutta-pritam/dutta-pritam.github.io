@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Encrypted mesh firmware, replay-attack testing, and a forensics-ready testbed for LoRa MANETs.">
+  <title>LoRa Mesh Network Security — Pritam Dutta</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <canvas id="ripple" aria-hidden="true"></canvas>
+
+  <main>
+    <a class="back" href="../index.html">Pritam Dutta</a>
+
+    <header class="page-header project-header">
+      <h1>LoRa Mesh Network Security</h1>
+      <p class="meta">2024–present, Embedded systems, Wireless security, LoRa</p>
+    </header>
+
+    <div class="project-body">
+      <p>An ongoing line of work on LoRa mesh networking at the protocol level, moving between firmware, security testing, and writing it up.</p>
+      <p>It started with an audit of a flood-relay mesh built on RP2040 boards at 433 MHz, which turned up five protocol bugs and a scalability ceiling around eight nodes. That audit became a full AODV-lite firmware rewrite (<code>lora_mesh_aodv.ino</code>) supporting 30+ nodes, with non-blocking relay queues, routing tables, RERR propagation, and corrected ACK logic.</p>
+      <p>A related firmware build for the ESP32-C3 Super Mini added AES-256-GCM encryption and Curve25519 ECDH key exchange on top of the AODV routing, with a BLE layer (Nordic UART Service) for connecting a companion Flutter app &mdash; including a migration between NimBLE and standard Bluedroid while keeping the app's UUIDs stable.</p>
+      <p>On the testing side, I built a Python replay-attack harness (<code>replay_test_harness.py</code>) on a Raspberry Pi to validate the firmware's nonce and counter replay-rejection logic, and ran a passive MITM test &mdash; a Raspberry Pi 4B with an SX1278 module intercepting traffic between two legitimate Pico + SX1278 nodes at 433 MHz, SF10, BW 125 kHz, CR 4/5 &mdash; alongside a packet-delivery-ratio test across distances up to 150 m. That became a conference paper draft, &ldquo;Security and Performance Evaluation of a LoRa Mesh Network: MITM Attack and Packet Delivery Ratio (PDR).&rdquo;</p>
+      <p>I'm now drafting a follow-up paper scoping a forensics-ready, open-source LoRa MANET testbed &mdash; reviewing the multi-hop routing and LoRa security landscape, characterizing the AODV-based mesh's attack surface, and proposing a tamper-evident logging layer and a web-based topology and evidence-download dashboard, meant to be released open-source and DIY-buildable.</p>
+    </div>
+
+    <nav class="project-footer-nav">
+      <a href="../index.html">All projects</a>
+    </nav>
+  </main>
+
+  <script src="../assets/ripple.js"></script>
+</body>
+</html>

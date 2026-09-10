@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A differential-drive robot simulator with LiDAR, occupancy-grid mapping, and A* path planning.">
+  <title>Autonomous Navigation — Pritam Dutta</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <canvas id="ripple" aria-hidden="true"></canvas>
+
+  <main>
+    <a class="back" href="../index.html">Pritam Dutta</a>
+
+    <header class="page-header project-header">
+      <h1>Autonomous Navigation</h1>
+      <p class="meta">2026, Robotics, Path planning, SLAM, Python</p>
+    </header>
+
+    <div class="project-body">
+      <p>A Python and matplotlib simulation of a differential-drive robot navigating a field of obstacles.</p>
+      <p>It began from an earlier &ldquo;Phase 1C&rdquo; script &mdash; a random obstacle field, wheel encoders, and a 180-ray LiDAR sweep rendered as a live animation &mdash; which I extended in two directions: path planning toward a goal using the LiDAR returns, and SLAM-style occupancy-grid mapping built up from those same scans.</p>
+      <p>I also raised the obstacle count from 18 to 100 to stress-test the planner in denser environments.</p>
+    </div>
+
+    <nav class="project-footer-nav">
+      <a href="../index.html">All projects</a>
+    </nav>
+  </main>
+
+  <script src="../assets/ripple.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Equilibrium galaxy models built with AGAMA's self-consistent modeling pipeline, fed into GADGET-4.">
+  <title>Equilibrium Galaxy Modeling with AGAMA — Pritam Dutta</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <canvas id="ripple" aria-hidden="true"></canvas>
+
+  <main>
+    <a class="back" href="../index.html">Pritam Dutta</a>
+
+    <header class="page-header project-header">
+      <h1>Equilibrium Galaxy Modeling with AGAMA</h1>
+      <p class="meta">2026, Astrophysics, HPC, Galactic dynamics</p>
+    </header>
+
+    <div class="project-body">
+      <p>Equilibrium galaxy models built with AGAMA's self-consistent modeling (SCM) pipeline, feeding into GADGET-4 for N-body evolution.</p>
+      <p>The work sits on top of the underlying mathematics: the collisionless Boltzmann equation, action-angle variables, the Staeckel fudge, quasi-isothermal and double-power-law distribution functions, and multipole Poisson solvers.</p>
+      <p>I refactored the pipeline into two stages &mdash; a serial stage (<code>run_iterate.py</code>) that uses OpenMP to converge the SCM, and an MPI-parallel stage (<code>run_sample.py</code>) that handles memory-distributed particle sampling at the 10⁷-particle scale on a cluster.</p>
+    </div>
+
+    <nav class="project-footer-nav">
+      <a href="../index.html">All projects</a>
+    </nav>
+  </main>
+
+  <script src="../assets/ripple.js"></script>
+</body>
+</html>
