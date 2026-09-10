@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pritam Dutta — BS-MS student at IACS interested in computational science, robotics, and autonomous systems.">
+  <title>Pritam Dutta</title>
+
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --text: #242424;
+      --muted: #777;
+      --line: rgba(0, 0, 0, 0.07);
+      --link: #315f9b;
+      --max-width: 700px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(70, 110, 150, 0.055), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(120, 100, 150, 0.04), transparent 30%),
+        var(--bg);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.72;
+      font-size: 16px;
+    }
+
+    /* Very subtle paper/grid texture */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.32;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
+      z-index: -1;
+    }
+
+    main {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin: 0 auto;
+      padding: 90px 0 70px;
+    }
+
+    header {
+      margin-bottom: 55px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 2.65rem);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.88rem;
+      letter-spacing: 0.01em;
+    }
+
+    .intro {
+      max-width: 650px;
+      margin: 0 0 58px;
+      font-size: 1.02rem;
+    }
+
+    section {
+      margin-top: 48px;
+    }
+
+    h2 {
+      margin: 0 0 22px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .item:first-of-type {
+      border-top: 1px solid var(--line);
+    }
+
+    .item a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    .item a:hover {
+      text-decoration: underline;
+    }
+
+    .description {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .year {
+      color: #999;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .links {
+      margin-top: 65px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.86rem;
+    }
+
+    .links a {
+      color: var(--link);
+      text-decoration: none;
+      margin-right: 18px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 55px;
+      color: #aaa;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding-top: 55px;
+      }
+
+      .item {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .year {
+        order: -1;
+        font-size: 0.76rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+
+    <header>
+      <h1>Pritam Dutta</h1>
+      <p class="subtitle">BS-MS · Indian Association for the Cultivation of Science</p>
+    </header>
+
+    <p class="intro">
+      I'm a BS-MS student interested in computational science, robotics,
+      and autonomous systems. I like building things, understanding them
+      from first principles, and writing about what I learn.
+      Feel free to reach out if you'd like to talk about research,
+      projects, or ideas.
+    </p>
+
+    <section>
+      <h2>Research + Projects</h2>
+
+      <div class="item">
+        <div>
+          <a href="#" target="_blank">N-body Simulation</a>
+          <span class="description">
+            A from-scratch gravitational N-body simulator with numerical
+            integration and scientific data analysis.
+          </span>
+        </div>
+        <span class="year">2026</span>
+      </div>
+
+      <div class="item">
+        <div>
+          <a href="#" target="_blank">Autonomous Navigation</a>
+          <span class="description">
+            Experiments with graph-search algorithms and path planning
+            for robotic navigation.
+          </span>
+        </div>
+        <span class="year">2026</span>
+      </div>
+
+      <div class="item">
+        <div>
+          <a href="#" target="_blank">Embedded Systems</a>
+          <span class="description">
+            Experiments with microcontrollers, sensors, communication,
+            and physical systems.
+          </span>
+        </div>
+        <span class="year">2025–</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Notes</h2>
+
+      <div class="item">
+        <div><a href="#">Robotics</a></div>
+      </div>
+
+      <div class="item">
+        <div><a href="#">Scientific Computing</a></div>
+      </div>
+
+      <div class="item">
+        <div><a href="#">Algorithms</a></div>
+      </div>
+
+      <div class="item">
+        <div><a href="#">Mathematics & Physics</a></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Writing + Misc.</h2>
+
+      <div class="item">
+        <div><a href="#">Books + Publications</a></div>
+      </div>
+
+      <div class="item">
+        <div><a href="#">Science & Technology</a></div>
+      </div>
+
+      <div class="item">
+        <div><a href="#">Other things</a></div>
+      </div>
+    </section>
+
+    <nav class="links" aria-label="External links">
+      <a href="#" target="_blank">GitHub</a>
+      <a href="#" target="_blank">LinkedIn</a>
+      <a href="mailto:your@email.com">Email</a>
+      <a href="#" target="_blank">CV</a>
+    </nav>
+
+    <footer>
+      © 2026 Pritam Dutta
+    </footer>
+
+  </main>
+</body>
+</html>
