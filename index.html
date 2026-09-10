@@ -9,24 +9,162 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    /* Minimalist CSS for perfect alignment and spacing */
+    :root {
+      --bg: #ffffff;
+      --text-main: #111111;
+      --text-muted: #666666;
+      --border: #eaeaea;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg);
+      line-height: 1.6;
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Typography & Headers */
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin: 0 0 4px 0;
+    }
+    
+    .subtitle {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .intro {
+      font-family: 'Newsreader', serif;
+      font-size: 1.15rem;
+      color: var(--text-main);
+      margin: 32px 0;
+    }
+
+    section {
+      margin-top: 48px;
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* Project & List Alignments (The Fix) */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-decoration: none;
+      color: inherit;
+      gap: 24px;
+    }
+
+    .row:hover .row-title {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .row-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .row-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .row-year {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .plain-row a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .plain-row a:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .empty-note {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Footer & Navigation */
+    .links {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .links a:hover {
+      color: var(--text-main);
+    }
+
+    .site-footer {
+      margin-top: 48px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Hide animation by default unless active */
+    #panda-forest { display: none; }
+  </style>
 </head>
 
 <body>
   <main>
-    <!-- Header & About -->
     <header class="page-header">
       <h1>Pritam Dutta</h1>
       <p class="subtitle">BS-MS · Indian Association for the Cultivation of Science</p>
     </header>
     
-    <section id="about">
-      <p class="intro">
-        I'm a BS-MS student interested in computational science, robotics, and autonomous systems. I like building things, understanding them from first principles, and writing about what I learn. Feel free to reach out if you'd like to talk about research, projects, or ideas.
-      </p>
-    </section>
+    <p class="intro">
+      I'm a BS-MS student interested in computational science, robotics,
+      and autonomous systems. I like building things, understanding them
+      from first principles, and writing about what I learn. Feel free to
+      reach out if you'd like to talk about research, projects, or ideas.
+    </p>
 
-    <!-- Projects -->
     <section id="projects">
       <h2>Projects</h2>
       <div class="list">
@@ -104,11 +242,10 @@
       </div>
     </section>
 
-    <!-- Experience & Writing -->
     <section id="positions">
       <h2>Positions</h2>
       <div class="list">
-        <p class="empty-note">Roles go here, most recent first — title, organization, and years.</p>
+        <p class="empty-note">Roles go here, most recent first — title, organization, and years. Send over your LinkedIn experience section and I'll drop them in.</p>
       </div>
     </section>
 
@@ -131,7 +268,6 @@
       </div>
     </section>
 
-    <!-- Footer & Links -->
     <nav class="links" aria-label="External links">
       <a href="https://github.com/ThePritamDutta" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/pritam-dutta-158b131a7/" target="_blank" rel="noopener">LinkedIn</a>
@@ -139,37 +275,7 @@
       <a href="#" target="_blank" rel="noopener">CV</a>
     </nav>
 
-    <footer class="site-footer">
-      <p>© 2026 Pritam Dutta</p>
-    </footer>
+    <footer class="site-footer">© 2026 Pritam Dutta</footer>
   </main>
-
-  <!-- Animation (Consider moving this to an external JS/HTML partial if strictly minimalist) -->
-  <div id="panda-forest" aria-hidden="true">
-    <div class="tree tree1"></div>
-    <div class="tree tree2"></div>
-    <div class="tree tree3"></div>
-    <div class="bamboo-decor"></div>
-    <div class="panda-walker">
-      <div class="panda">
-        <div class="body"></div>
-        <div class="belly-patch"></div>
-        <div class="leg leg-left"></div>
-        <div class="leg leg-right"></div>
-        <div class="arm arm-far"></div>
-        <div class="arm arm-near"></div>
-        <div class="bamboo-bite"></div>
-        <div class="head">
-          <div class="ear left"></div>
-          <div class="ear right"></div>
-          <div class="patch left"></div>
-          <div class="patch right"></div>
-          <div class="eye left"></div>
-          <div class="eye right"></div>
-          <div class="nose"></div>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
