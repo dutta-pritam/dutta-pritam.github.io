@@ -1,0 +1,204 @@
+:root {
+  --paper: #ffffff;
+  --ink: #1c211d;
+  --muted: #70796f;
+  --moss: #3f6b4a;
+  --mist: #f4f7f3;
+  --line: rgba(28, 33, 29, 0.1);
+  --water: #cfe0d3;
+  --max-width: 660px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Newsreader", Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient ripple canvas sits behind everything, drawn very faintly. */
+#ripple {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 48px), var(--max-width));
+  margin: 0 auto;
+  padding: 96px 0 80px;
+}
+
+/* ---------- Header ---------- */
+
+header.page-header { margin-bottom: 46px; }
+
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.9rem, 5vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-size: 0.86rem;
+}
+
+.intro {
+  max-width: 58ch;
+  margin: 28px 0 0;
+  font-size: 1.05rem;
+}
+
+/* ---------- Sections & list rows ---------- */
+
+section {
+  margin-top: 52px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+h2 {
+  margin: 0 0 18px;
+  font-family: "Newsreader", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+
+.list { display: flex; flex-direction: column; }
+
+a.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: baseline;
+  padding: 14px 10px;
+  margin: 0 -10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.15s ease;
+}
+
+a.row:hover { background: var(--mist); }
+a.row:hover .row-title { color: var(--moss); }
+
+.row-title { display: block; font-size: 1.05rem; }
+
+.row-desc {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  max-width: 56ch;
+}
+
+.row-year {
+  color: #9aa39a;
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.plain-row { padding: 12px 10px; margin: 0 -10px; }
+.plain-row a { color: var(--ink); text-decoration: none; }
+.plain-row a:hover { color: var(--moss); text-decoration: underline; }
+
+.empty-note {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.95rem;
+  padding: 6px 10px 0;
+  margin: 0;
+}
+
+/* ---------- Footer links ---------- */
+
+nav.links {
+  margin-top: 64px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-family: "Inter", sans-serif;
+  font-size: 0.86rem;
+}
+
+nav.links a { color: var(--moss); text-decoration: none; margin-right: 20px; }
+nav.links a:hover { text-decoration: underline; }
+
+footer.site-footer {
+  margin-top: 40px;
+  color: #a7ada4;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+}
+
+/* ---------- Project detail pages ---------- */
+
+.back {
+  display: inline-block;
+  margin-bottom: 40px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.back:hover { color: var(--moss); }
+
+.project-header .meta {
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.project-body { margin-top: 36px; max-width: 62ch; }
+.project-body p { margin: 0 0 20px; }
+.project-body a { color: var(--moss); }
+.project-body code {
+  font-family: "Inter", monospace;
+  font-size: 0.88em;
+  background: var(--mist);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.project-footer-nav {
+  margin-top: 56px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+}
+.project-footer-nav a { color: var(--moss); text-decoration: none; }
+.project-footer-nav a:hover { text-decoration: underline; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  main { padding-top: 64px; }
+
+  a.row { grid-template-columns: 1fr; gap: 2px; }
+  .row-year { order: -1; font-size: 0.78rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
