@@ -8,32 +8,89 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../assets/style.css">
-  
   <style>
-    /* Basic styling for the newly added images */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: #333;
+      background-color: #ffffff;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: #555;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back:hover {
+      color: #111;
+    }
+    .page-header h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #111;
+      margin-bottom: 0.2rem;
+    }
+    .meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .project-body p {
+      margin-bottom: 1.2rem;
+      color: #444;
+    }
+    .project-body h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #111;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .project-body ul {
+      margin-bottom: 1.2rem;
+      padding-left: 1.5rem;
+      color: #444;
+    }
+    .project-body li {
+      margin-bottom: 0.4rem;
+    }
     .project-image {
       width: 100%;
-      max-width: 700px;
       height: auto;
       display: block;
       margin: 2rem auto 0.5rem auto;
       border-radius: 6px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     .image-caption {
       text-align: center;
-      font-size: 0.9rem;
-      color: #555;
+      font-size: 0.85rem;
+      color: #666;
       margin-bottom: 2rem;
-      font-family: 'Newsreader', serif;
-      font-style: italic;
     }
-    h3 {
-      margin-top: 2.5rem;
-      color: #333;
+    hr {
+      border: 0;
+      border-top: 1px solid #eaeaea;
+      margin: 2rem 0;
+    }
+    .project-footer-nav {
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eaeaea;
+    }
+    .project-footer-nav a {
+      color: #555;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .project-footer-nav a:hover {
+      color: #111;
     }
   </style>
 </head>
@@ -64,15 +121,14 @@
       <h3>System Objective & Hardware</h3>
       <p>The objective of this project is to develop a low-power, long-range, decentralized communication network using LoRa technology designed to operate without internet or cellular infrastructure[cite: 1]. The node hardware architecture relies on the following components:</p>
       <ul>
-        <li>Raspberry Pi Pico[cite: 1].</li>
-        <li>SX1278 (RA-02 LoRa Module)[cite: 1].</li>
-        <li>JDY-25M BLE Module[cite: 1].</li>
-        <li>18650 Battery and TP4056 Charger[cite: 1].</li>
+        <li>Raspberry Pi Pico[cite: 1]</li>
+        <li>SX1278 (RA-02 LoRa Module)[cite: 1]</li>
+        <li>JDY-25M BLE Module[cite: 1]</li>
+        <li>18650 Battery and TP4056 Charger[cite: 1]</li>
       </ul>
 
       <figure>
-        <!-- Replace "hardware-architecture.jpg" with your actual image path -->
-        <img src="../assets/images/hardware-architecture.jpg" alt="Hardware Architecture Diagram linking Smartphone, BLE, Raspberry Pi Pico, and SX1278" class="project-image">
+        <img src="../assets/images/hardware-architecture.png" alt="Hardware Architecture Diagram linking Smartphone, BLE, Raspberry Pi Pico, and SX1278" class="project-image">
         <figcaption class="image-caption">Figure 1: Hardware Architecture of the LoRa-BLE Communication Node[cite: 1].</figcaption>
       </figure>
 
@@ -80,8 +136,7 @@
       <p>Currently, due to lower hardware complexity and a smaller number of nodes, the system is implemented with a simple naive flooding technique[cite: 1]. In this protocol, every node receives the data and broadcasts it until it reaches the destination node[cite: 1].</p>
       
       <figure>
-        <!-- Replace "naive-flood.jpg" with your actual image path -->
-        <img src="../assets/images/naive-flood.jpg" alt="Diagram showing naive flood routing between nodes A through F" class="project-image">
+        <img src="../assets/images/naive-flood.png" alt="Diagram showing naive flood routing between nodes A through F" class="project-image">
         <figcaption class="image-caption">Figure 2: The Naive-Flood Routing technique with source A and destination F[cite: 1].</figcaption>
       </figure>
 
@@ -89,19 +144,18 @@
       <p>The network utilizes a robust security stack, including COMSEC (Data Security) utilizing AES-256-GCM Authenticated Encryption and Session Management through Ephemeral ECDH (Curve25519)[cite: 1]. It also supports audio transmission where a mobile Flutter app captures audio, encodes it into compressed speech bits via Codec2, and transfers it to the Raspberry Pi Pico for LoRa transmission[cite: 1].</p>
 
       <figure>
-        <!-- Replace "security-audio-stack.jpg" with your actual image path -->
         <img src="../assets/images/security-audio-stack.jpg" alt="Stack diagram showing Application, Anti-Replay, COMSEC, Session Management, TRANSEC, and Audio encoding layers" class="project-image">
-        <figcaption class="image-caption">Figure 3: Security and Audio Transmission Stack Layers[cite: 1].</figcaption>
+        <figcaption class="image-caption">Figure 3: Security and Audio Transmission Stack Layers.</figcaption>
       </figure>
 
       <h3>Applications</h3>
-      <p>This resilient architecture provides multi-hop communication and self-healing mesh networking[cite: 1]. It is well-suited for several critical applications:</p>
+      <p>This resilient architecture provides multi-hop communication and self-healing mesh networking. It is well-suited for several critical applications:</p>
       <ul>
-        <li>Disaster and emergency communication[cite: 1].</li>
-        <li>Rural and remote connectivity[cite: 1].</li>
-        <li>Environmental monitoring and telemetry systems[cite: 1].</li>
-        <li>Infrastructure independent communications in Industries[cite: 1].</li>
-        <li>Secured communication in Military[cite: 1].</li>
+        <li>Disaster and emergency communication</li>
+        <li>Rural and remote connectivity</li>
+        <li>Environmental monitoring and telemetry systems</li>
+        <li>Infrastructure independent communications in Industries</li>
+        <li>Secured communication in Military</li>
       </ul>
 
     </div>
