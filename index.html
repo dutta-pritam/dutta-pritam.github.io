@@ -417,9 +417,12 @@
   </main>
 
   <script>
-    // A quiet node graph, drifting only in the side margins either side of the
-    // reading column — never over the text itself. Pauses for reduced-motion
-    // and hidden tabs, and switches off entirely when there's no gutter to show it in.
+    // A small, physically-simulated gas of particles, confined to a box in each
+    // side margin — they drift, bounce off the walls, and collide elastically
+    // with each other, but never cross into the reading column. A soft trailing
+    // fade (rather than a hard clear) makes the collisions easier to read.
+    // Pauses for reduced-motion and hidden tabs, and switches off entirely
+    // when there's no gutter to show it in.
     (function () {
       var canvas = document.getElementById('side-field');
       if (!canvas || !canvas.getContext) return;
@@ -427,26 +430,28 @@
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduceMotion) { canvas.remove(); return; }
 
-      var COLUMN_WIDTH = 690;     // matches the ~650px content + its padding
-      var MIN_GUTTER = 90;        // below this, there's no room to draw calmly — stay off
-      var LINK_DIST = 95;
+      var COLUMN_WIDTH = 690;   // matches the ~650px content + its padding
+      var MIN_GUTTER = 90;      // below this, there's no room to draw calmly — stay off
       var DOT_COLOR = '76, 106, 134';
+      var SPEED = 0.35;
 
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
       var particles = [];
 
       function makeParticle(side) {
-        var x = side === 'l'
-          ? Math.random() * Math.max(gutterL - 24, 1) + 12
-          : (w - gutterR) + Math.random() * Math.max(gutterR - 24, 1) + 12;
+        var r = 2 + Math.random() * 2.2;
+        var lo = side === 'l' ? r : (w - gutterR) + r;
+        var hi = side === 'l' ? gutterL - r : w - r;
+        var angle = Math.random() * Math.PI * 2;
         return {
           side: side,
-          x: x,
+          x: lo + Math.random() * Math.max(hi - lo, 1),
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.06,
-          vy: 0.05 + Math.random() * 0.07,
-          r: 1 + Math.random() * 1.2
+          vx: Math.cos(angle) * SPEED,
+          vy: Math.sin(angle) * SPEED,
+          r: r,
+          m: r * r
         };
       }
 
@@ -458,57 +463,78 @@
         canvas.style.width = w + 'px';
         canvas.style.height = h + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
 
         var gutter = (w - COLUMN_WIDTH) / 2;
         gutterL = gutterR = Math.max(gutter, 0);
         active = gutter >= MIN_GUTTER;
 
-        if (active && particles.length === 0) {
-          var count = Math.min(9, Math.floor(gutter / 40));
+        particles = [];
+        if (active) {
+          var count = Math.min(7, Math.floor(gutter / 55));
           for (var i = 0; i < count; i++) particles.push(makeParticle('l'));
           for (var j = 0; j < count; j++) particles.push(makeParticle('r'));
-        } else if (!active) {
-          particles = [];
         }
       }
 
+      // Elastic collision between two circles of mass m1, m2 (equal-radius-derived).
+      function resolveCollision(p, q) {
+        var dx = q.x - p.x, dy = q.y - p.y;
+        var dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
+        var minDist = p.r + q.r;
+        if (dist >= minDist) return;
+
+        var nx = dx / dist, ny = dy / dist;
+        // separate so they don't stick/overlap
+        var overlap = (minDist - dist) / 2;
+        p.x -= nx * overlap; p.y -= ny * overlap;
+        q.x += nx * overlap; q.y += ny * overlap;
+
+        var kx = p.vx - q.vx, ky = p.vy - q.vy;
+        var dot = kx * nx + ky * ny;
+        if (dot > 0) return; // already separating
+
+        var factor = (2 * dot) / (p.m + q.m);
+        p.vx -= factor * q.m * nx; p.vy -= factor * q.m * ny;
+        q.vx += factor * p.m * nx; q.vy += factor * p.m * ny;
+      }
+
       function step() {
-        ctx.clearRect(0, 0, w, h);
+        // soft trailing fade instead of a hard clear — makes bounces read as motion, not jumps
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.fillRect(0, 0, w, h);
+
         if (active) {
           for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
             p.x += p.vx;
             p.y += p.vy;
 
-            // gentle wrap, kept within its own gutter
-            if (p.y > h + 10) p.y = -10;
             var lo = p.side === 'l' ? 0 : w - gutterR;
             var hi = p.side === 'l' ? gutterL : w;
-            if (p.x < lo + 8) { p.x = lo + 8; p.vx = Math.abs(p.vx); }
-            if (p.x > hi - 8) { p.x = hi - 8; p.vx = -Math.abs(p.vx); }
+            if (p.x - p.r < lo) { p.x = lo + p.r; p.vx = Math.abs(p.vx); }
+            if (p.x + p.r > hi) { p.x = hi - p.r; p.vx = -Math.abs(p.vx); }
+            if (p.y - p.r < 0)  { p.y = p.r; p.vy = Math.abs(p.vy); }
+            if (p.y + p.r > h)  { p.y = h - p.r; p.vy = -Math.abs(p.vy); }
+          }
 
-            // faint links to nearby particles on the same side
-            for (var k = i + 1; k < particles.length; k++) {
-              var q = particles[k];
-              if (q.side !== p.side) continue;
-              var dx = p.x - q.x, dy = p.y - q.y;
-              var dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < LINK_DIST) {
-                ctx.strokeStyle = 'rgba(' + DOT_COLOR + ', ' + (0.1 * (1 - dist / LINK_DIST)) + ')';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(q.x, q.y);
-                ctx.stroke();
+          for (var a = 0; a < particles.length; a++) {
+            for (var b = a + 1; b < particles.length; b++) {
+              if (particles[a].side === particles[b].side) {
+                resolveCollision(particles[a], particles[b]);
               }
             }
+          }
 
-            ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.3)';
+          for (var k = 0; k < particles.length; k++) {
+            var pt = particles[k];
+            ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.4)';
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
             ctx.fill();
           }
         }
+
         if (!paused) requestAnimationFrame(step);
       }
 
