@@ -3,30 +3,818 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A from-scratch gravitational N-body simulator using numerical integration, scientific data analysis, and HDF5 storage.">
-  <title>N-body Simulation — Pritam Dutta</title>
+
+  <meta name="description" content="N-body Gravitational Simulations Using RK and Verlet Integrators — a numerical study of gravitational N-body systems, energy conservation, stability, and runtime scaling.">
+
+  <title>N-body Gravitational Simulations — Pritam Dutta</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/style.css">
+
+  <style>
+    /* Project-page additions. Existing site styling remains the primary theme. */
+
+    .project-hero {
+      margin-bottom: 4rem;
+    }
+
+    .project-hero .eyebrow {
+      font-family: Inter, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.58;
+      margin-bottom: 1rem;
+    }
+
+    .project-hero h1 {
+      margin-bottom: 1rem;
+    }
+
+    .project-hero .abstract {
+      max-width: 760px;
+      font-size: 1.16rem;
+      line-height: 1.75;
+    }
+
+    .project-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin: 2.5rem 0 4rem;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      opacity: 0.9;
+    }
+
+    .project-meta-grid div {
+      padding: 1rem 0.8rem;
+    }
+
+    .project-meta-grid strong,
+    .result-card strong {
+      display: block;
+      font-family: Inter, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      margin-bottom: 0.35rem;
+    }
+
+    .project-section {
+      margin: 4.5rem 0;
+      scroll-margin-top: 4rem;
+    }
+
+    .project-section h2 {
+      margin-bottom: 1.2rem;
+    }
+
+    .project-section h3 {
+      margin-top: 2.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-number {
+      font-family: Inter, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      opacity: 0.45;
+      display: block;
+      margin-bottom: 0.55rem;
+    }
+
+    .equation {
+      overflow-x: auto;
+      padding: 1.25rem 1rem;
+      margin: 1.5rem 0;
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      font-family: "Times New Roman", serif;
+      font-size: 1.15rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .result-card {
+      border: 1px solid currentColor;
+      padding: 1.2rem;
+    }
+
+    .result-card p {
+      margin: 0;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      font-family: Inter, sans-serif;
+      font-size: 0.88rem;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 0.75rem 0.55rem;
+      border-bottom: 1px solid currentColor;
+      text-align: left;
+    }
+
+    .data-table th {
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    .algorithm {
+      padding: 1.2rem;
+      border: 1px solid currentColor;
+      overflow-x: auto;
+      font-family: "Courier New", monospace;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tag-list li {
+      border: 1px solid currentColor;
+      padding: 0.35rem 0.65rem;
+      font-family: Inter, sans-serif;
+      font-size: 0.75rem;
+    }
+
+    .figure-placeholder {
+      min-height: 190px;
+      border: 1px dashed currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      opacity: 0.65;
+    }
+
+    .project-toc {
+      border-top: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      padding: 1rem 0;
+      margin: 2rem 0 4rem;
+    }
+
+    .project-toc a {
+      margin-right: 1.2rem;
+      white-space: nowrap;
+    }
+
+    .reference-list {
+      padding-left: 1.2rem;
+    }
+
+    .reference-list li {
+      margin-bottom: 0.7rem;
+    }
+
+    @media (max-width: 760px) {
+      .project-meta-grid,
+      .results-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .project-toc {
+        line-height: 2;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .project-meta-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <canvas id="ripple" aria-hidden="true"></canvas>
 
   <main>
     <a class="back" href="../index.html">Pritam Dutta</a>
 
-    <header class="page-header project-header">
-      <h1>N-body Simulation</h1>
-      <p class="meta">2026, Astrophysics, Numerical methods, Python</p>
+    <header class="page-header project-header project-hero">
+      <p class="eyebrow">Computational Astrophysics</p>
+      <h1>N-body Gravitational Simulations</h1>
+      <p class="meta">2025 · Numerical Methods · Python · Astrophysics</p>
+
+      <p class="abstract">
+        A systematic numerical study of gravitational N-body systems using
+        Velocity Verlet, RK4, and RK45 integrators, with emphasis on energy
+        conservation, angular momentum, long-term stability, and computational
+        runtime.
+      </p>
     </header>
 
+    <div class="project-meta-grid">
+      <div>
+        <strong>Authors</strong>
+        Pritam Dutta &amp; Akshat Chakarverty
+      </div>
+      <div>
+        <strong>Institution</strong>
+        Indian Association for the Cultivation of Science
+      </div>
+      <div>
+        <strong>Work</strong>
+        Numerical simulation &amp; analysis
+      </div>
+      <div>
+        <strong>Scale</strong>
+        Few-body to hundreds of bodies
+      </div>
+    </div>
+
+    <nav class="project-toc" aria-label="Project sections">
+      <a href="#introduction">Introduction</a>
+      <a href="#theory">Theory</a>
+      <a href="#methods">Methods</a>
+      <a href="#diagnostics">Diagnostics</a>
+      <a href="#results">Results</a>
+      <a href="#solar-system">Solar System</a>
+      <a href="#implementation">Implementation</a>
+      <a href="#conclusion">Conclusion</a>
+    </nav>
+
     <div class="project-body">
-      <p>A gravitational N-body simulator written from scratch, built around numerical integration methods, scientific data analysis, and HDF5-based storage for simulation output.</p>
-      <p>The project includes a series of computational experiments exploring integrator accuracy, stability, and performance at different particle counts.</p>
-      <p>The code is on <a href="https://github.com/dutta-pritam/n-body-simulation" target="_blank" rel="noopener">GitHub</a>.</p>
+
+      <section class="project-section" id="introduction">
+        <span class="section-number">01</span>
+        <h2>Introduction</h2>
+
+        <p>
+          N-body simulations provide a numerical way to solve the equations of
+          motion for systems of interacting particles. In astrophysics, they
+          are used to investigate systems ranging from few-body and Solar
+          System dynamics to galactic and cosmological scales.
+        </p>
+
+        <p>
+          This work compares a symplectic integration scheme, Velocity Verlet,
+          with the non-symplectic Runge–Kutta methods RK4 and RK45. The main
+          questions are how numerical accuracy, conservation of physical
+          quantities, long-term stability, and computational cost change with
+          the integration method and number of bodies.
+        </p>
+
+        <p>
+          The simulations numerically solve coupled equations of motion by
+          discretizing time and approximating the trajectories of interacting
+          bodies. This makes it possible to investigate orbital evolution,
+          stability, and chaotic behaviour that becomes difficult to analyse
+          analytically for systems with three or more bodies.
+        </p>
+      </section>
+
+      <section class="project-section" id="theory">
+        <span class="section-number">02</span>
+        <h2>The N-body problem</h2>
+
+        <p>
+          Each body experiences a gravitational force from every other body.
+          For the i-th body, Newton's second law gives:
+        </p>
+
+        <div class="equation">
+          m<sub>i</sub> d²r<sub>i</sub>/dt² = F<sub>i</sub>
+        </div>
+
+        <p>
+          The total gravitational force is obtained by summing the contribution
+          from all other bodies:
+        </p>
+
+        <div class="equation">
+          F<sub>i</sub> =
+          Σ<sub>j ≠ i</sub>
+          G m<sub>i</sub>m<sub>j</sub>
+          (r<sub>j</sub> − r<sub>i</sub>) /
+          |r<sub>j</sub> − r<sub>i</sub>|³
+        </div>
+
+        <p>
+          Dividing by m<sub>i</sub> gives the acceleration used by the numerical
+          integrators:
+        </p>
+
+        <div class="equation">
+          a<sub>i</sub> =
+          Σ<sub>j ≠ i</sub>
+          G m<sub>j</sub>
+          (r<sub>j</sub> − r<sub>i</sub>) /
+          |r<sub>j</sub> − r<sub>i</sub>|³
+        </div>
+
+        <p>
+          The direct, or brute-force, method evaluates these interactions for
+          every particle at every time step. The principal approximation is
+          that the acceleration is treated as constant over the small interval
+          Δt before being recomputed.
+        </p>
+
+        <h3>Physical assumptions</h3>
+        <ul>
+          <li>Newtonian gravity.</li>
+          <li>Point-like masses.</li>
+          <li>No relativistic corrections.</li>
+          <li>No external forces.</li>
+          <li>No non-gravitational interactions.</li>
+        </ul>
+      </section>
+
+      <section class="project-section" id="methods">
+        <span class="section-number">03</span>
+        <h2>Numerical integration</h2>
+
+        <h3>Velocity Verlet</h3>
+        <p>
+          Velocity Verlet is a symplectic integration scheme particularly
+          useful for long-term Hamiltonian dynamics. The method advances the
+          velocity by half a time step, updates the position, recomputes the
+          gravitational forces, and completes the velocity update.
+        </p>
+
+        <h3>RK4</h3>
+        <p>
+          The classical fourth-order Runge–Kutta method evaluates intermediate
+          slopes and combines them to obtain the next state. It provides high
+          local accuracy when the dynamics are adequately resolved, but does
+          not preserve the Hamiltonian structure of the gravitational system.
+        </p>
+
+        <h3>RK45</h3>
+        <p>
+          RK45 calculates fourth- and fifth-order approximations and estimates
+          the local truncation error from their difference. The step can be
+          accepted or rejected according to a chosen tolerance, allowing the
+          step size to be controlled adaptively.
+        </p>
+
+        <p>
+          In the fixed-step comparisons of this work, RK45's adaptive
+          capabilities provide little benefit unless adaptive stepping is
+          explicitly enabled.
+        </p>
+
+        <ul class="tag-list">
+          <li>Velocity Verlet</li>
+          <li>RK4</li>
+          <li>RK45</li>
+          <li>Fixed Δt</li>
+          <li>Adaptive stepping</li>
+          <li>Symplectic integration</li>
+        </ul>
+      </section>
+
+      <section class="project-section" id="diagnostics">
+        <span class="section-number">04</span>
+        <h2>Physical diagnostics</h2>
+
+        <h3>Energy conservation</h3>
+
+        <p>
+          The total mechanical energy is the sum of kinetic and gravitational
+          potential energy:
+        </p>
+
+        <div class="equation">
+          K(t) = Σ<sub>i</sub> ½m<sub>i</sub>|v<sub>i</sub>(t)|²
+        </div>
+
+        <div class="equation">
+          U(t) = −Σ<sub>i&lt;j</sub>
+          Gm<sub>i</sub>m<sub>j</sub> /
+          |r<sub>i</sub>(t) − r<sub>j</sub>(t)|
+        </div>
+
+        <div class="equation">
+          E(t) = K(t) + U(t)
+        </div>
+
+        <p>
+          Relative final energy drift is used as a principal numerical
+          diagnostic:
+        </p>
+
+        <div class="equation">
+          ΔE/E = |E(T) − E<sub>0</sub>| / |E<sub>0</sub>|
+        </div>
+
+        <h3>Angular momentum</h3>
+
+        <p>
+          Angular momentum is monitored alongside energy to test whether the
+          numerical evolution preserves another important conserved quantity
+          of the isolated gravitational system.
+        </p>
+
+        <div class="equation">
+          ΔL/L = |L(T) − L<sub>0</sub>| / |L<sub>0</sub>|
+        </div>
+
+        <h3>Long-term stability</h3>
+
+        <p>
+          The comparison is not based only on whether an orbit looks correct.
+          The simulations track how numerical errors accumulate over long
+          integrations, making conservation diagnostics central to evaluating
+          the integrators.
+        </p>
+      </section>
+
+      <section class="project-section" id="results">
+        <span class="section-number">05</span>
+        <h2>Results</h2>
+
+        <p>
+          The study examines systems ranging from simple two-body setups to
+          simulations containing hundreds of particles. For two-body systems,
+          all three integrators reproduce circular, elliptical, and parabolic
+          orbital behaviour.
+        </p>
+
+        <div class="results-grid">
+          <div class="result-card">
+            <strong>Two-body systems</strong>
+            <p>
+              Circular, elliptical, and parabolic trajectories are reproduced
+              by all tested integrators.
+            </p>
+          </div>
+
+          <div class="result-card">
+            <strong>Energy behaviour</strong>
+            <p>
+              Verlet produces bounded, oscillatory errors, while RK4 and RK45
+              show gradual long-term drift.
+            </p>
+          </div>
+
+          <div class="result-card">
+            <strong>Scaling</strong>
+            <p>
+              Direct force evaluation gives the expected approximately
+              quadratic O(N²) scaling.
+            </p>
+          </div>
+        </div>
+
+        <p>
+          As the number of bodies increases, the trajectories can remain
+          visually similar while quantitative diagnostics reveal differences
+          between the integration schemes.
+        </p>
+
+        <p>
+          Velocity Verlet maintains bounded errors in energy and angular
+          momentum, characteristic of a symplectic method. RK4 and RK45 show
+          gradual monotonic drift in conserved quantities over long
+          integrations.
+        </p>
+
+        <p>
+          Smaller time steps improve the behaviour of all integrators, but the
+          bounded-error behaviour of Verlet remains advantageous for long-term
+          gravitational calculations.
+        </p>
+
+        <h3>Runtime measurements</h3>
+
+        <p>
+          The direct gravitational algorithm evaluates
+          N(N − 1)/2 pairwise interactions per time step. Consequently, the
+          computational cost grows approximately as N² for large N.
+        </p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>Verlet (s)</th>
+              <th>RK45 (s)</th>
+              <th>RK4 (s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10</td><td>2.581</td><td>3.527</td><td>6.865</td></tr>
+            <tr><td>25</td><td>16.583</td><td>21.905</td><td>43.893</td></tr>
+            <tr><td>50</td><td>65.489</td><td>87.707</td><td>178.571</td></tr>
+            <tr><td>100</td><td>263.818</td><td>340.748</td><td>699.592</td></tr>
+            <tr><td>150</td><td>660.197</td><td>790.977</td><td>1623.218</td></tr>
+          </tbody>
+        </table>
+
+        <p class="meta">
+          Runtime data correspond to the documented 100-day simulations with
+          Δt = 100 seconds.
+        </p>
+
+        <h3>N = 10 example</h3>
+
+        <p>
+          For the N = 10 experiment, the reported total simulation times were
+          64.765 seconds for Verlet, 16.430 seconds for RK45, and 65.743
+          seconds for RK4 under that experiment's configuration.
+        </p>
+
+        <h3>N = 150 example</h3>
+
+        <p>
+          For the N = 150 experiment documented in the paper, the total
+          simulation times were 16 minutes 54 seconds for Verlet, 43 minutes
+          10 seconds for RK45, and 45 minutes 23 seconds for RK4.
+        </p>
+      </section>
+
+      <section class="project-section" id="solar-system">
+        <span class="section-number">06</span>
+        <h2>Solar System simulation</h2>
+
+        <p>
+          The Solar System provides a physically motivated test case with
+          comparatively well-characterized initial conditions. The Sun and
+          planets are represented as point masses interacting through
+          Newtonian gravity.
+        </p>
+
+        <p>
+          The documented simulation uses a total simulated time of 248 years
+          and a time step of 8000 seconds.
+        </p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Body</th>
+              <th>Mean distance (AU)</th>
+              <th>Eccentricity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Mercury</td><td>0.387</td><td>0.2056</td></tr>
+            <tr><td>Venus</td><td>0.723</td><td>0.0068</td></tr>
+            <tr><td>Earth</td><td>1.000</td><td>0.0167</td></tr>
+            <tr><td>Mars</td><td>1.524</td><td>0.0934</td></tr>
+            <tr><td>Jupiter</td><td>5.203</td><td>0.0489</td></tr>
+            <tr><td>Saturn</td><td>9.537</td><td>0.0565</td></tr>
+            <tr><td>Uranus</td><td>19.191</td><td>0.0472</td></tr>
+            <tr><td>Neptune</td><td>30.070</td><td>0.0086</td></tr>
+            <tr><td>Pluto</td><td>39.482</td><td>0.2488</td></tr>
+          </tbody>
+        </table>
+
+        <p>
+          The orbital geometry is described using the semi-major axis a and
+          eccentricity e. At perihelion:
+        </p>
+
+        <div class="equation">
+          r<sub>peri</sub> = a(1 − e)
+        </div>
+
+        <p>
+          The perihelion velocity follows from the vis-viva relation:
+        </p>
+
+        <div class="equation">
+          v<sub>p</sub> =
+          √[GM(1 + e) / a(1 − e)]
+        </div>
+
+        <p>
+          In the documented implementation the Sun is fixed at the origin.
+          The paper notes that this produces an eventually rounder orbit than
+          the barycentric description and identifies barycentric corrections as
+          future work.
+        </p>
+
+        <div class="figure-placeholder">
+          <div>
+            <strong>Solar System simulation figure</strong><br>
+            Add the corresponding simulation image here, for example:
+            <code>solar-system.png</code>
+          </div>
+        </div>
+
+        <div class="figure-placeholder">
+          <div>
+            <strong>Total energy figure</strong><br>
+            Add the energy-vs-time plot from the simulation here.
+          </div>
+        </div>
+      </section>
+
+      <section class="project-section" id="implementation">
+        <span class="section-number">07</span>
+        <h2>Implementation</h2>
+
+        <p>
+          The direct N-body algorithm initializes masses, positions, velocities,
+          gravitational parameters, softening length, time step, final time,
+          and the chosen numerical integrator.
+        </p>
+
+        <div class="algorithm">INITIALIZE
+  t ← 0
+  Store initial positions and velocities
+  Compute initial energy E₀
+  Compute initial angular momentum L₀
+
+WHILE t &lt; T
+  Compute gravitational forces
+
+  FOR each body i
+    Fᵢ ← 0
+
+    FOR each body j ≠ i
+      rᵢⱼ ← rⱼ − rᵢ
+      Compute softened gravitational force
+      Fᵢ ← Fᵢ + Fᵢⱼ
+    END FOR
+  END FOR
+
+  IF integrator = Verlet / Leapfrog
+    Half-step velocity update
+    Position update
+    Recompute forces
+    Complete velocity update
+  END IF
+
+  IF integrator = RK4 / RK45
+    Evaluate intermediate slopes
+    Update positions and velocities
+  END IF
+
+  t ← t + Δt
+  Compute E(t) and L(t)
+  Store trajectories
+END WHILE
+
+POST-PROCESS
+  Calculate energy drift
+  Calculate angular-momentum drift
+  Measure runtime
+  Plot trajectories and diagnostics
+  Compare drift and runtime against N</div>
+
+        <h3>Softening</h3>
+
+        <p>
+          The implementation includes a softening length ε in the force
+          calculation to reduce numerical problems associated with very small
+          particle separations:
+        </p>
+
+        <div class="equation">
+          F<sub>ij</sub> =
+          Gm<sub>i</sub>m<sub>j</sub>r<sub>ij</sub> /
+          (|r<sub>ij</sub>|² + ε²)<sup>3/2</sup>
+        </div>
+
+        <h3>Stored state</h3>
+
+        <p>
+          After integration, particle positions and velocities are stored for
+          each time step. These trajectories can then be used independently
+          for post-processing and scientific visualisation.
+        </p>
+
+        <h3>Tools</h3>
+
+        <ul class="tag-list">
+          <li>Python</li>
+          <li>NumPy</li>
+          <li>Numba</li>
+          <li>HDF5</li>
+          <li>Matplotlib</li>
+        </ul>
+      </section>
+
+      <section class="project-section" id="discussion">
+        <span class="section-number">08</span>
+        <h2>Discussion</h2>
+
+        <p>
+          The experiments show that choosing an integrator for gravitational
+          N-body simulations involves more than comparing formal order or
+          single-step accuracy.
+        </p>
+
+        <p>
+          For short, well-resolved integrations, the tested Runge–Kutta methods
+          can reproduce the expected dynamics accurately. Over long time
+          intervals, however, the preservation of conserved quantities becomes
+          increasingly important.
+        </p>
+
+        <p>
+          Velocity Verlet's bounded and oscillatory energy and angular-momentum
+          errors make it particularly suitable for long-term gravitational
+          simulations. The runtime analysis also shows that force evaluation,
+          rather than only the integrator's per-step overhead, dominates the
+          computational cost as N grows.
+        </p>
+
+        <p>
+          The Solar System and 30-body simulations further demonstrate that the
+          framework can represent both orbital mechanics and collective
+          behaviour such as mass segregation.
+        </p>
+      </section>
+
+      <section class="project-section" id="conclusion">
+        <span class="section-number">09</span>
+        <h2>Conclusion</h2>
+
+        <p>
+          A direct Newtonian N-body simulator was developed and applied to
+          systems ranging from small particle numbers to hundreds of bodies,
+          using Velocity Verlet, RK4, and RK45 integration schemes.
+        </p>
+
+        <p>
+          Runtime measurements confirm the expected O(N²) scaling of direct
+          pairwise force evaluation. Energy diagnostics demonstrate the
+          superior long-term stability of the symplectic Verlet scheme.
+        </p>
+
+        <p>
+          Overall, the study indicates that symplectic integration is well suited
+          to long-term gravitational N-body calculations where preservation of
+          energy and angular momentum is essential.
+        </p>
+
+        <h3>Future work</h3>
+
+        <ul>
+          <li>Barycentric Solar System simulations.</li>
+          <li>Adaptive symplectic integrators.</li>
+          <li>Tree-based force evaluation.</li>
+          <li>Simulations at significantly larger N.</li>
+        </ul>
+      </section>
+
+      <section class="project-section" id="references">
+        <span class="section-number">10</span>
+        <h2>References</h2>
+
+        <ol class="reference-list">
+          <li>F. Pretorius, “N-body Simulations: Introduction,” Princeton University, 2025.</li>
+          <li>University of Melbourne, School of Physics, “N-Body Simulation,” Astrophysics Physics Laboratory notes.</li>
+          <li>C. C. Dyer &amp; P. S. S. Ip, “Softening in N-Body Simulations of Collisionless Systems,” The Astrophysical Journal, 409, 60–67, 1993.</li>
+          <li>R. S. Park et al., “The JPL Planetary and Lunar Ephemerides DE440 and DE441,” The Astronomical Journal, 161, 105, 2021.</li>
+          <li>NASA Jet Propulsion Laboratory, Planetary Fact Sheets.</li>
+          <li>International Astronomical Union, IAU 2015 Resolution B3.</li>
+          <li>J. C. Butcher, <em>Numerical Methods for Ordinary Differential Equations</em>, 2nd ed., Wiley, 2008.</li>
+          <li>W. H. Press et al., <em>Numerical Recipes: The Art of Scientific Computing</em>, 3rd ed., 2007.</li>
+          <li>E. Fehlberg, “Low-order classical Runge–Kutta formulas with stepsize control,” NASA Technical Report R–315, 1969.</li>
+          <li>E. Hairer, S. P. Nørsett &amp; G. Wanner, <em>Solving Ordinary Differential Equations I</em>, Springer, 1993.</li>
+          <li>E. Hairer, C. Lubich &amp; G. Wanner, <em>Geometric Numerical Integration</em>, Springer, 2006.</li>
+          <li>C. D. Murray &amp; S. F. Dermott, <em>Solar System Dynamics</em>, Cambridge University Press, 1999.</li>
+          <li>A. Gualandris, S. Portegies Zwart &amp; A. Tirado-Ramos, “Performance analysis of direct N-body algorithms for astrophysical simulations on distributed systems,” arXiv:astro-ph/0412206.</li>
+          <li>S. Portegies Zwart &amp; T. Boekholt, “On the minimal accuracy required for simulating self-gravitating systems by means of direct N-body method,” arXiv:astro-ph.IM/1402.6713.</li>
+        </ol>
+      </section>
+
+      <section class="project-section">
+        <p>
+          The research paper and implementation form the basis of this project.
+          <a href="https://github.com/dutta-pritam/n-body-simulation"
+             target="_blank"
+             rel="noopener">
+            View the source on GitHub →
+          </a>
+        </p>
+      </section>
+
     </div>
 
     <nav class="project-footer-nav">
