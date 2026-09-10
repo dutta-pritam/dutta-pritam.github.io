@@ -45,8 +45,7 @@
       overflow-x: hidden;
     }
 
-    /* Calm, slow-drifting ambient backdrop — sits behind everything, never draws the eye on its own.
-       Nudged very slightly by scroll position (--parallax-x/y) for a faint sense of depth. */
+    /* Calm, slow-drifting ambient backdrop */
     body::before {
       content: "";
       position: fixed;
@@ -54,27 +53,32 @@
       z-index: -4;
       pointer-events: none;
       background:
-        radial-gradient(circle at 18% 14%, rgba(76, 106, 134, 0.05), transparent 38%),
-        radial-gradient(circle at 82% 68%, rgba(76, 106, 134, 0.045), transparent 42%);
+        radial-gradient(circle at 18% 14%, rgba(76, 106, 134, 0.08), transparent 38%),
+        radial-gradient(circle at 82% 68%, rgba(76, 106, 134, 0.06), transparent 42%);
       transform: translate(var(--parallax-x), var(--parallax-y));
-      animation: drift 26s ease-in-out infinite alternate;
-      transition: transform 0.6s ease-out;
+      animation: drift 20s ease-in-out infinite alternate;
+      transition: transform 0.2s ease-out;
     }
 
-    /* Faint dot grid for quiet texture, evoking graph paper / a plotted field */
+    /* Animated Dot Grid */
     body::after {
       content: "";
       position: fixed;
-      inset: 0;
+      inset: -5%;
       z-index: -2;
       pointer-events: none;
-      background-image: radial-gradient(circle, rgba(17, 17, 17, 0.035) 1px, transparent 1px);
+      background-image: radial-gradient(circle, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
       background-size: 26px 26px;
       mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black 30%, transparent 75%);
       -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black 30%, transparent 75%);
+      animation: breatheGrid 15s ease-in-out infinite alternate;
     }
 
-    /* A quiet node graph drifting in the side margins only — the reading column stays clear */
+    @keyframes breatheGrid {
+      0% { transform: scale(1) translateY(0); opacity: 0.8; }
+      100% { transform: scale(1.02) translateY(5px); opacity: 1; }
+    }
+
     #side-field {
       position: fixed;
       inset: 0;
@@ -85,9 +89,7 @@
       display: block;
     }
 
-    /* Three faint elliptical orbit paths, anchored behind the header, rotating at
-       different, very slow speeds — a quiet nod to orbital mechanics / N-body work.
-       Kept to a hairline stroke and low opacity so it reads as texture, not decoration. */
+    /* Orbit Field */
     #orbit-field {
       position: fixed;
       top: -14vw;
@@ -99,6 +101,7 @@
       z-index: -3;
       pointer-events: none;
       opacity: 0.85;
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     #orbit-field svg {
@@ -118,29 +121,28 @@
     #orbit-field .ring--b { stroke-opacity: 0.20; animation: spin 95s linear infinite reverse; }
     #orbit-field .ring--c { stroke-opacity: 0.14; animation: spin 150s linear infinite; }
 
-    #orbit-field .body {
-      fill: var(--accent);
-      opacity: 0.4;
-    }
+    #orbit-field .body { fill: var(--accent); opacity: 0.4; }
 
-    /* A visible planet traveling the outer ring's path, trailing a soft comet tail */
     #orbit-field .satellite-track {
       transform-origin: 50% 50%;
-      animation: spin 60s linear infinite;
+      animation: spin 30s linear infinite; /* Sped up satellite */
     }
 
-    #orbit-field .satellite {
-      fill: var(--accent);
-      opacity: 0.85;
-    }
+    #orbit-field .satellite { fill: var(--accent); opacity: 0.85; }
 
     #orbit-field .satellite-tail {
       fill: none;
       stroke: var(--accent);
       stroke-width: 1.5;
       stroke-linecap: round;
-      opacity: 0.3;
+      opacity: 0.4;
       stroke-dasharray: 14 190;
+      animation: pulseTail 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseTail {
+      from { stroke-width: 1px; opacity: 0.2; }
+      to { stroke-width: 2px; opacity: 0.6; }
     }
 
     @keyframes spin {
@@ -148,8 +150,6 @@
       to   { transform: rotate(360deg); }
     }
 
-    /* A soft radar-style signal pulse beside the subtitle — a nod to the
-       radio-astronomy work, and the one clearly "always on" visible motion. */
     .signal {
       position: relative;
       display: inline-block;
@@ -169,48 +169,41 @@
       inset: 0;
       border-radius: 50%;
       border: 1px solid var(--accent);
-      animation: ping 2.8s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+      animation: ping 2.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
     }
 
-    .signal::after {
-      animation-delay: 1.4s;
-    }
+    .signal::after { animation-delay: 1.25s; }
 
     @keyframes ping {
-      0%   { transform: scale(1); opacity: 0.6; }
+      0%   { transform: scale(1); opacity: 0.8; }
       100% { transform: scale(6); opacity: 0; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .signal::before, .signal::after { animation: none; opacity: 0; }
     }
 
     @keyframes drift {
       0%   { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-2.5%, 2.5%) scale(1.03); }
+      100% { transform: translate(-3%, 3%) scale(1.05); }
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0); filter: blur(0px); }
     }
 
-    /* One orchestrated entrance on load — header, intro, then each section in turn */
     .page-header, .intro, section {
-      animation: fadeUp 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+      animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
-    .page-header { animation-delay: 0.02s; }
-    .intro       { animation-delay: 0.12s; }
-    section:nth-of-type(1) { animation-delay: 0.22s; }
-    section:nth-of-type(2) { animation-delay: 0.30s; }
-    section:nth-of-type(3) { animation-delay: 0.38s; }
-    section:nth-of-type(4) { animation-delay: 0.46s; }
+    .page-header { animation-delay: 0.1s; }
+    .intro       { animation-delay: 0.2s; }
+    section:nth-of-type(1) { animation-delay: 0.3s; }
+    section:nth-of-type(2) { animation-delay: 0.4s; }
+    section:nth-of-type(3) { animation-delay: 0.5s; }
+    section:nth-of-type(4) { animation-delay: 0.6s; }
 
-    /* Typography & Headers */
     h1 {
       font-size: 1.5rem;
       font-weight: 500;
       margin: 0 0 4px 0;
+      font-family: monospace; /* Hacker aesthetic during decode */
     }
 
     .subtitle {
@@ -226,9 +219,7 @@
       margin: 32px 0;
     }
 
-    section {
-      margin-top: 48px;
-    }
+    section { margin-top: 48px; }
 
     h2 {
       font-size: 1rem;
@@ -236,14 +227,29 @@
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
       margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Project & List Alignments */
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    /* Animated underline for headers */
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: translateX(-100%);
+      animation: swipeLine 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation-delay: 0.5s;
     }
+
+    @keyframes swipeLine {
+      to { transform: translateX(0); }
+    }
+
+    .list { display: flex; flex-direction: column; gap: 4px; }
 
     .row {
       display: flex;
@@ -253,84 +259,53 @@
       color: inherit;
       gap: 24px;
       position: relative;
-      padding: 10px 12px;
-      margin: 0 -12px;
-      border-radius: 6px;
-      transition: background-color 0.35s ease, transform 0.35s ease;
+      padding: 12px 14px;
+      margin: 0 -14px;
+      border-radius: 8px;
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border: 1px solid transparent;
     }
 
-    /* Rows animate in as they're scrolled into view, each slightly later than
-       the last within its section — visible motion tied to the act of scrolling,
-       not just the initial page load. */
-    .row.reveal-init {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-
+    .row.reveal-init { opacity: 0; transform: translateY(20px) scale(0.98); }
     .row.reveal-in {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s cubic-bezier(0.2, 0.6, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+      opacity: 1; transform: translateY(0) scale(1);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .row.reveal-init { opacity: 1; transform: none; }
-    }
-
-    /* A quiet accent bar that grows in from the left on hover, rather than a generic shadow/card */
     a.row::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 12px;
-      bottom: 12px;
-      width: 2px;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
       background: var(--accent);
       transform: scaleY(0);
       transform-origin: center;
-      transition: transform 0.35s ease;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 4px;
     }
 
+    /* Enhanced Hover states */
     a.row:hover {
-      background-color: var(--accent-soft);
-      transform: translateX(4px);
+      background-color: var(--bg);
+      transform: translateX(6px) translateY(-2px);
+      box-shadow: 0 8px 24px rgba(76, 106, 134, 0.12);
+      border: 1px solid var(--accent-soft);
+      z-index: 10;
     }
 
-    a.row:hover::before {
-      transform: scaleY(1);
-    }
+    a.row:hover::before { transform: scaleY(1); }
 
-    /* Only underline links on hover, not static text rows */
     a.row:hover .row-title {
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      text-decoration-color: rgba(17, 17, 17, 0.35);
+      color: var(--accent);
+      text-decoration: none;
     }
 
-    .row-main {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .row-title {
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .row-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      line-height: 1.5;
-    }
-
-    .row-year {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      margin-top: 2px;
-      font-variant-numeric: tabular-nums;
-    }
+    .row-main { display: flex; flex-direction: column; }
+    .row-title { font-weight: 500; font-size: 0.95rem; transition: color 0.3s ease; }
+    .row-desc { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+    .row-year { font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; margin-top: 2px; font-variant-numeric: tabular-nums; }
 
     .plain-row a {
       text-decoration: none;
@@ -338,40 +313,87 @@
       font-size: 0.95rem;
       display: inline-block;
       padding: 4px 0;
-      transition: color 0.25s ease, transform 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+    }
+
+    .plain-row a::after {
+      content: '→';
+      position: absolute;
+      right: -20px;
+      opacity: 0;
+      transition: all 0.3s ease;
     }
 
     .plain-row a:hover {
       color: var(--accent);
-      transform: translateX(3px);
+      transform: translateX(8px);
     }
 
-    /* Footer & Navigation */
-    .links {
-      margin-top: 48px;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+    .plain-row a:hover::after {
+      opacity: 1;
+      right: -15px;
     }
 
+    .links { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; }
     .links a {
       color: var(--text-muted);
       text-decoration: none;
       font-size: 0.9rem;
-      transition: color 0.25s ease;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .links a::after {
+      content: "";
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s ease;
     }
 
-    .links a:hover {
-      color: var(--accent);
+    .links a:hover { color: var(--accent); }
+    .links a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
     }
 
+    .site-footer { margin-top: 48px; font-size: 0.85rem; color: var(--text-muted); }
+
+    /* Visitor Counter */
     .site-footer {
-      margin-top: 48px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
     }
 
-    /* Respect people who've asked for less motion */
+    .visitor-module {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .visitor-module svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+
+    #v-count {
+      color: var(--accent);
+      font-weight: 500;
+      min-width: 45px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -379,7 +401,7 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      body::before { animation: none; transform: none !important; }
+      body::before, body::after { animation: none; transform: none !important; }
       #orbit-field .ring { animation: none; }
     }
   </style>
@@ -401,7 +423,7 @@
   <canvas id="side-field" aria-hidden="true"></canvas>
   <main>
     <header class="page-header">
-      <h1>Pritam Dutta</h1>
+      <h1 id="decoder-text" data-value="Pritam Dutta">Pritam Dutta</h1>
       <p class="subtitle"><span class="signal" aria-hidden="true"></span>BS-MS · Indian Association for the Cultivation of Science</p>
     </header>
     
@@ -423,7 +445,6 @@
           <span class="row-year">2026-</span>
         </a>
 
-        
         <a class="row" href="projects/hydrogen-line-radio-astronomy.html">
           <span class="row-main">
             <span class="row-title">Hydrogen Line Radio Astronomy</span>
@@ -471,15 +492,12 @@
           </span>
           <span class="row-year">2021–</span>
         </a>
-
-       
       </div>
     </section>
 
     <section id="positions">
       <h2>Experience</h2>
       <div class="list">
-        
         <div class="row">
           <span class="row-main">
             <span class="row-title">RF9 Fellow · Roote</span>
@@ -491,7 +509,6 @@
         <div class="row">
           <span class="row-main">
             <span class="row-title">Summer Intern · IIT Indore</span>
-            
           </span>
           <span class="row-year">2026–Pres.</span>
         </div>
@@ -499,7 +516,6 @@
         <div class="row">
           <span class="row-main">
             <span class="row-title">Research Intern · Jadavpur University</span>
-            
           </span>
           <span class="row-year">2026</span>
         </div>
@@ -507,7 +523,6 @@
         <div class="row">
           <span class="row-main">
             <span class="row-title">Young Researcher · PICS</span>
-           
           </span>
           <span class="row-year">2023–2025</span>
         </div>
@@ -515,11 +530,9 @@
         <div class="row">
           <span class="row-main">
             <span class="row-title">Innovator · ACIC MIET Meerut Foundation</span>
-            
           </span>
           <span class="row-year">2023–2024</span>
         </div>
-
       </div>
     </section>
 
@@ -529,7 +542,6 @@
         <div class="plain-row"><a href="#">Robotics</a></div>
         <div class="plain-row"><a href="#">Scientific Computing</a></div>
         <div class="plain-row"><a href="#">Algorithms</a></div>
-       
       </div>
     </section>
 
@@ -549,17 +561,56 @@
       <a href="#" target="_blank" rel="noopener">CV</a>
     </nav>
 
-    <footer class="site-footer">© 2026 Pritam Dutta</footer>
+    <footer class="site-footer">
+      <span>© 2026 Pritam Dutta</span>
+
+      <div class="visitor-module" title="Total Visits" aria-label="Total Visits">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <span id="v-count">—</span>
+      </div>
+    </footer>
   </main>
 
   <script>
-    // A small, physically-simulated gas of particles, confined to a box in each
-    // side margin — they drift, bounce off the walls, and collide elastically
-    // with each other, and now also draw thin "mesh" links to nearby neighbors
-    // (a quiet nod to the N-body / LoRa-mesh work), fading in and out as pairs
-    // drift in and out of range. A soft trailing fade (rather than a hard clear)
-    // makes the motion easier to read. Pauses for reduced-motion and hidden tabs,
-    // and switches off entirely when there's no gutter to show it in.
+    // 1. TEXT DECODE EFFECT
+    // Gives the main header a computational/hacker decryption effect on load
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let interval = null;
+    const headerText = document.getElementById("decoder-text");
+    
+    setTimeout(() => {
+      let iteration = 0;
+      clearInterval(interval);
+      interval = setInterval(() => {
+        headerText.innerText = headerText.innerText
+          .split("")
+          .map((letter, index) => {
+            if(index < iteration) {
+              return headerText.dataset.value[index];
+            }
+            return letters[Math.floor(Math.random() * 26)];
+          })
+          .join("");
+        
+        if(iteration >= headerText.dataset.value.length){ 
+          clearInterval(interval);
+          headerText.style.fontFamily = "'Inter', sans-serif";
+        }
+        iteration += 1 / 3;
+      }, 30);
+    }, 600); // Wait for fadeUp animation slightly
+
+    // 2. INTERACTIVE PHYSICS CANVAS (Now reacts to Mouse Hover)
     (function () {
       var canvas = document.getElementById('side-field');
       if (!canvas || !canvas.getContext) return;
@@ -567,18 +618,36 @@
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduceMotion) { canvas.remove(); return; }
 
-      var COLUMN_WIDTH = 690;   // matches the ~650px content + its padding
-      var MIN_GUTTER = 90;      // below this, there's no room to draw calmly — stay off
+      var COLUMN_WIDTH = 690;  
+      var MIN_GUTTER = 90;      
       var DOT_COLOR = '76, 106, 134';
-      var SPEED = 0.35;
-      var LINK_DIST = 130;      // particles closer than this get a connecting line
+      var SPEED = 0.45; // slightly faster for dynamic feel
+      var LINK_DIST = 140;      
 
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
       var particles = [];
 
+      // Mouse tracking for interactivity
+      let mouse = { x: -1000, y: -1000, radius: 120 };
+      
+      window.addEventListener('mousemove', function(e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        // Shift orbit SVG slightly based on mouse
+        const orbit = document.getElementById('orbit-field');
+        const moveX = (e.clientX - window.innerWidth / 2) * 0.05;
+        const moveY = (e.clientY - window.innerHeight / 2) * 0.05;
+        orbit.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+
+      window.addEventListener('mouseleave', function() {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      });
+
       function makeParticle(side) {
-        var r = 2 + Math.random() * 2.2;
+        var r = 2 + Math.random() * 2.5;
         var lo = side === 'l' ? r : (w - gutterR) + r;
         var hi = side === 'l' ? gutterL - r : w - r;
         var angle = Math.random() * Math.PI * 2;
@@ -588,6 +657,8 @@
           y: Math.random() * h,
           vx: Math.cos(angle) * SPEED,
           vy: Math.sin(angle) * SPEED,
+          baseVx: Math.cos(angle) * SPEED,
+          baseVy: Math.sin(angle) * SPEED,
           r: r,
           m: r * r
         };
@@ -609,13 +680,12 @@
 
         particles = [];
         if (active) {
-          var count = Math.min(7, Math.floor(gutter / 55));
+          var count = Math.min(10, Math.floor(gutter / 45)); // Slightly more particles
           for (var i = 0; i < count; i++) particles.push(makeParticle('l'));
           for (var j = 0; j < count; j++) particles.push(makeParticle('r'));
         }
       }
 
-      // Elastic collision between two circles of mass m1, m2 (equal-radius-derived).
       function resolveCollision(p, q) {
         var dx = q.x - p.x, dy = q.y - p.y;
         var dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
@@ -623,14 +693,13 @@
         if (dist >= minDist) return;
 
         var nx = dx / dist, ny = dy / dist;
-        // separate so they don't stick/overlap
         var overlap = (minDist - dist) / 2;
         p.x -= nx * overlap; p.y -= ny * overlap;
         q.x += nx * overlap; q.y += ny * overlap;
 
         var kx = p.vx - q.vx, ky = p.vy - q.vy;
         var dot = kx * nx + ky * ny;
-        if (dot > 0) return; // already separating
+        if (dot > 0) return; 
 
         var factor = (2 * dot) / (p.m + q.m);
         p.vx -= factor * q.m * nx; p.vy -= factor * q.m * ny;
@@ -638,22 +707,42 @@
       }
 
       function step() {
-        // soft trailing fade instead of a hard clear — makes bounces read as motion, not jumps
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; // slightly faster fade for dynamic trails
         ctx.fillRect(0, 0, w, h);
 
         if (active) {
           for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
+            
+            // Mouse Interaction (Gravity Repulsion)
+            let dx = p.x - mouse.x;
+            let dy = p.y - mouse.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < mouse.radius) {
+              let forceDirectionX = dx / distance;
+              let forceDirectionY = dy / distance;
+              let force = (mouse.radius - distance) / mouse.radius;
+              let pushX = forceDirectionX * force * 2;
+              let pushY = forceDirectionY * force * 2;
+              
+              p.vx += pushX;
+              p.vy += pushY;
+            } else {
+              // Return to normal speed slowly
+              p.vx = p.vx * 0.98 + p.baseVx * 0.02;
+              p.vy = p.vy * 0.98 + p.baseVy * 0.02;
+            }
+
             p.x += p.vx;
             p.y += p.vy;
 
             var lo = p.side === 'l' ? 0 : w - gutterR;
             var hi = p.side === 'l' ? gutterL : w;
-            if (p.x - p.r < lo) { p.x = lo + p.r; p.vx = Math.abs(p.vx); }
-            if (p.x + p.r > hi) { p.x = hi - p.r; p.vx = -Math.abs(p.vx); }
-            if (p.y - p.r < 0)  { p.y = p.r; p.vy = Math.abs(p.vy); }
-            if (p.y + p.r > h)  { p.y = h - p.r; p.vy = -Math.abs(p.vy); }
+            if (p.x - p.r < lo) { p.x = lo + p.r; p.vx = Math.abs(p.vx); p.baseVx = Math.abs(p.baseVx); }
+            if (p.x + p.r > hi) { p.x = hi - p.r; p.vx = -Math.abs(p.vx); p.baseVx = -Math.abs(p.baseVx); }
+            if (p.y - p.r < 0)  { p.y = p.r; p.vy = Math.abs(p.vy); p.baseVy = Math.abs(p.baseVy); }
+            if (p.y + p.r > h)  { p.y = h - p.r; p.vy = -Math.abs(p.vy); p.baseVy = -Math.abs(p.baseVy); }
           }
 
           for (var a = 0; a < particles.length; a++) {
@@ -664,8 +753,6 @@
             }
           }
 
-          // Mesh links: thin lines between nearby same-side particles, opacity
-          // scaled by proximity so links fade in/out rather than snapping on.
           ctx.lineWidth = 1;
           for (var m = 0; m < particles.length; m++) {
             for (var n = m + 1; n < particles.length; n++) {
@@ -674,7 +761,7 @@
               var ddx = pm.x - pn.x, ddy = pm.y - pn.y;
               var d = Math.sqrt(ddx * ddx + ddy * ddy);
               if (d < LINK_DIST) {
-                var alpha = (1 - d / LINK_DIST) * 0.22;
+                var alpha = (1 - d / LINK_DIST) * 0.35; // Brighter mesh links
                 ctx.strokeStyle = 'rgba(' + DOT_COLOR + ', ' + alpha.toFixed(3) + ')';
                 ctx.beginPath();
                 ctx.moveTo(pm.x, pm.y);
@@ -686,7 +773,7 @@
 
           for (var k = 0; k < particles.length; k++) {
             var pt = particles[k];
-            ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.4)';
+            ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.6)';
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
             ctx.fill();
@@ -712,17 +799,15 @@
       requestAnimationFrame(step);
     })();
 
-    // Faint scroll-linked parallax on the ambient backdrop gradients — a couple
-    // of pixels of drift, throttled to one update per frame, so depth is felt
-    // rather than seen. Skipped entirely under reduced-motion.
+    // 3. ENHANCED PARALLAX (Quicker reaction)
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var root = document.documentElement;
       var ticking = false;
       function apply() {
         var y = window.scrollY || window.pageYOffset || 0;
-        var shiftY = Math.max(-24, Math.min(24, y * 0.04));
-        var shiftX = Math.max(-10, Math.min(10, y * 0.015));
+        var shiftY = Math.max(-30, Math.min(30, y * 0.06));
+        var shiftX = Math.max(-15, Math.min(15, y * 0.02));
         root.style.setProperty('--parallax-y', shiftY.toFixed(1) + 'px');
         root.style.setProperty('--parallax-x', shiftX.toFixed(1) + 'px');
         ticking = false;
@@ -735,10 +820,7 @@
       }, { passive: true });
     })();
 
-    // Scroll-triggered reveal: each project/experience row fades and lifts in
-    // as it enters the viewport, staggered within its own section, so scrolling
-    // down the page itself feels animated rather than the motion being confined
-    // to the initial load.
+    // 4. SCROLL REVEAL (Slightly snappier)
     (function () {
       var rows = document.querySelectorAll('.list .row');
       if (!rows.length) return;
@@ -767,13 +849,39 @@
           var index = siblings.indexOf(row);
           setTimeout(function () {
             row.classList.add('reveal-in');
-          }, Math.max(index, 0) * 70);
+          }, Math.max(index, 0) * 80);
           observer.unobserve(row);
         });
-      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
+    // 5. REAL VISITOR COUNTER
+    // Counts page visits using CounterAPI. Each page load increments the counter.
+    (function () {
+      var counterEl = document.getElementById('v-count');
+      if (!counterEl) return;
+
+      var counterURL =
+        'https://api.counterapi.dev/v1/pritam-portfolio/visits/up';
+
+      fetch(counterURL, { cache: 'no-store' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Counter request failed');
+          return response.json();
+        })
+        .then(function (data) {
+          if (typeof data.count === 'number') {
+            counterEl.textContent = data.count.toLocaleString();
+          } else {
+            counterEl.textContent = '—';
+          }
+        })
+        .catch(function () {
+          counterEl.textContent = '—';
+        });
+    })();
+
   </script>
 </body>
 </html>
