@@ -11,12 +11,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
   <style>
-    /* Minimalist CSS for perfect alignment and spacing */
     :root {
       --bg: #ffffff;
       --text-main: #111111;
       --text-muted: #666666;
       --border: #eaeaea;
+      --accent: #4c6a86;
+      --accent-soft: rgba(76, 106, 134, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    ::selection {
+      background: rgba(76, 106, 134, 0.16);
     }
 
     body {
@@ -28,7 +39,67 @@
       margin: 0 auto;
       padding: 40px 20px;
       -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow-x: hidden;
     }
+
+    /* Calm, slow-drifting ambient backdrop — sits behind everything, never draws the eye on its own */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -10%;
+      z-index: -3;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 14%, rgba(76, 106, 134, 0.05), transparent 38%),
+        radial-gradient(circle at 82% 68%, rgba(76, 106, 134, 0.045), transparent 42%);
+      animation: drift 26s ease-in-out infinite alternate;
+    }
+
+    /* Faint dot grid for quiet texture, evoking graph paper / a plotted field */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(17, 17, 17, 0.035) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black 30%, transparent 75%);
+    }
+
+    /* A quiet node graph drifting in the side margins only — the reading column stays clear */
+    #side-field {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      display: block;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-2.5%, 2.5%) scale(1.03); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* One orchestrated entrance on load — header, intro, then each section in turn */
+    .page-header, .intro, section {
+      animation: fadeUp 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    }
+    .page-header { animation-delay: 0.02s; }
+    .intro       { animation-delay: 0.12s; }
+    section:nth-of-type(1) { animation-delay: 0.22s; }
+    section:nth-of-type(2) { animation-delay: 0.30s; }
+    section:nth-of-type(3) { animation-delay: 0.38s; }
+    section:nth-of-type(4) { animation-delay: 0.46s; }
 
     /* Typography & Headers */
     h1 {
@@ -36,7 +107,7 @@
       font-weight: 500;
       margin: 0 0 4px 0;
     }
-    
+
     .subtitle {
       color: var(--text-muted);
       margin: 0;
@@ -66,7 +137,7 @@
     .list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 4px;
     }
 
     .row {
@@ -76,12 +147,41 @@
       text-decoration: none;
       color: inherit;
       gap: 24px;
+      position: relative;
+      padding: 10px 12px;
+      margin: 0 -12px;
+      border-radius: 6px;
+      transition: background-color 0.35s ease, transform 0.35s ease;
+    }
+
+    /* A quiet accent bar that grows in from the left on hover, rather than a generic shadow/card */
+    a.row::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: center;
+      transition: transform 0.35s ease;
+    }
+
+    a.row:hover {
+      background-color: var(--accent-soft);
+      transform: translateX(4px);
+    }
+
+    a.row:hover::before {
+      transform: scaleY(1);
     }
 
     /* Only underline links on hover, not static text rows */
     a.row:hover .row-title {
       text-decoration: underline;
       text-underline-offset: 4px;
+      text-decoration-color: rgba(17, 17, 17, 0.35);
     }
 
     .row-main {
@@ -106,17 +206,21 @@
       color: var(--text-muted);
       white-space: nowrap;
       margin-top: 2px;
+      font-variant-numeric: tabular-nums;
     }
 
     .plain-row a {
       text-decoration: none;
       color: var(--text-main);
       font-size: 0.95rem;
+      display: inline-block;
+      padding: 4px 0;
+      transition: color 0.25s ease, transform 0.25s ease;
     }
 
     .plain-row a:hover {
-      text-decoration: underline;
-      text-underline-offset: 4px;
+      color: var(--accent);
+      transform: translateX(3px);
     }
 
     /* Footer & Navigation */
@@ -131,10 +235,11 @@
       color: var(--text-muted);
       text-decoration: none;
       font-size: 0.9rem;
+      transition: color 0.25s ease;
     }
 
     .links a:hover {
-      color: var(--text-main);
+      color: var(--accent);
     }
 
     .site-footer {
@@ -142,10 +247,22 @@
       font-size: 0.85rem;
       color: var(--text-muted);
     }
+
+    /* Respect people who've asked for less motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      body::before { animation: none; }
+    }
   </style>
 </head>
 
 <body>
+  <canvas id="side-field" aria-hidden="true"></canvas>
   <main>
     <header class="page-header">
       <h1>Pritam Dutta</h1>
@@ -298,5 +415,118 @@
 
     <footer class="site-footer">© 2026 Pritam Dutta</footer>
   </main>
+
+  <script>
+    // A quiet node graph, drifting only in the side margins either side of the
+    // reading column — never over the text itself. Pauses for reduced-motion
+    // and hidden tabs, and switches off entirely when there's no gutter to show it in.
+    (function () {
+      var canvas = document.getElementById('side-field');
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext('2d');
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) { canvas.remove(); return; }
+
+      var COLUMN_WIDTH = 690;     // matches the ~650px content + its padding
+      var MIN_GUTTER = 90;        // below this, there's no room to draw calmly — stay off
+      var LINK_DIST = 95;
+      var DOT_COLOR = '76, 106, 134';
+
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
+      var particles = [];
+
+      function makeParticle(side) {
+        var x = side === 'l'
+          ? Math.random() * Math.max(gutterL - 24, 1) + 12
+          : (w - gutterR) + Math.random() * Math.max(gutterR - 24, 1) + 12;
+        return {
+          side: side,
+          x: x,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.06,
+          vy: 0.05 + Math.random() * 0.07,
+          r: 1 + Math.random() * 1.2
+        };
+      }
+
+      function layout() {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        var gutter = (w - COLUMN_WIDTH) / 2;
+        gutterL = gutterR = Math.max(gutter, 0);
+        active = gutter >= MIN_GUTTER;
+
+        if (active && particles.length === 0) {
+          var count = Math.min(9, Math.floor(gutter / 40));
+          for (var i = 0; i < count; i++) particles.push(makeParticle('l'));
+          for (var j = 0; j < count; j++) particles.push(makeParticle('r'));
+        } else if (!active) {
+          particles = [];
+        }
+      }
+
+      function step() {
+        ctx.clearRect(0, 0, w, h);
+        if (active) {
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // gentle wrap, kept within its own gutter
+            if (p.y > h + 10) p.y = -10;
+            var lo = p.side === 'l' ? 0 : w - gutterR;
+            var hi = p.side === 'l' ? gutterL : w;
+            if (p.x < lo + 8) { p.x = lo + 8; p.vx = Math.abs(p.vx); }
+            if (p.x > hi - 8) { p.x = hi - 8; p.vx = -Math.abs(p.vx); }
+
+            // faint links to nearby particles on the same side
+            for (var k = i + 1; k < particles.length; k++) {
+              var q = particles[k];
+              if (q.side !== p.side) continue;
+              var dx = p.x - q.x, dy = p.y - q.y;
+              var dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < LINK_DIST) {
+                ctx.strokeStyle = 'rgba(' + DOT_COLOR + ', ' + (0.1 * (1 - dist / LINK_DIST)) + ')';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.stroke();
+              }
+            }
+
+            ctx.fillStyle = 'rgba(' + DOT_COLOR + ', 0.3)';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        if (!paused) requestAnimationFrame(step);
+      }
+
+      var paused = document.hidden;
+      document.addEventListener('visibilitychange', function () {
+        paused = document.hidden;
+        if (!paused) requestAnimationFrame(step);
+      });
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(layout, 150);
+      });
+
+      layout();
+      requestAnimationFrame(step);
+    })();
+  </script>
 </body>
 </html>
