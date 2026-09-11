@@ -40,28 +40,43 @@
       margin-top: 0.5rem;
     }
 
-    /* Small controls */
+    /* Small controls & Filters */
     .gallery-tools {
       display: flex;
       gap: .65rem;
       flex-wrap: wrap;
       margin: 1.25rem 0 0;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .gallery-tools button {
+    .tool-group {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .gallery-tools button, .filter-btn {
       border: 1px solid currentColor;
       background: transparent;
       color: inherit;
       border-radius: 999px;
-      padding: .5rem .85rem;
+      padding: .45rem .85rem;
       cursor: pointer;
       font: inherit;
-      transition: transform .2s var(--ease), background .2s ease;
+      font-size: 0.85rem;
+      transition: transform .2s var(--ease), background .2s ease, color .2s ease;
     }
 
-    .gallery-tools button:hover {
+    .gallery-tools button:hover, .filter-btn:hover {
       transform: translateY(-2px);
       background: rgba(127,127,127,.10);
+    }
+
+    .filter-btn.active {
+      background: #111;
+      color: #fff;
+      border-color: #111;
     }
 
     /* Photography Grid */
@@ -80,6 +95,11 @@
       opacity: 0;
       transform: translateY(22px);
       animation: reveal .7s var(--ease) forwards;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .photo-gallery figure.hidden {
+      display: none;
     }
 
     .photo-gallery figure:nth-child(2n) { animation-delay: .05s; }
@@ -94,6 +114,7 @@
       aspect-ratio: 4 / 3;
       box-shadow: 0 8px 24px rgba(0,0,0,.06);
       transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+      transform-style: preserve-style;
     }
 
     .photo-gallery img {
@@ -105,13 +126,12 @@
     }
 
     .photo-gallery figure:hover .photo-card {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 34px rgba(0,0,0,.12);
+      box-shadow: 0 16px 34px rgba(0,0,0,.15);
     }
 
     .photo-gallery figure:hover img {
-      transform: scale(1.045);
-      filter: saturate(1.05);
+      transform: scale(1.05);
+      filter: saturate(1.08);
     }
 
     .photo-card::after {
@@ -135,12 +155,52 @@
       transform: translateY(0);
     }
 
+    /* Like heart pop animation */
+    .like-heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 3rem;
+      color: #ff3366;
+      pointer-events: none;
+      z-index: 10;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      opacity: 0;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .photo-card.liked .like-heart {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+
     figcaption {
       transition: transform .25s var(--ease);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .photo-gallery figure:hover figcaption {
       transform: translateX(3px);
+    }
+
+    .heart-icon {
+      cursor: pointer;
+      font-size: 1rem;
+      color: #999;
+      transition: color .2s ease, transform .2s ease;
+      background: none;
+      border: none;
+    }
+
+    .heart-icon:hover {
+      transform: scale(1.2);
+    }
+
+    .heart-icon.liked {
+      color: #ff3366;
     }
 
     /* Lightbox */
@@ -225,6 +285,18 @@
       margin-top: .35rem;
     }
 
+    /* Footer Copyright */
+    .site-footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
     @keyframes reveal {
       to { opacity: 1; transform: translateY(0); }
     }
@@ -241,8 +313,9 @@
     @media (max-width: 600px) {
       .photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
       .photo-card { border-radius: 7px; }
-      figcaption { font-size: .75rem; }
+      figcaption { font-size: .75rem; flex-direction: column; align-items: flex-start; gap: 4px; }
       .lightbox-nav { width: 38px; height: 38px; }
+      .site-footer { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
   </style>
 </head>
@@ -258,186 +331,305 @@
     </header>
 
     <div class="project-body">
-      <p>Here is a selection of my favorite clicked photos.</p>
+      <p>Here is a selection of my favorite clicked photos. <em>Tip: Double-click any photo to like it!</em></p>
 
       <div class="gallery-tools" aria-label="Gallery controls">
-        <button type="button" id="shuffleBtn">Shuffle photos</button>
-        <button type="button" id="motionBtn" aria-pressed="false">Pause motion</button>
+        <div class="tool-group" role="tablist">
+          <button type="button" class="filter-btn active" data-filter="all">All Photos</button>
+          <button type="button" class="filter-btn" data-filter="sunset">Sunsets</button>
+          <button type="button" class="filter-btn" data-filter="other">Scenery & Others</button>
+        </div>
+        <div class="tool-group">
+          <button type="button" id="shuffleBtn">Shuffle</button>
+          <button type="button" id="motionBtn" aria-pressed="false">Pause motion</button>
+        </div>
       </div>
 
       <div class="photo-gallery">
         <!-- Photo 1 -->
-        <figure>
-          <div class="photo-card"><img src="Sunset.jpg" alt="Sunset" loading="lazy"></div>
-          <figcaption>Sunset-6th July 2026 • Google Pixel 6a</figcaption>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="Sunset.jpg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Sunset-6th July 2026 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
 
         <!-- Photo 2 -->
-        <figure>
-          <div class="photo-card"><img src="photos/photo_2.jpg" alt="Description of the second photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_2.jpg" alt="Description of the second photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
 
         <!-- Photo 3 -->
-        <figure>
-          <div class="photo-card"><img src="photos/photo_3.jpg" alt="Description of the third photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_3.jpg" alt="Description of the third photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
         <!-- Photo 4 -->
-        <figure>
-          <div class="photo-card"><img src="photos/photo_4.jpg" alt="Description of the fourth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_4.jpg" alt="Description of the fourth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_5.jpg" alt="Description of the fifth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-
-        <figure>
-          <div class="photo-card"><img src="photos/photo_6.jpg" alt="Description of the sixth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        
-        <figure>
-          <div class="photo-card"><img src="photos/photo_7.jpg" alt="Description of the seventh photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_8.jpg" alt="Description of the eighth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_5.jpg" alt="Description of the fifth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
 
-        <figure>
-          <div class="photo-card"><img src="photos/photo_9.jpg" alt="Description of the ninth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_6.jpg" alt="Description of the sixth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_10.jpg" alt="Description of the tenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_7.jpg" alt="Description of the seventh photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_11.jpg" alt="Description of the eleventh photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_8.jpg" alt="Description of the eighth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
 
-        <figure>
-          <div class="photo-card"><img src="photos/photo_12.jpg" alt="Description of the twelfth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_9.jpg" alt="Description of the ninth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_13.jpg" alt="Description of the thirteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_10.jpg" alt="Description of the tenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_14.jpg" alt="Description of the fourteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_11.jpg" alt="Description of the eleventh photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
 
-        <figure>
-          <div class="photo-card"><img src="photos/photo_15.jpg" alt="Description of the fifteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_12.jpg" alt="Description of the twelfth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_16.jpg" alt="Description of the sixteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_13.jpg" alt="Description of the thirteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_17.jpeg" alt="Description of the seventeenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_14.jpg" alt="Description of the fourteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        
-        <figure>
-          <div class="photo-card"><img src="photos/photo_18.jpeg" alt="Description of the eighteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_19.jpeg" alt="Description of the nineteenth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        
-        <figure>
-          <div class="photo-card"><img src="photos/photo_20.jpeg" alt="Description of the twentieth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_21.jpeg" alt="Description of the twenty-first photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_15.jpg" alt="Description of the fifteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_22.jpeg" alt="Description of the twenty-second photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_16.jpg" alt="Description of the sixteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_23.jpeg" alt="Description of the twenty-third photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        
-        <figure>
-          <div class="photo-card"><img src="photos/photo24.jpeg" alt="Description of the twenty-fourth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
-        </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_25.jpeg" alt="Description of the twenty-fifth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_17.jpeg" alt="Description of the seventeenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_26.jpeg" alt="Description of the twenty-sixth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_18.jpeg" alt="Description of the eighteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_27.jpeg" alt="Description of the twenty-seventh photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_19.jpeg" alt="Description of the nineteenth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
-        <figure>
-          <div class="photo-card"><img src="photos/photo_28.jpeg" alt="Description of the twenty-eighth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_20.jpeg" alt="Description of the twentieth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_29.jpeg" alt="Description of the twenty-ninth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_21.jpeg" alt="Description of the twenty-first photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_30.jpeg" alt="Description of the thirtieth photo" loading="lazy"></div>
-          <figcaption>Location or Title — Date • Google Pixel 6a</figcaption>
+        
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_22.jpeg" alt="Description of the twenty-second photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_31.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>Sunset -- 1st Jan 2024 • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_23.jpeg" alt="Description of the twenty-third photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_32.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>19th November 2023 • Google Pixel 6a</figcaption>
+        
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo24.jpeg" alt="Description of the twenty-fourth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_33.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>5th December 2023 • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_25.jpeg" alt="Description of the twenty-fifth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_34.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>22th December 2023 • Google Pixel 6a</figcaption>
+        
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_26.jpeg" alt="Description of the twenty-sixth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_35.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>22th December 2023 • Google Pixel 6a</figcaption>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_27.jpeg" alt="Description of the twenty-seventh photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
-        <figure>
-          <div class="photo-card"><img src="photos/photo_36.jpeg" alt="Sunset" loading="lazy"></div>
-          <figcaption>3rd April 2025 • Google Pixel 6a</figcaption>
+        
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_28.jpeg" alt="Description of the twenty-eighth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_29.jpeg" alt="Description of the twenty-ninth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="other">
+          <div class="photo-card">
+            <img src="photos/photo_30.jpeg" alt="Description of the thirtieth photo" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Location or Title — Date • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_31.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>Sunset -- 1st Jan 2024 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_32.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>19th November 2023 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_33.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>5th December 2023 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_34.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>22th December 2023 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_35.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>22th December 2023 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
+        </figure>
+        <figure data-category="sunset">
+          <div class="photo-card">
+            <img src="photos/photo_36.jpeg" alt="Sunset" loading="lazy">
+            <div class="like-heart">❤️</div>
+          </div>
+          <figcaption><span>3rd April 2025 • Google Pixel 6a</span><button class="heart-icon" aria-label="Like photo">♡</button></figcaption>
         </figure>
         
       </div>
     </div>
 
-    <nav class="project-footer-nav">
-      <a href="../index.html">All projects</a>
-    </nav>
+    <!-- Copyright Footer -->
+    <footer class="site-footer">
+      <div>&copy; <span id="copyright-year">2026</span> Pritam Dutta. All rights reserved.</div>
+      <nav class="project-footer-nav">
+        <a href="../index.html">All projects</a>
+      </nav>
+    </footer>
   </main>
 
   <!-- Interactive Lightbox -->
@@ -452,6 +644,9 @@
 
   <script src="../assets/ripple.js"></script>
   <script>
+    // Update Copyright Year automatically
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxCaption = document.getElementById('lightbox-caption');
@@ -462,22 +657,28 @@
     const gallery = document.querySelector('.photo-gallery');
     const shuffleBtn = document.getElementById('shuffleBtn');
     const motionBtn = document.getElementById('motionBtn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
 
     let figures = [...document.querySelectorAll('.photo-gallery figure')];
     let current = 0;
     let motionPaused = false;
 
+    // Get active/visible figures for lightbox navigation filtering capability
+    function getVisibleFigures() {
+      return [...document.querySelectorAll('.photo-gallery figure:not(.hidden)')];
+    }
+
     function openLightbox(index) {
-      figures = [...document.querySelectorAll('.photo-gallery figure')];
-      current = (index + figures.length) % figures.length;
-      const figure = figures[current];
+      const activeFigures = getVisibleFigures();
+      current = (index + activeFigures.length) % activeFigures.length;
+      const figure = activeFigures[current];
       const img = figure.querySelector('img');
-      const caption = figure.querySelector('figcaption');
+      const captionText = figure.querySelector('figcaption span').textContent;
 
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt;
-      lightboxCaption.textContent = caption ? caption.textContent : '';
-      photoCount.textContent = `${current + 1} / ${figures.length}`;
+      lightboxCaption.textContent = captionText;
+      photoCount.textContent = `${current + 1} / ${activeFigures.length}`;
 
       lightbox.classList.add('active');
       lightbox.setAttribute('aria-hidden', 'false');
@@ -495,6 +696,61 @@
       openLightbox(current + step);
     }
 
+    // Lightbox & Interaction triggers
+    figures.forEach((figure, index) => {
+      const card = figure.querySelector('.photo-card');
+      const heartBtn = figure.querySelector('.heart-icon');
+
+      // Open lightbox on image card click
+      card.addEventListener('click', (e) => {
+        const visibleFigs = getVisibleFigures();
+        const visibleIndex = visibleFigs.indexOf(figure);
+        if (visibleIndex !== -1) openLightbox(visibleIndex);
+      });
+
+      // Double-click like effect
+      card.addEventListener('dblclick', () => {
+        toggleLike(figure, heartBtn);
+      });
+
+      // Heart button like click
+      heartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleLike(figure, heartBtn);
+      });
+    });
+
+    function toggleLike(figure, heartBtn) {
+      const card = figure.querySelector('.photo-card');
+      const isLiked = card.classList.toggle('liked');
+      heartBtn.classList.toggle('liked', isLiked);
+      heartBtn.textContent = isLiked ? '❤️' : '♡';
+      
+      if (isLiked) {
+        setTimeout(() => {
+          card.classList.remove('liked');
+        }, 800);
+      }
+    }
+
+    // Category Filtering Logic
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+
+        figures.forEach(fig => {
+          const category = fig.getAttribute('data-category');
+          if (filter === 'all' || category === filter) {
+            fig.classList.remove('hidden');
+          } else {
+            fig.classList.add('hidden');
+          }
+        });
+      });
+    });
+
     function shufflePhotos() {
       const items = [...gallery.children];
       for (let i = items.length - 1; i > 0; i--) {
@@ -509,10 +765,6 @@
         figure.style.animation = `reveal .7s var(--ease) ${Math.min(i * .025, .4)}s forwards`;
       });
     }
-
-    figures.forEach((figure, index) => {
-      figure.addEventListener('click', () => openLightbox(index));
-    });
 
     closeBtn.addEventListener('click', closeLightbox);
     prevBtn.addEventListener('click', () => move(-1));
