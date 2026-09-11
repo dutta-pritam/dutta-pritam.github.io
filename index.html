@@ -666,15 +666,8 @@
 
     <footer class="site-footer">
       <span>© 2026 Pritam Dutta</span>
-     <footer>
-    <p>Visitors:</p>
-
-    <script type="text/javascript" src="https://www.freevisitorcounters.com/auth.php?id=d6df1b1e1c302406ab06ff25b06bd915fd6148da"></script>
-    <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1641682/t/0"></script>
-</footer>
 
       <div class="visitor-module" title="Total Visits" aria-label="Total Visits">
-
         <svg xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 24 24"
              fill="none"
@@ -686,7 +679,8 @@
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
-        <span id="v-count">—</span>
+        <span>Visitors:</span>
+        <span id="v-count">Loading…</span>
       </div>
     </footer>
   </main>
@@ -967,36 +961,46 @@
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
-
-    // 5. UNIVERSAL VISITOR COUNTER (using GoatCounter)
-   // 5. UNIVERSAL VISITOR COUNTER (using GoatCounter)
+    // 5. VISITOR COUNTER (GoatCounter)
     (function () {
-      var counterEl = document.getElementById('v-count');
+      const counterEl = document.getElementById('v-count');
       if (!counterEl) return;
 
-      var counterUrl = 'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
+      const counterUrl =
+        'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
 
-      fetch(counterUrl)
-        .then(function (response) {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.json();
-        })
-        .then(function (data) {
-          if (data && data.count) {
-            var num = Number(String(data.count).replace(/,/g, ''));
-            counterEl.textContent = num.toLocaleString();
+      fetch(counterUrl, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-store'
+      })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('GoatCounter HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        if (data && data.count !== undefined) {
+          const count = Number(String(data.count).replace(/,/g, ''));
+          if (Number.isFinite(count)) {
+            counterEl.textContent = count.toLocaleString();
             counterEl.title = 'Total site visits';
+            counterEl.parentElement.classList.add('updated');
           } else {
-            throw new Error('Invalid response structure');
+            throw new Error('Invalid count');
           }
-        })
-        .catch(function (error) {
-          console.warn('GoatCounter unavailable:', error);
-          counterEl.textContent = 'offline';
-          counterEl.title = 'Visitor counter unavailable';
-        });
+        } else {
+          throw new Error('No count returned');
+        }
+      })
+      .catch(function (error) {
+        console.warn('GoatCounter visitor count unavailable:', error);
+        counterEl.textContent = '—';
+        counterEl.title = 'Visitor count temporarily unavailable';
+      });
     })();
-    // 6. THEME TOGGLE
+// 6. THEME TOGGLE
     (function () {
       var button = document.getElementById('theme-toggle');
       if (!button) return;
@@ -1101,8 +1105,6 @@
   <!-- GoatCounter tracking pixel — records each visit -->
  <!-- GoatCounter tracking pixel — records each visit -->
   <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
-          async src="//gc.zgo.at/count.js"></script>
-</body>
-</html>
+          async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
