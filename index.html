@@ -651,7 +651,7 @@
         
       </div>
     </section>
-     
+      
 
     <nav class="links" aria-label="External links">
       <a href="https://github.com/ThePritamDutta" target="_blank" rel="noopener">GitHub</a>
@@ -723,10 +723,10 @@
       if (reduceMotion) { canvas.remove(); return; }
 
       var COLUMN_WIDTH = 690;  
-      var MIN_GUTTER = 90;      
+      var MIN_GUTTER = 90;     
       var DOT_COLOR = '76, 106, 134';
       var SPEED = 0.45; // slightly faster for dynamic feel
-      var LINK_DIST = 140;      
+      var LINK_DIST = 140;     
 
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
@@ -961,62 +961,41 @@
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
-    // 5. GLOBAL VISITOR COUNTER
-    // CounterAPI is a third-party service. If it is unavailable, show a clear
-    // fallback instead of leaving a misleading permanent dash.
+
+    // 5. UNIVERSAL VISITOR COUNTER (using GoatCounter)
     (function () {
       var counterEl = document.getElementById('v-count');
       if (!counterEl) return;
 
+      var counterUrl = 'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
       var fallbackKey = 'portfolio-local-visit-count';
-      var shown = false;
 
-      function showFallback() {
-        try {
-          var count = Number(localStorage.getItem(fallbackKey) || '0') + 1;
-          localStorage.setItem(fallbackKey, String(count));
-          counterEl.textContent = count.toLocaleString() + ' local';
-          counterEl.title = 'Local browser visits (global counter unavailable)';
-        } catch (e) {
-          counterEl.textContent = 'offline';
-          counterEl.title = 'Global visitor counter unavailable';
-        }
-      }
-
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js';
-      script.async = true;
-
-      script.onload = function () {
-        try {
-          if (typeof Counter !== 'function') throw new Error('CounterAPI client not loaded');
-          var counter = new Counter({ workspace: 'pritam-portfolio' });
-
-          counter.up('visits')
-            .then(function (result) {
-              if (result && typeof result.value === 'number') {
-                shown = true;
-                counterEl.textContent = result.value.toLocaleString();
-                counterEl.title = 'Global visits';
-              } else {
-                throw new Error('Invalid counter response');
-              }
-            })
-            .catch(function (error) {
-              console.warn('Global visitor counter unavailable:', error);
-              if (!shown) showFallback();
-            });
-        } catch (error) {
-          console.warn('Visitor counter initialization failed:', error);
-          showFallback();
-        }
-      };
-
-      script.onerror = function () {
-        showFallback();
-      };
-
-      document.head.appendChild(script);
+      fetch(counterUrl)
+        .then(function (response) {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(function (data) {
+          if (data && data.count) {
+            var num = Number(String(data.count).replace(/,/g, ''));
+            counterEl.textContent = num.toLocaleString();
+            counterEl.title = 'Total site visits';
+          } else {
+            throw new Error('Invalid response structure');
+          }
+        })
+        .catch(function (error) {
+          console.warn('GoatCounter unavailable, falling back to local:', error);
+          try {
+            var count = Number(localStorage.getItem(fallbackKey) || '0') + 1;
+            localStorage.setItem(fallbackKey, String(count));
+            counterEl.textContent = count.toLocaleString() + ' local';
+            counterEl.title = 'Local browser visits (GoatCounter offline)';
+          } catch (e) {
+            counterEl.textContent = 'offline';
+            counterEl.title = 'Visitor counter unavailable';
+          }
+        });
     })();
 
     // 6. THEME TOGGLE
@@ -1093,7 +1072,7 @@
       setInterval(updateTime, 1000);
     })();
 
-    // 8. SCROLL PROGRESS
+    // 9. SCROLL PROGRESS
     (function () {
       var progress = document.getElementById('scroll-progress');
       if (!progress) return;
@@ -1110,7 +1089,7 @@
       updateProgress();
     })();
 
-    // 9. BACK TO TOP
+    // 10. BACK TO TOP
     (function () {
       var button = document.getElementById('top-button');
       if (!button) return;
@@ -1120,5 +1099,9 @@
     })();
 
   </script>
+
+  <!-- GoatCounter tracking pixel — records each visit -->
+  <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
