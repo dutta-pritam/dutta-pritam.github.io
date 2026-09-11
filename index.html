@@ -697,7 +697,7 @@
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
         <span>Visitors:</span>
-        <span id="v-count" aria-live="polite">Loading…</span>
+        <span id="v-count">Loading…</span>
         <button id="v-refresh" type="button" title="Refresh visitor count" aria-label="Refresh visitor count">⟳</button>
       </div>
     </footer>
@@ -975,48 +975,74 @@
       rows.forEach(function (row) { observer.observe(row); });
     })();
 
-    // 5. VISITOR COUNTER (GoatCounter official visit_count method)
+    // 5. VISITOR COUNTER (CountAPI)
     (function () {
       const counterEl = document.getElementById('v-count');
+      const refreshBtn = document.getElementById('v-refresh');
+      const moduleEl = document.querySelector('.visitor-module');
       if (!counterEl) return;
 
-      // GoatCounter loads count.js asynchronously. Wait until its official
-      // visitor-counter method is available, then let GoatCounter render
-      // the count for the current page.
-      let attempts = 0;
-      const maxAttempts = 100;
+      // A stable namespace/key for this portfolio.
+      // CountAPI increments the counter each time the page is loaded.
+      const NAMESPACE = 'pritam-portfolio';
+      const ACTION = 'view';
+      const KEY = 'visits';
 
-      function initVisitorCounter() {
-        if (window.goatcounter && typeof window.goatcounter.visit_count === 'function') {
-          window.goatcounter.visit_count({
-            append: '#v-count',
-            no_branding: true,
-            type: 'html',
-            style: `
-              div {
-                display: inline;
-                margin: 0;
-                padding: 0;
-                border: 0;
-                background: transparent;
-                color: inherit;
-                font: inherit;
-              }
-            `
-          });
-          return;
-        }
-
-        attempts += 1;
-        if (attempts < maxAttempts) {
-          setTimeout(initVisitorCounter, 100);
-        } else {
-          counterEl.textContent = '—';
-          counterEl.title = 'Visitor count unavailable';
+      function showCount(count) {
+        const value = Number(count);
+        if (!Number.isFinite(value)) throw new Error('Invalid counter value');
+        counterEl.textContent = value.toLocaleString();
+        counterEl.title = 'Total portfolio visits';
+        if (moduleEl) {
+          moduleEl.classList.remove('updated');
+          void moduleEl.offsetWidth;
+          moduleEl.classList.add('updated');
         }
       }
 
-      initVisitorCounter();
+      async function countVisit() {
+        const url = 'https://counterapi.com/api/' +
+          encodeURIComponent(NAMESPACE) + '/' +
+          encodeURIComponent(ACTION) + '/' +
+          encodeURIComponent(KEY);
+
+        const response = await fetch(url, {
+          method: 'GET',
+          cache: 'no-store',
+          mode: 'cors'
+        });
+
+        if (!response.ok) {
+          throw new Error('CountAPI HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+        showCount(data.value);
+      }
+
+      function loadCount() {
+        counterEl.textContent = 'Loading…';
+        countVisit().catch(function (error) {
+          console.warn('Visitor counter unavailable:', error);
+          counterEl.textContent = '—';
+          counterEl.title = 'Visitor count unavailable';
+        }).finally(function () {
+          if (refreshBtn) {
+            refreshBtn.classList.remove('spinning');
+            refreshBtn.disabled = false;
+          }
+        });
+      }
+
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () {
+          refreshBtn.classList.add('spinning');
+          refreshBtn.disabled = true;
+          loadCount();
+        });
+      }
+
+      loadCount();
     })();
 
     // 6. THEME TOGGLE
@@ -1120,8 +1146,5 @@
     })();
   </script>
 
-  <!-- GoatCounter tracking script -->
-  <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
-          src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
