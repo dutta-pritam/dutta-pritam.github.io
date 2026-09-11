@@ -127,7 +127,7 @@
 
     #orbit-field .satellite-track {
       transform-origin: 50% 50%;
-      animation: spin 30s linear infinite; /* Sped up satellite */
+      animation: spin 30s linear infinite;
     }
 
     #orbit-field .satellite { fill: var(--accent); opacity: 0.85; }
@@ -205,7 +205,7 @@
       font-size: 1.5rem;
       font-weight: 500;
       margin: 0 0 4px 0;
-      font-family: monospace; /* Hacker aesthetic during decode */
+      font-family: monospace;
     }
 
     .subtitle {
@@ -233,7 +233,6 @@
       overflow: hidden;
     }
 
-    /* Animated underline for headers */
     h2::after {
       content: '';
       position: absolute;
@@ -288,7 +287,6 @@
       border-radius: 4px;
     }
 
-    /* Enhanced Hover states */
     a.row:hover {
       background-color: var(--bg);
       transform: translateX(6px) translateY(-2px);
@@ -363,16 +361,17 @@
       transform-origin: left;
     }
 
-    .site-footer { margin-top: 48px; font-size: 0.85rem; color: var(--text-muted); }
-
-    /* Visitor Counter */
     .site-footer {
+      margin-top: 48px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 20px;
     }
 
+    /* Visitor Counter */
     .visitor-module {
       display: flex;
       align-items: center;
@@ -380,7 +379,13 @@
       font-family: monospace;
       font-size: 0.8rem;
       white-space: nowrap;
+      cursor: default;
+      padding: 5px 8px;
+      border-radius: 6px;
+      transition: background 0.25s ease;
     }
+
+    .visitor-module:hover { background: var(--accent-soft); }
 
     .visitor-module svg {
       width: 14px;
@@ -394,6 +399,16 @@
       min-width: 45px;
       text-align: right;
       font-variant-numeric: tabular-nums;
+      transition: opacity .3s ease;
+    }
+
+    .visitor-module.updated #v-count {
+      animation: counterPulse .5s ease;
+    }
+
+    @keyframes counterPulse {
+      0% { opacity: .35; transform: translateY(2px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     #v-refresh {
@@ -410,7 +425,6 @@
     #v-refresh:hover { color: var(--accent); background: var(--accent-soft); }
     #v-refresh.spinning { animation: spin 0.7s linear infinite; }
     #v-refresh:disabled { cursor: default; opacity: 0.5; }
-
 
     /* Profile / utility upgrades */
     .header-top {
@@ -472,17 +486,7 @@
       background: var(--accent); z-index: 1000;
       transition: width 0.08s linear;
     }
-    .visitor-module {
-      cursor: default; padding: 5px 8px; border-radius: 6px;
-      transition: background 0.25s ease;
-    }
-    .visitor-module:hover { background: var(--accent-soft); }
-    #v-count { transition: opacity .3s ease; }
-    .visitor-module.updated #v-count { animation: counterPulse .5s ease; }
-    @keyframes counterPulse {
-      0% { opacity: .35; transform: translateY(2px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
+
     @media (max-width: 520px) {
       .header-top { align-items: flex-start; }
       .profile-photo { width: 64px; height: 64px; }
@@ -663,11 +667,9 @@
         <div class="plain-row"><a href="photography/photography.html">Photography</a></div>
         <div class="plain-row"><a href="#">Books + Publications</a></div>
         <div class="plain-row"><a href="#">Science &amp; Technology</a></div>
-        
       </div>
     </section>
       
-
     <nav class="links" aria-label="External links">
       <a href="https://github.com/ThePritamDutta" target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/pritam-dutta-158b131a7/" target="_blank" rel="noopener">LinkedIn</a>
@@ -703,7 +705,6 @@
 
   <script>
     // 1. TEXT DECODE EFFECT
-    // Gives the main header a computational/hacker decryption effect on load
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
     let interval = null;
     const headerText = document.getElementById("decoder-text");
@@ -728,9 +729,9 @@
         }
         iteration += 1 / 3;
       }, 30);
-    }, 600); // Wait for fadeUp animation slightly
+    }, 600);
 
-    // 2. INTERACTIVE PHYSICS CANVAS (Now reacts to Mouse Hover)
+    // 2. INTERACTIVE PHYSICS CANVAS
     (function () {
       var canvas = document.getElementById('side-field');
       if (!canvas || !canvas.getContext) return;
@@ -741,20 +742,18 @@
       var COLUMN_WIDTH = 690;  
       var MIN_GUTTER = 90;     
       var DOT_COLOR = '76, 106, 134';
-      var SPEED = 0.45; // slightly faster for dynamic feel
+      var SPEED = 0.45;
       var LINK_DIST = 140;     
 
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var w = 0, h = 0, gutterL = 0, gutterR = 0, active = false;
       var particles = [];
 
-      // Mouse tracking for interactivity
       let mouse = { x: -1000, y: -1000, radius: 120 };
       
       window.addEventListener('mousemove', function(e) {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
-        // Shift orbit SVG slightly based on mouse
         const orbit = document.getElementById('orbit-field');
         const moveX = (e.clientX - window.innerWidth / 2) * 0.05;
         const moveY = (e.clientY - window.innerHeight / 2) * 0.05;
@@ -800,7 +799,7 @@
 
         particles = [];
         if (active) {
-          var count = Math.min(10, Math.floor(gutter / 45)); // Slightly more particles
+          var count = Math.min(10, Math.floor(gutter / 45));
           for (var i = 0; i < count; i++) particles.push(makeParticle('l'));
           for (var j = 0; j < count; j++) particles.push(makeParticle('r'));
         }
@@ -835,7 +834,6 @@
           for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
             
-            // Mouse Interaction (Gravity Repulsion)
             let dx = p.x - mouse.x;
             let dy = p.y - mouse.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -850,7 +848,6 @@
               p.vx += pushX;
               p.vy += pushY;
             } else {
-              // Return to normal speed slowly
               p.vx = p.vx * 0.98 + p.baseVx * 0.02;
               p.vy = p.vy * 0.98 + p.baseVy * 0.02;
             }
@@ -882,7 +879,7 @@
               var ddx = pm.x - pn.x, ddy = pm.y - pn.y;
               var d = Math.sqrt(ddx * ddx + ddy * ddy);
               if (d < LINK_DIST) {
-                var alpha = (1 - d / LINK_DIST) * 0.35; // Brighter mesh links
+                var alpha = (1 - d / LINK_DIST) * 0.35;
                 ctx.strokeStyle = 'rgba(' + DOT_COLOR + ', ' + alpha.toFixed(3) + ')';
                 ctx.beginPath();
                 ctx.moveTo(pm.x, pm.y);
@@ -920,7 +917,7 @@
       requestAnimationFrame(step);
     })();
 
-    // 3. ENHANCED PARALLAX (Quicker reaction)
+    // 3. ENHANCED PARALLAX
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var root = document.documentElement;
@@ -941,7 +938,7 @@
       }, { passive: true });
     })();
 
-    // 4. SCROLL REVEAL (Slightly snappier)
+    // 4. SCROLL REVEAL
     (function () {
       var rows = document.querySelectorAll('.list .row');
       if (!rows.length) return;
@@ -977,16 +974,24 @@
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
-    // 5. VISITOR COUNTER (GoatCounter) — live, with manual refresh + resilient fallback
+
+    // 5. VISITOR COUNTER (GoatCounter) — live, dynamic path retrieval & refresh
     (function () {
       const counterEl = document.getElementById('v-count');
       const moduleEl = document.querySelector('.visitor-module');
       const refreshBtn = document.getElementById('v-refresh');
       if (!counterEl) return;
 
-      const counterUrl = 'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
       const FETCH_TIMEOUT_MS = 6000;
       let lastGoodCount = null;
+
+      function getCounterPath() {
+        if (window.goatcounter && typeof window.goatcounter.get_data === 'function') {
+          const data = window.goatcounter.get_data();
+          if (data && data.p) return data.p;
+        }
+        return window.location.pathname || '/';
+      }
 
       function fetchWithTimeout(url, ms) {
         const controller = new AbortController();
@@ -995,12 +1000,17 @@
           .finally(function () { clearTimeout(timer); });
       }
 
-      function loadCount(isManual) {
+      function loadCount(isManual = false) {
         if (isManual && refreshBtn) {
           refreshBtn.classList.add('spinning');
           refreshBtn.disabled = true;
         }
-        if (!isManual) counterEl.textContent = 'Loading…';
+        if (!isManual && lastGoodCount === null) {
+          counterEl.textContent = 'Loading…';
+        }
+
+        const path = getCounterPath();
+        const counterUrl = 'https://dutta-pritam.goatcounter.com/counter/' + encodeURIComponent(path) + '.json';
 
         fetchWithTimeout(counterUrl, FETCH_TIMEOUT_MS)
           .then(function (response) {
@@ -1008,28 +1018,29 @@
             return response.json();
           })
           .then(function (data) {
-            const count = data && data.count !== undefined
-              ? Number(String(data.count).replace(/,/g, ''))
-              : NaN;
+            const rawCount = data && data.count !== undefined ? String(data.count).replace(/,/g, '') : NaN;
+            const count = Number(rawCount);
+
             if (!Number.isFinite(count)) throw new Error('Invalid count');
+
             lastGoodCount = count;
             counterEl.textContent = count.toLocaleString();
-            counterEl.title = 'Total site visits (live)';
+            counterEl.title = 'Total visits for ' + path;
+
             if (moduleEl) {
               moduleEl.classList.remove('updated');
-              void moduleEl.offsetWidth; // restart pulse animation
+              void moduleEl.offsetWidth;
               moduleEl.classList.add('updated');
             }
           })
           .catch(function (error) {
             console.warn('GoatCounter visitor count unavailable:', error);
             if (lastGoodCount !== null) {
-              // Keep showing the last successful count rather than a dead dash
               counterEl.textContent = lastGoodCount.toLocaleString();
-              counterEl.title = 'Live count unavailable (adblocker or network) — showing last known value';
+              counterEl.title = 'Live count unavailable — showing last known value';
             } else {
               counterEl.textContent = '—';
-              counterEl.title = 'Visitor count unavailable — likely blocked by an ad/privacy blocker';
+              counterEl.title = 'Count unavailable (adblocker or path not recorded yet)';
             }
           })
           .finally(function () {
@@ -1040,15 +1051,17 @@
           });
       }
 
-      // Initial load
-      loadCount(false);
+      // Defer initial query until window load so count.js finishes instantiating window.goatcounter
+      if (document.readyState === 'complete') {
+        loadCount(false);
+      } else {
+        window.addEventListener('load', function () { loadCount(false); }, { once: true });
+      }
 
-      // Manual refresh
       if (refreshBtn) {
         refreshBtn.addEventListener('click', function () { loadCount(true); });
       }
 
-      // Keep it "live": refresh periodically, and whenever the tab regains focus/visibility
       const AUTO_REFRESH_MS = 60000;
       setInterval(function () {
         if (!document.hidden) loadCount(false);
@@ -1059,7 +1072,8 @@
       });
       window.addEventListener('focus', function () { loadCount(false); });
     })();
-// 6. THEME TOGGLE
+
+    // 6. THEME TOGGLE
     (function () {
       var button = document.getElementById('theme-toggle');
       if (!button) return;
@@ -1158,11 +1172,9 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     })();
-
   </script>
 
-  <!-- GoatCounter tracking pixel — records each visit -->
- <!-- GoatCounter tracking pixel — records each visit -->
+  <!-- GoatCounter tracking script -->
   <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
           async src="https://gc.zgo.at/count.js"></script>
 </body>
