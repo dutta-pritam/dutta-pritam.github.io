@@ -963,12 +963,12 @@
     })();
 
     // 5. UNIVERSAL VISITOR COUNTER (using GoatCounter)
+   // 5. UNIVERSAL VISITOR COUNTER (using GoatCounter)
     (function () {
       var counterEl = document.getElementById('v-count');
       if (!counterEl) return;
 
       var counterUrl = 'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
-      var fallbackKey = 'portfolio-local-visit-count';
 
       fetch(counterUrl)
         .then(function (response) {
@@ -985,19 +985,11 @@
           }
         })
         .catch(function (error) {
-          console.warn('GoatCounter unavailable, falling back to local:', error);
-          try {
-            var count = Number(localStorage.getItem(fallbackKey) || '0') + 1;
-            localStorage.setItem(fallbackKey, String(count));
-            counterEl.textContent = count.toLocaleString() + ' local';
-            counterEl.title = 'Local browser visits (GoatCounter offline)';
-          } catch (e) {
-            counterEl.textContent = 'offline';
-            counterEl.title = 'Visitor counter unavailable';
-          }
+          console.warn('GoatCounter unavailable:', error);
+          counterEl.textContent = 'offline';
+          counterEl.title = 'Visitor counter unavailable';
         });
     })();
-
     // 6. THEME TOGGLE
     (function () {
       var button = document.getElementById('theme-toggle');
@@ -1101,7 +1093,10 @@
   </script>
 
   <!-- GoatCounter tracking pixel — records each visit -->
+ <!-- GoatCounter tracking pixel — records each visit -->
   <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
 </body>
 </html>
