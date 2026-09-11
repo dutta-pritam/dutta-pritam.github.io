@@ -396,6 +396,21 @@
       font-variant-numeric: tabular-nums;
     }
 
+    #v-refresh {
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 0.85rem;
+      line-height: 1;
+      border-radius: 4px;
+      transition: color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+    }
+    #v-refresh:hover { color: var(--accent); background: var(--accent-soft); }
+    #v-refresh.spinning { animation: spin 0.7s linear infinite; }
+    #v-refresh:disabled { cursor: default; opacity: 0.5; }
+
 
     /* Profile / utility upgrades */
     .header-top {
@@ -681,6 +696,7 @@
         </svg>
         <span>Visitors:</span>
         <span id="v-count">Loading…</span>
+        <button id="v-refresh" type="button" title="Refresh visitor count" aria-label="Refresh visitor count">⟳</button>
       </div>
     </footer>
   </main>
@@ -961,44 +977,87 @@
 
       rows.forEach(function (row) { observer.observe(row); });
     })();
-    // 5. VISITOR COUNTER (GoatCounter)
+    // 5. VISITOR COUNTER (GoatCounter) — live, with manual refresh + resilient fallback
     (function () {
       const counterEl = document.getElementById('v-count');
+      const moduleEl = document.querySelector('.visitor-module');
+      const refreshBtn = document.getElementById('v-refresh');
       if (!counterEl) return;
 
-      const counterUrl =
-        'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
+      const counterUrl = 'https://dutta-pritam.goatcounter.com/counter/TOTAL.json';
+      const FETCH_TIMEOUT_MS = 6000;
+      let lastGoodCount = null;
 
-      fetch(counterUrl, {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-store'
-      })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error('GoatCounter HTTP ' + response.status);
+      function fetchWithTimeout(url, ms) {
+        const controller = new AbortController();
+        const timer = setTimeout(function () { controller.abort(); }, ms);
+        return fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store', signal: controller.signal })
+          .finally(function () { clearTimeout(timer); });
+      }
+
+      function loadCount(isManual) {
+        if (isManual && refreshBtn) {
+          refreshBtn.classList.add('spinning');
+          refreshBtn.disabled = true;
         }
-        return response.json();
-      })
-      .then(function (data) {
-        if (data && data.count !== undefined) {
-          const count = Number(String(data.count).replace(/,/g, ''));
-          if (Number.isFinite(count)) {
+        if (!isManual) counterEl.textContent = 'Loading…';
+
+        fetchWithTimeout(counterUrl, FETCH_TIMEOUT_MS)
+          .then(function (response) {
+            if (!response.ok) throw new Error('GoatCounter HTTP ' + response.status);
+            return response.json();
+          })
+          .then(function (data) {
+            const count = data && data.count !== undefined
+              ? Number(String(data.count).replace(/,/g, ''))
+              : NaN;
+            if (!Number.isFinite(count)) throw new Error('Invalid count');
+            lastGoodCount = count;
             counterEl.textContent = count.toLocaleString();
-            counterEl.title = 'Total site visits';
-            counterEl.parentElement.classList.add('updated');
-          } else {
-            throw new Error('Invalid count');
-          }
-        } else {
-          throw new Error('No count returned');
-        }
-      })
-      .catch(function (error) {
-        console.warn('GoatCounter visitor count unavailable:', error);
-        counterEl.textContent = '—';
-        counterEl.title = 'Visitor count temporarily unavailable';
+            counterEl.title = 'Total site visits (live)';
+            if (moduleEl) {
+              moduleEl.classList.remove('updated');
+              void moduleEl.offsetWidth; // restart pulse animation
+              moduleEl.classList.add('updated');
+            }
+          })
+          .catch(function (error) {
+            console.warn('GoatCounter visitor count unavailable:', error);
+            if (lastGoodCount !== null) {
+              // Keep showing the last successful count rather than a dead dash
+              counterEl.textContent = lastGoodCount.toLocaleString();
+              counterEl.title = 'Live count unavailable (adblocker or network) — showing last known value';
+            } else {
+              counterEl.textContent = '—';
+              counterEl.title = 'Visitor count unavailable — likely blocked by an ad/privacy blocker';
+            }
+          })
+          .finally(function () {
+            if (refreshBtn) {
+              refreshBtn.classList.remove('spinning');
+              refreshBtn.disabled = false;
+            }
+          });
+      }
+
+      // Initial load
+      loadCount(false);
+
+      // Manual refresh
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', function () { loadCount(true); });
+      }
+
+      // Keep it "live": refresh periodically, and whenever the tab regains focus/visibility
+      const AUTO_REFRESH_MS = 60000;
+      setInterval(function () {
+        if (!document.hidden) loadCount(false);
+      }, AUTO_REFRESH_MS);
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) loadCount(false);
       });
+      window.addEventListener('focus', function () { loadCount(false); });
     })();
 // 6. THEME TOGGLE
     (function () {
