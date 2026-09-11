@@ -697,7 +697,7 @@
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
         <span>Visitors:</span>
-        <span id="v-count">Loading…</span>
+        <span id="v-count" aria-live="polite">Loading…</span>
         <button id="v-refresh" type="button" title="Refresh visitor count" aria-label="Refresh visitor count">⟳</button>
       </div>
     </footer>
@@ -975,102 +975,48 @@
       rows.forEach(function (row) { observer.observe(row); });
     })();
 
-    // 5. VISITOR COUNTER (GoatCounter) — live, dynamic path retrieval & refresh
+    // 5. VISITOR COUNTER (GoatCounter official visit_count method)
     (function () {
       const counterEl = document.getElementById('v-count');
-      const moduleEl = document.querySelector('.visitor-module');
-      const refreshBtn = document.getElementById('v-refresh');
       if (!counterEl) return;
 
-      const FETCH_TIMEOUT_MS = 6000;
-      let lastGoodCount = null;
+      // GoatCounter loads count.js asynchronously. Wait until its official
+      // visitor-counter method is available, then let GoatCounter render
+      // the count for the current page.
+      let attempts = 0;
+      const maxAttempts = 100;
 
-      function getCounterPath() {
-        if (window.goatcounter && typeof window.goatcounter.get_data === 'function') {
-          const data = window.goatcounter.get_data();
-          if (data && data.p) return data.p;
-        }
-        return window.location.pathname || '/';
-      }
-
-      function fetchWithTimeout(url, ms) {
-        const controller = new AbortController();
-        const timer = setTimeout(function () { controller.abort(); }, ms);
-        return fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store', signal: controller.signal })
-          .finally(function () { clearTimeout(timer); });
-      }
-
-      function loadCount(isManual = false) {
-        if (isManual && refreshBtn) {
-          refreshBtn.classList.add('spinning');
-          refreshBtn.disabled = true;
-        }
-        if (!isManual && lastGoodCount === null) {
-          counterEl.textContent = 'Loading…';
-        }
-
-        const path = getCounterPath();
-        const counterUrl = 'https://dutta-pritam.goatcounter.com/counter/' + encodeURIComponent(path) + '.json';
-
-        fetchWithTimeout(counterUrl, FETCH_TIMEOUT_MS)
-          .then(function (response) {
-            if (!response.ok) throw new Error('GoatCounter HTTP ' + response.status);
-            return response.json();
-          })
-          .then(function (data) {
-            const rawCount = data && data.count !== undefined ? String(data.count).replace(/,/g, '') : NaN;
-            const count = Number(rawCount);
-
-            if (!Number.isFinite(count)) throw new Error('Invalid count');
-
-            lastGoodCount = count;
-            counterEl.textContent = count.toLocaleString();
-            counterEl.title = 'Total visits for ' + path;
-
-            if (moduleEl) {
-              moduleEl.classList.remove('updated');
-              void moduleEl.offsetWidth;
-              moduleEl.classList.add('updated');
-            }
-          })
-          .catch(function (error) {
-            console.warn('GoatCounter visitor count unavailable:', error);
-            if (lastGoodCount !== null) {
-              counterEl.textContent = lastGoodCount.toLocaleString();
-              counterEl.title = 'Live count unavailable — showing last known value';
-            } else {
-              counterEl.textContent = '—';
-              counterEl.title = 'Count unavailable (adblocker or path not recorded yet)';
-            }
-          })
-          .finally(function () {
-            if (refreshBtn) {
-              refreshBtn.classList.remove('spinning');
-              refreshBtn.disabled = false;
-            }
+      function initVisitorCounter() {
+        if (window.goatcounter && typeof window.goatcounter.visit_count === 'function') {
+          window.goatcounter.visit_count({
+            append: '#v-count',
+            no_branding: true,
+            type: 'html',
+            style: `
+              div {
+                display: inline;
+                margin: 0;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                color: inherit;
+                font: inherit;
+              }
+            `
           });
+          return;
+        }
+
+        attempts += 1;
+        if (attempts < maxAttempts) {
+          setTimeout(initVisitorCounter, 100);
+        } else {
+          counterEl.textContent = '—';
+          counterEl.title = 'Visitor count unavailable';
+        }
       }
 
-      // Defer initial query until window load so count.js finishes instantiating window.goatcounter
-      if (document.readyState === 'complete') {
-        loadCount(false);
-      } else {
-        window.addEventListener('load', function () { loadCount(false); }, { once: true });
-      }
-
-      if (refreshBtn) {
-        refreshBtn.addEventListener('click', function () { loadCount(true); });
-      }
-
-      const AUTO_REFRESH_MS = 60000;
-      setInterval(function () {
-        if (!document.hidden) loadCount(false);
-      }, AUTO_REFRESH_MS);
-
-      document.addEventListener('visibilitychange', function () {
-        if (!document.hidden) loadCount(false);
-      });
-      window.addEventListener('focus', function () { loadCount(false); });
+      initVisitorCounter();
     })();
 
     // 6. THEME TOGGLE
@@ -1176,6 +1122,6 @@
 
   <!-- GoatCounter tracking script -->
   <script data-goatcounter="https://dutta-pritam.goatcounter.com/count"
-          async src="https://gc.zgo.at/count.js"></script>
+          src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
