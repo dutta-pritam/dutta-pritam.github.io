@@ -1,38 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Writing — Pritam Dutta</title>
-
-  <meta name="description"
-        content="Essays, reflections, notes and ideas by Pritam Dutta.">
-
+  <meta name="description" content="Essays, reflections, notes and ideas by Pritam Dutta.">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
-        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
   <style>
-
     :root {
-      --bg: #f7f6f2;
-      --text: #171717;
-      --muted: #777;
-      --line: #deddd7;
-      --hover: #ecebe6;
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --hover: #f9fafb;
     }
 
     [data-theme="dark"] {
-      --bg: #11110f;
-      --text: #eeeeea;
-      --muted: #999;
-      --line: #2d2d29;
-      --hover: #22221e;
+      --bg: #0a0a0a;
+      --text: #ededed;
+      --muted: #a1a1aa;
+      --line: #27272a;
+      --hover: #18181b;
     }
 
     * {
@@ -41,519 +33,227 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
       background: var(--bg);
       color: var(--text);
       font-family: "Inter", sans-serif;
-      transition: background .35s ease, color .35s ease;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      /* Background nodes inspired by Screenshot 2026-09-18 104714.png */
+      background-image: radial-gradient(circle at 10% 20%, rgba(107, 114, 128, 0.05) 0%, transparent 20%), 
+                        radial-gradient(circle at 90% 80%, rgba(107, 114, 128, 0.05) 0%, transparent 20%);
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px;
     }
 
     /* --------------------
-       HEADER
+       HEADER & INTRO
     -------------------- */
-
     header {
-      max-width: 1100px;
-      margin: auto;
-      padding: 28px;
-    }
-
-    .top {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 60px;
     }
 
     .back {
       text-decoration: none;
-      color: var(--text);
+      color: var(--muted);
       font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
     }
 
     .back:hover {
-      opacity: .55;
+      color: var(--text);
     }
 
     .theme {
-      width: 38px;
-      height: 38px;
-
-      border-radius: 50%;
-      border: 1px solid var(--line);
-
       background: transparent;
-      color: var(--text);
-
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      color: var(--muted);
       cursor: pointer;
-
-      transition: .25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
     }
 
     .theme:hover {
       background: var(--hover);
-      transform: rotate(15deg);
-    }
-
-
-    /* --------------------
-       INTRO
-    -------------------- */
-
-    .intro {
-      max-width: 1100px;
-      margin: auto;
-      padding: 110px 28px 75px;
-    }
-
-    .eyebrow {
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      margin-bottom: 20px;
+      color: var(--text);
     }
 
     h1 {
-      font-family: "Newsreader", serif;
-      font-size: clamp(65px, 10vw, 120px);
-      font-weight: 400;
-      letter-spacing: -.055em;
-      line-height: .9;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
     }
 
     .description {
-      max-width: 570px;
-      margin-top: 30px;
-
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--muted);
+      font-family: "Lora", serif;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 60px;
     }
-
 
     /* --------------------
-       WRITING LIST
+       WRITING LIST 
     -------------------- */
-
-    .writings {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 28px 120px;
-    }
-
     .section-heading {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--line);
-      padding-bottom: 15px;
-
-      display: flex;
-      justify-content: space-between;
-
-      font-size: 11px;
-      color: var(--muted);
-
-      text-transform: uppercase;
-      letter-spacing: .12em;
     }
 
-
-    /* --------------------
-       WRITING CARD
-    -------------------- */
+    .writing-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
 
     .writing {
-      display: grid;
-
-      grid-template-columns: 70px 1fr 100px;
-
-      gap: 25px;
-
-      padding: 38px 10px;
-
-      border-bottom: 1px solid var(--line);
-
       text-decoration: none;
+      color: inherit;
+      display: block;
+      group: transition;
+    }
+
+    .writing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .writing-title {
+      font-size: 16px;
+      font-weight: 500;
       color: var(--text);
-
-      transition:
-        background .3s ease,
-        padding .3s ease;
     }
 
-    .writing:hover {
-      background: var(--hover);
-      padding-left: 20px;
-      padding-right: 20px;
+    .writing:hover .writing-title {
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
-    .number {
-      font-family: "Newsreader", serif;
-      font-size: 17px;
-      color: var(--muted);
-    }
-
-    .writing-content h2 {
-      font-family: "Newsreader", serif;
-      font-size: 35px;
-      font-weight: 400;
-
-      line-height: 1.05;
-      letter-spacing: -.025em;
-
-      margin-bottom: 12px;
-    }
-
-    .writing-content p {
-      max-width: 620px;
-
-      color: var(--muted);
+    .writing-meta {
       font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .meta {
-      text-align: right;
-
-      font-size: 10px;
       color: var(--muted);
-
-      text-transform: uppercase;
-      letter-spacing: .08em;
-
-      padding-top: 5px;
+      font-family: monospace;
     }
 
-    .arrow {
-      display: inline-block;
-
-      margin-left: 5px;
-
-      transition: transform .25s ease;
+    .writing-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
     }
-
-    .writing:hover .arrow {
-      transform: translateX(5px);
-    }
-
 
     /* --------------------
        FOOTER
     -------------------- */
-
     footer {
-      max-width: 1100px;
-      margin: auto;
-
-      padding: 30px 28px 50px;
-
+      margin-top: 80px;
+      padding-top: 24px;
       border-top: 1px solid var(--line);
-
       display: flex;
       justify-content: space-between;
-
       color: var(--muted);
-      font-size: 12px;
+      font-size: 13px;
     }
-
-
-    /* --------------------
-       MOBILE
-    -------------------- */
-
-    @media (max-width: 700px) {
-
-      .intro {
-        padding: 85px 20px 60px;
-      }
-
-      header {
-        padding: 22px 20px;
-      }
-
-      .writings {
-        padding: 0 20px 80px;
-      }
-
-      .writing {
-        grid-template-columns: 35px 1fr;
-        gap: 15px;
-        padding: 30px 5px;
-      }
-
-      .writing:hover {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .meta {
-        grid-column: 2;
-        text-align: left;
-        padding-top: 0;
-      }
-
-      .writing-content h2 {
-        font-size: 30px;
-      }
-
-      footer {
-        padding: 28px 20px 40px;
-      }
-    }
-
   </style>
 </head>
-
-
 <body>
 
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <a href="index.html" class="back">← Pritam Dutta</a>
+      <button class="theme" id="themeButton" aria-label="Toggle theme">◐</button>
+    </header>
 
-  <!-- HEADER -->
+    <!-- INTRO -->
+    <section class="intro">
+      <h1>Writing</h1>
+      <p class="description">
+        A collection of things I have written — ideas I have been thinking about, 
+        questions I have asked, and observations that stayed with me.
+      </p>
+    </section>
 
-  <header>
+    <!-- WRITINGS -->
+    <section class="writings">
+      <div class="section-heading">Selected writings</div>
 
-    <div class="top">
+      <div class="writing-list">
+        <!-- WRITING 01 -->
+        <a href="writing/impact-without-the-i.html" class="writing">
+          <div class="writing-header">
+            <h2 class="writing-title">Impact without the I.</h2>
+            <span class="writing-meta">2026</span>
+          </div>
+          <p class="writing-desc">
+            What does it really mean to make an impact? Perhaps impact does not always need to be large, measurable or celebrated. Sometimes it begins with something very small.
+          </p>
+        </a>
 
-      <a href="index.html" class="back">
-        ← Pritam Dutta
-      </a>
+        <!-- WRITING 02 -->
+        <a href="writing/your-next-writing.html" class="writing">
+          <div class="writing-header">
+            <h2 class="writing-title">Reflections on autonomy</h2>
+            <span class="writing-meta">2026</span>
+          </div>
+          <p class="writing-desc">
+            A deeper look into how systems manage themselves and what that means for computational science.
+          </p>
+        </a>
 
-      <button class="theme"
-              id="themeButton"
-              aria-label="Toggle theme">
-        ◐
-      </button>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- INTRO -->
-
-  <section class="intro">
-
-    <div class="eyebrow">
-      Essays · Notes · Reflections
-    </div>
-
-    <h1>
-      Writing.
-    </h1>
-
-    <p class="description">
-      A collection of things I have written — ideas I have
-      been thinking about, questions I have asked, and
-      observations that stayed with me.
-    </p>
-
-  </section>
-
-
-
-  <!-- WRITINGS -->
-
-  <section class="writings">
-
-    <div class="section-heading">
-      <span>Selected writings</span>
-      <span>Archive</span>
-    </div>
-
-
-    <!-- =========================
-         WRITING 01
-         ========================= -->
-
-    <a href="writing/impact-without-the-i.html"
-       class="writing">
-
-      <div class="number">
-        01
+        <!-- WRITING 03 -->
+        <a href="writing/another-writing.html" class="writing">
+          <div class="writing-header">
+            <h2 class="writing-title">Building from first principles</h2>
+            <span class="writing-meta">2026</span>
+          </div>
+          <p class="writing-desc">
+            Stripping complex robotics problems down to their fundamental truths to find clearer solutions.
+          </p>
+        </a>
       </div>
+    </section>
 
-      <div class="writing-content">
+    <!-- FOOTER -->
+    <footer>
+      <span>© 2026 Pritam Dutta</span>
+      <span>Ideas in progress.</span>
+    </footer>
+  </div>
 
-        <h2>
-          Impact without the I.
-        </h2>
-
-        <p>
-          What does it really mean to make an impact?
-          Perhaps impact does not always need to be large,
-          measurable or celebrated. Sometimes it begins
-          with something very small.
-        </p>
-
-      </div>
-
-      <div class="meta">
-        Essay<br>
-        2026
-        <span class="arrow">→</span>
-      </div>
-
-    </a>
-
-
-
-    <!-- =========================
-         WRITING 02
-         ========================= -->
-
-    <a href="writing/your-next-writing.html"
-       class="writing">
-
-      <div class="number">
-        02
-      </div>
-
-      <div class="writing-content">
-
-        <h2>
-         ---
-        </h2>
-
-        <p>
-        ---
-        </p>
-
-      </div>
-
-      <div class="meta">
-        Reflection<br>
-        2026
-        <span class="arrow">→</span>
-      </div>
-
-    </a>
-
-
-
-    <!-- =========================
-         WRITING 03
-         ========================= -->
-
-    <a href="writing/another-writing.html"
-       class="writing">
-
-      <div class="number">
-        03
-      </div>
-
-      <div class="writing-content">
-
-        <h2>
-         --
-        </h2>
-
-        <p>
-          --
-        </p>
-
-      </div>
-
-      <div class="meta">
-        Notes<br>
-        2026
-        <span class="arrow">→</span>
-      </div>
-
-    </a>
-
-
-
-    <!-- =========================
-         ADD MORE WRITINGS
-         ========================= -->
-
-    <!--
-
-    <a href="writing/example.html"
-       class="writing">
-
-      <div class="number">
-        04
-      </div>
-
-      <div class="writing-content">
-
-        <h2>
-          Example title.
-        </h2>
-
-        <p>
-          Short description of the writing.
-        </p>
-
-      </div>
-
-      <div class="meta">
-        Essay<br>
-        2026
-        <span class="arrow">→</span>
-      </div>
-
-    </a>
-
-    -->
-
-
-  </section>
-
-
-
-  <!-- FOOTER -->
-
-  <footer>
-
-    <span>
-      © 2026 Pritam Dutta
-    </span>
-
-    <span>
-      Ideas in progress.
-    </span>
-
-  </footer>
-
-
-
-  <!-- THEME -->
-
+  <!-- THEME SCRIPT -->
   <script>
-
-    const button =
-      document.getElementById("themeButton");
-
-    const saved =
-      localStorage.getItem("theme");
+    const button = document.getElementById("themeButton");
+    const saved = localStorage.getItem("theme");
 
     if (saved) {
       document.documentElement.dataset.theme = saved;
     }
 
     button.addEventListener("click", () => {
-
-      const current =
-        document.documentElement.dataset.theme;
-
-      const next =
-        current === "dark"
-          ? "light"
-          : "dark";
-
+      const current = document.documentElement.dataset.theme;
+      const next = current === "dark" ? "light" : "dark";
       document.documentElement.dataset.theme = next;
-
       localStorage.setItem("theme", next);
-
     });
-
   </script>
-
-
 </body>
 </html>
