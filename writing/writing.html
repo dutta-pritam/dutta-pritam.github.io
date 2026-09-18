@@ -1,1 +1,882 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Writing — Pritam Dutta</title>
+
+  <meta name="description"
+        content="Writing, reflections, ideas, and notes by Pritam Dutta.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+        rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --text: #181818;
+      --muted: #777;
+      --line: #deddd7;
+      --card: #ffffff;
+      --accent: #222;
+      --soft: #ecebe6;
+    }
+
+    [data-theme="dark"] {
+      --bg: #11110f;
+      --text: #eeeeea;
+      --muted: #999;
+      --line: #2d2d29;
+      --card: #181815;
+      --accent: #fff;
+      --soft: #242420;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      line-height: 1.6;
+      transition:
+        background 0.4s ease,
+        color 0.4s ease;
+    }
+
+    /* -------------------------
+       BACKGROUND
+    ------------------------- */
+
+    .background {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .orb {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      opacity: 0.35;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      top: -180px;
+      right: -120px;
+    }
+
+    .orb.two {
+      bottom: -250px;
+      left: -150px;
+      width: 520px;
+      height: 520px;
+      animation-delay: -6s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      to {
+        transform: translate(35px, 25px) rotate(12deg);
+      }
+    }
+
+    /* -------------------------
+       HEADER
+    ------------------------- */
+
+    header {
+      max-width: 1100px;
+      margin: auto;
+      padding: 28px 28px 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .back {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      transition: opacity 0.2s ease;
+    }
+
+    .back:hover {
+      opacity: 0.55;
+    }
+
+    .theme {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .theme:hover {
+      background: var(--soft);
+      transform: rotate(15deg);
+    }
+
+    /* -------------------------
+       HERO
+    ------------------------- */
+
+    .hero {
+      max-width: 1100px;
+      margin: auto;
+      padding: 115px 28px 80px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: "Newsreader", serif;
+      font-size: clamp(60px, 9vw, 110px);
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+    }
+
+    .intro {
+      max-width: 620px;
+      margin-top: 30px;
+      font-size: 17px;
+      color: var(--muted);
+    }
+
+    /* -------------------------
+       CONTROLS
+    ------------------------- */
+
+    .controls {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 28px 35px;
+
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+
+      border-bottom: 1px solid var(--line);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 13px;
+      border-radius: 100px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter:hover,
+    .filter.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .search {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 100px;
+      outline: none;
+      width: 210px;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .search:focus {
+      border-color: var(--text);
+    }
+
+    /* -------------------------
+       WRITINGS
+    ------------------------- */
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 28px 120px;
+    }
+
+    .writing-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 55px;
+    }
+
+    .writing {
+      position: relative;
+      padding: 38px 0 42px;
+      border-bottom: 1px solid var(--line);
+
+      cursor: pointer;
+
+      opacity: 0;
+      transform: translateY(15px);
+
+      animation: appear 0.7s ease forwards;
+    }
+
+    .writing:nth-child(2) { animation-delay: 0.08s; }
+    .writing:nth-child(3) { animation-delay: 0.16s; }
+    .writing:nth-child(4) { animation-delay: 0.24s; }
+    .writing:nth-child(5) { animation-delay: 0.32s; }
+    .writing:nth-child(6) { animation-delay: 0.40s; }
+
+    @keyframes appear {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .writing:hover .arrow {
+      transform: translateX(7px);
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .writing h2 {
+      font-family: "Newsreader", serif;
+      font-size: 35px;
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: 13px;
+    }
+
+    .excerpt {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 480px;
+    }
+
+    .bottom {
+      margin-top: 23px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tag {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .arrow {
+      font-size: 19px;
+      transition: transform 0.25s ease;
+    }
+
+    /* -------------------------
+       EMPTY
+    ------------------------- */
+
+    .empty {
+      display: none;
+      padding: 80px 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* -------------------------
+       FOOTER
+    ------------------------- */
+
+    footer {
+      max-width: 1100px;
+      margin: auto;
+      padding: 35px 28px 55px;
+      border-top: 1px solid var(--line);
+
+      display: flex;
+      justify-content: space-between;
+
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* -------------------------
+       MOBILE
+    ------------------------- */
+
+    @media (max-width: 720px) {
+
+      header {
+        padding: 22px 20px 0;
+      }
+
+      .hero {
+        padding: 90px 20px 60px;
+      }
+
+      .intro {
+        font-size: 15px;
+      }
+
+      .controls {
+        padding: 0 20px 25px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      main {
+        padding: 0 20px 80px;
+      }
+
+      .writing-list {
+        grid-template-columns: 1fr;
+      }
+
+      .writing h2 {
+        font-size: 31px;
+      }
+
+      footer {
+        padding: 30px 20px 45px;
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+  </div>
+
+  <!-- HEADER -->
+
+  <header>
+    <div class="topbar">
+
+      <a class="back" href="index.html">
+        ← Pritam Dutta
+      </a>
+
+      <button class="theme"
+              id="themeButton"
+              aria-label="Toggle dark mode">
+        ◐
+      </button>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="eyebrow">
+      Notes · Essays · Ideas
+    </div>
+
+    <h1>Writing.</h1>
+
+    <p class="intro">
+      A collection of thoughts, observations, questions and ideas —
+      somewhere between science, people and the things I find
+      interesting.
+    </p>
+
+  </section>
+
+
+  <!-- FILTERS -->
+
+  <section class="controls">
+
+    <div class="filters">
+
+      <button class="filter active" data-filter="all">
+        All
+      </button>
+
+      <button class="filter" data-filter="science">
+        Science
+      </button>
+
+      <button class="filter" data-filter="ideas">
+        Ideas
+      </button>
+
+      <button class="filter" data-filter="society">
+        Society
+      </button>
+
+      <button class="filter" data-filter="notes">
+        Notes
+      </button>
+
+    </div>
+
+    <input
+      class="search"
+      id="search"
+      type="search"
+      placeholder="Search writing..."
+      aria-label="Search writing"
+    >
+
+  </section>
+
+
+  <!-- WRITINGS -->
+
+  <main>
+
+    <div class="writing-list" id="writingList">
+
+
+      <!-- ARTICLE 1 -->
+
+      <article class="writing"
+               data-category="ideas"
+               data-title="Impact without the I">
+
+        <div class="meta">
+          <span>Essay</span>
+          <span>01</span>
+        </div>
+
+        <h2>
+          Impact without the I.
+        </h2>
+
+        <p class="excerpt">
+          We often talk about impact as something enormous.
+          But perhaps impact begins much closer to the ground —
+          in places where nobody is measuring it.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Ideas · Society
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+      <!-- ARTICLE 2 -->
+
+      <article class="writing"
+               data-category="science"
+               data-title="Why things rotate">
+
+        <div class="meta">
+          <span>Science</span>
+          <span>02</span>
+        </div>
+
+        <h2>
+          Why things rotate.
+        </h2>
+
+        <p class="excerpt">
+          A small note on angular momentum, symmetry and why
+          rotation appears everywhere from microscopic systems
+          to galaxies.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Physics
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+      <!-- ARTICLE 3 -->
+
+      <article class="writing"
+               data-category="notes"
+               data-title="Things I noticed this week">
+
+        <div class="meta">
+          <span>Notes</span>
+          <span>03</span>
+        </div>
+
+        <h2>
+          Things I noticed this week.
+        </h2>
+
+        <p class="excerpt">
+          Small observations that would probably never deserve
+          an essay — but somehow stayed in my head.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Personal Notes
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+      <!-- ARTICLE 4 -->
+
+      <article class="writing"
+               data-category="science"
+               data-title="The beauty of approximation">
+
+        <div class="meta">
+          <span>Science</span>
+          <span>04</span>
+        </div>
+
+        <h2>
+          The beauty of approximation.
+        </h2>
+
+        <p class="excerpt">
+          Science rarely begins with perfect descriptions.
+          Sometimes understanding what we can safely ignore
+          is just as important as knowing what matters.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Science · Thinking
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+      <!-- ARTICLE 5 -->
+
+      <article class="writing"
+               data-category="society"
+               data-title="Small systems, large effects">
+
+        <div class="meta">
+          <span>Essay</span>
+          <span>05</span>
+        </div>
+
+        <h2>
+          Small systems, large effects.
+        </h2>
+
+        <p class="excerpt">
+          A system does not have to be large to matter.
+          Sometimes changing one small interaction changes
+          everything downstream.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Society · Systems
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+      <!-- ARTICLE 6 -->
+
+      <article class="writing"
+               data-category="ideas"
+               data-title="Questions are experiments">
+
+        <div class="meta">
+          <span>Reflection</span>
+          <span>06</span>
+        </div>
+
+        <h2>
+          Questions are experiments.
+        </h2>
+
+        <p class="excerpt">
+          A good question does something strange:
+          it changes the way you look at the answer.
+        </p>
+
+        <div class="bottom">
+          <span class="tag">
+            Ideas
+          </span>
+
+          <span class="arrow">
+            →
+          </span>
+        </div>
+
+      </article>
+
+
+    </div>
+
+    <div class="empty" id="empty">
+      Nothing found.
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <span>
+      © 2026 Pritam Dutta
+    </span>
+
+    <span>
+      Written slowly.
+    </span>
+
+  </footer>
+
+
+  <script>
+
+    /* -------------------------
+       THEME
+    ------------------------- */
+
+    const themeButton =
+      document.getElementById("themeButton");
+
+    const savedTheme =
+      localStorage.getItem("theme");
+
+    if (savedTheme) {
+      document.documentElement.dataset.theme =
+        savedTheme;
+    }
+
+    themeButton.addEventListener("click", () => {
+
+      const current =
+        document.documentElement.dataset.theme;
+
+      const next =
+        current === "dark" ? "light" : "dark";
+
+      document.documentElement.dataset.theme =
+        next;
+
+      localStorage.setItem("theme", next);
+
+    });
+
+
+    /* -------------------------
+       FILTER + SEARCH
+    ------------------------- */
+
+    const filters =
+      document.querySelectorAll(".filter");
+
+    const writings =
+      document.querySelectorAll(".writing");
+
+    const search =
+      document.getElementById("search");
+
+    const empty =
+      document.getElementById("empty");
+
+    let activeFilter = "all";
+
+
+    function updateResults() {
+
+      const query =
+        search.value.toLowerCase().trim();
+
+      let visible = 0;
+
+      writings.forEach(article => {
+
+        const category =
+          article.dataset.category;
+
+        const title =
+          article.dataset.title.toLowerCase();
+
+        const text =
+          article.innerText.toLowerCase();
+
+        const matchesFilter =
+          activeFilter === "all" ||
+          category === activeFilter;
+
+        const matchesSearch =
+          !query ||
+          title.includes(query) ||
+          text.includes(query);
+
+        if (matchesFilter && matchesSearch) {
+
+          article.style.display = "block";
+          visible++;
+
+        } else {
+
+          article.style.display = "none";
+
+        }
+
+      });
+
+      empty.style.display =
+        visible === 0 ? "block" : "none";
+    }
+
+
+    filters.forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        filters.forEach(b =>
+          b.classList.remove("active")
+        );
+
+        button.classList.add("active");
+
+        activeFilter =
+          button.dataset.filter;
+
+        updateResults();
+
+      });
+
+    });
+
+
+    search.addEventListener(
+      "input",
+      updateResults
+    );
+
+
+    /* -------------------------
+       ARTICLE CLICK
+       -------------------------
+       Replace this with links to
+       individual article pages.
+    */
+
+    writings.forEach(article => {
+
+      article.addEventListener("click", () => {
+
+        const title =
+          article.dataset.title;
+
+        console.log(
+          "Open article:",
+          title
+        );
+
+        /*
+          Example:
+
+          window.location.href =
+            "writing/impact-without-the-i.html";
+        */
+
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>
+```
 
