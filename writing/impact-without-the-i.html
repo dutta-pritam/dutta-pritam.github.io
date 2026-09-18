@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impact without the I — Pritam Dutta</title>
+  <meta name="description" content="What does it really mean to make an impact?">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --hover: #f9fafb;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0a0a0a;
+      --text: #ededed;
+      --muted: #a1a1aa;
+      --line: #27272a;
+      --hover: #18181b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(circle at 10% 20%, rgba(107, 114, 128, 0.05) 0%, transparent 20%), 
+                        radial-gradient(circle at 90% 80%, rgba(107, 114, 128, 0.05) 0%, transparent 20%);
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    /* --------------------
+       HEADER
+    -------------------- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    .back {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .back:hover {
+      color: var(--text);
+    }
+
+    .theme {
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .theme:hover {
+      background: var(--hover);
+      color: var(--text);
+    }
+
+    /* --------------------
+       ARTICLE HEADER
+    -------------------- */
+    .article-header {
+      margin-bottom: 48px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .meta {
+      font-size: 14px;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    /* --------------------
+       ARTICLE CONTENT
+    -------------------- */
+    .article-content {
+      font-family: "Lora", serif;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .article-content p {
+      margin-bottom: 24px;
+    }
+
+    .article-content strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .article-content h2 {
+      font-family: "Inter", sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 48px 0 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .article-content h3 {
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin: 40px 0 16px;
+    }
+
+    .article-content hr {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 48px auto;
+      width: 25%;
+    }
+
+    .article-content ul, 
+    .article-content ol {
+      margin-bottom: 24px;
+      padding-left: 24px;
+    }
+
+    .article-content li {
+      margin-bottom: 12px;
+    }
+
+    .article-content blockquote {
+      border-left: 3px solid var(--line);
+      padding-left: 20px;
+      margin: 32px 0;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* --------------------
+       FOOTER
+    -------------------- */
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: "Inter", sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <a href="../index.html" class="back">← Writing</a>
+      <button class="theme" id="themeButton" aria-label="Toggle theme">◐</button>
+    </header>
+
+    <!-- ARTICLE HEADER -->
+    <section class="article-header">
+      <h1>Impact without the I</h1>
+      <div class="meta">Essay · 2026</div>
+    </section>
+
+    <!-- ARTICLE CONTENT -->
+    <article class="article-content">
+      <p>Being from a scientific background, I tend to look at things through the lens of science. However, there are many things in society that cannot be understood as neatly as they can be understood through scientific principles.</p>
+
+      <p>Let us take the word <strong>“Impact.”</strong></p>
+
+      <p>In physics, impact can be associated with the force exerted when two bodies collide, resulting in a change in momentum over a very short period of time.</p>
+
+      <p>But the <strong>impact on society</strong> is quite different.</p>
+
+      <p>It may not happen within a fraction of a second. It may take a year, a decade, or even a millennium before its consequences become visible.</p>
+
+      <p>Perhaps this is what makes social impact so difficult to create—and even more difficult to measure.</p>
+
+      <p>If we look closely at impact in real life, maybe we need to start from the <strong>grassroots level</strong>.</p>
+
+      <hr>
+
+      <h2>What do we exactly mean by Impact?</h2>
+
+      <p>The word <em>impact</em> itself tells us a lot.</p>
+
+      <p>Impact should not be restricted to the relatively narrow subset where the founders of Impact-First startups lie. Impact exists everywhere, at different scales and in different forms.</p>
+
+      <p>Therefore, perhaps creating meaningful impact becomes much more effective when we start from the ground level.</p>
+
+      <p>Think about how a food chain works. The organisms at the bottom may appear insignificant compared to those at the top, but they form the foundation on which the entire system depends. What happens at the bottom can eventually propagate upwards through the entire system.</p>
+
+      <p>Society can work in a similar way.</p>
+
+      <p>Consider a person selling fruits on the street.</p>
+
+      <p>At first glance, we might say that this person creates almost no impact.</p>
+
+      <p>But look more closely.</p>
+
+      <p>Through the eyes of the vendor, that small shop may mean everything. It provides an income that supports their family. That family is itself interconnected with many other people—suppliers, customers, transporters, neighbours, and local businesses.</p>
+
+      <p>So that seemingly insignificant fruit stall does create an impact.</p>
+
+      <p>The impact simply isn't immediately visible.</p>
+
+      <p>It is <strong>distributed across a network of people</strong>.</p>
+
+      <p>And perhaps that is one of the most important things about impact: <strong>we often see the action, but we don't see all of its consequences.</strong></p>
+
+      <hr>
+
+      <h2>Impact in a broader sense</h2>
+
+      <p>If we look at impact more broadly, we can begin by classifying it into two basic categories:</p>
+
+      <ol>
+        <li><strong>Good Impact</strong></li>
+        <li><strong>Bad Impact / Not-so-Good Impact</strong></li>
+      </ol>
+
+      <p>From childhood, we have come across many examples of this.</p>
+
+      <p>Our parents may have told us to stay away from friends who might have a bad influence on us.</p>
+
+      <p>We have also heard the classic example:</p>
+
+      <blockquote>“A spoiled potato can spoil the whole sack.”</blockquote>
+
+      <p>We often hear these examples without thinking much about them.</p>
+
+      <p>But perhaps they were actually some of our earliest introductions to the concept of <strong>impact and propagation</strong>.</p>
+
+      <p>One individual's behaviour can influence another.</p>
+
+      <p>One action can trigger another action.</p>
+
+      <p>One idea can spread from one person to another.</p>
+
+      <p>And eventually, something that started at a very small scale can become much larger.</p>
+
+      <hr>
+
+      <h2>Some perspectives from which we can understand Impact</h2>
+
+      <h3>Good Impact</h3>
+
+      <p>What makes an impact “good”? Is an impact good simply because the intention behind it was good? Or should we judge it by its consequences? Can something benefit one group while negatively affecting another?</p>
+
+      <h3>Not-so-Good Impact / Bad Impact</h3>
+
+      <p>Can something that begins with a positive intention eventually create a negative consequence? How do unintended consequences fit into the idea of impact?</p>
+
+      <h3>Direct Impact</h3>
+
+      <p>The effect that occurs immediately as a consequence of an action.</p>
+
+      <p>For example, teaching someone a particular skill can directly increase their ability to perform a task.</p>
+
+      <h3>Indirect Impact</h3>
+
+      <p>The consequences that occur through a chain of interactions.</p>
+
+      <p>The fruit vendor is a simple example. The vendor earns money → the family benefits → the family spends that money → another person earns from that transaction → and the chain continues.</p>
+
+      <p>Where exactly does the impact end?</p>
+
+      <h3>Impact from a Mathematical Perspective</h3>
+
+      <p>Can impact actually be quantified? Can we represent impact using mathematics? Could we describe it using variables, networks, probability, statistics, differential equations, or some other mathematical framework?</p>
+
+      <p>And an even more fundamental question:</p>
+
+      <p><strong>If we can measure something, does that necessarily mean we understand it?</strong></p>
+
+      <h3>Impact from Some Fundamental Causes</h3>
+
+      <p>What actually creates impact? Is it an action? An idea? Information? Technology? Resources? Human behaviour? Or is impact created through the interaction of all of these?</p>
+
+      <p>Perhaps understanding the <strong>fundamental causes</strong> of impact is more important than simply measuring its final outcome.</p>
+
+      <h3>Impact through the Eyes of an Impact-First Startup</h3>
+
+      <p>Finally, how does an Impact-First startup look at impact? What changes when an organisation is deliberately created with impact as one of its primary objectives? Is creating a profitable business that also produces positive externalities the same as creating a business whose fundamental purpose is impact? And how should such impact be measured?</p>
+
+      <hr>
+
+      <p>Perhaps these aren't questions that need immediate answers.</p>
+
+      <p>Maybe these are questions that we should <strong>discuss, challenge, disagree with, and build upon</strong>.</p>
+
+      <p>Because before we ask:</p>
+
+      <p><strong>“What should we build?”</strong></p>
+
+      <p>perhaps we should first ask:</p>
+
+      <p><strong>“What exactly do we mean by impact?”</strong></p>
+    </article>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>© 2026 Pritam Dutta</span>
+      <span>Ideas in progress.</span>
+    </footer>
+  </div>
+
+  <!-- THEME SCRIPT -->
+  <script>
+    const button = document.getElementById("themeButton");
+    const saved = localStorage.getItem("theme");
+
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
+    }
+
+    button.addEventListener("click", () => {
+      const current = document.documentElement.dataset.theme;
+      const next = current === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("theme", next);
+    });
+  </script>
+</body>
+</html>
