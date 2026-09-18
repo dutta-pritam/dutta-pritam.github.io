@@ -1,6 +1,7 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
   <title>Writing — Pritam Dutta</title>
 
   <meta name="description"
-        content="Writing, reflections, ideas, and notes by Pritam Dutta.">
+        content="Essays, reflections, notes and ideas by Pritam Dutta.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,14 +18,13 @@
         rel="stylesheet">
 
   <style>
+
     :root {
       --bg: #f7f6f2;
-      --text: #181818;
+      --text: #171717;
       --muted: #777;
       --line: #deddd7;
-      --card: #ffffff;
-      --accent: #222;
-      --soft: #ecebe6;
+      --hover: #ecebe6;
     }
 
     [data-theme="dark"] {
@@ -32,9 +32,7 @@
       --text: #eeeeea;
       --muted: #999;
       --line: #2d2d29;
-      --card: #181815;
-      --accent: #fff;
-      --soft: #242420;
+      --hover: #22221e;
     }
 
     * {
@@ -51,659 +49,464 @@
       background: var(--bg);
       color: var(--text);
       font-family: "Inter", sans-serif;
-      line-height: 1.6;
-      transition:
-        background 0.4s ease,
-        color 0.4s ease;
+      transition: background .35s ease, color .35s ease;
     }
 
-    /* -------------------------
-       BACKGROUND
-    ------------------------- */
-
-    .background {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .orb {
-      position: absolute;
-      width: 420px;
-      height: 420px;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      opacity: 0.35;
-      animation: drift 18s ease-in-out infinite alternate;
-    }
-
-    .orb.one {
-      top: -180px;
-      right: -120px;
-    }
-
-    .orb.two {
-      bottom: -250px;
-      left: -150px;
-      width: 520px;
-      height: 520px;
-      animation-delay: -6s;
-    }
-
-    @keyframes drift {
-      from {
-        transform: translate(0, 0) rotate(0deg);
-      }
-
-      to {
-        transform: translate(35px, 25px) rotate(12deg);
-      }
-    }
-
-    /* -------------------------
+    /* --------------------
        HEADER
-    ------------------------- */
+    -------------------- */
 
     header {
       max-width: 1100px;
       margin: auto;
-      padding: 28px 28px 0;
+      padding: 28px;
     }
 
-    .topbar {
+    .top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
     .back {
       text-decoration: none;
       color: var(--text);
       font-size: 14px;
-      transition: opacity 0.2s ease;
     }
 
     .back:hover {
-      opacity: 0.55;
+      opacity: .55;
     }
 
     .theme {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--text);
       width: 38px;
       height: 38px;
+
       border-radius: 50%;
+      border: 1px solid var(--line);
+
+      background: transparent;
+      color: var(--text);
+
       cursor: pointer;
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+
+      transition: .25s ease;
     }
 
     .theme:hover {
-      background: var(--soft);
+      background: var(--hover);
       transform: rotate(15deg);
     }
 
-    /* -------------------------
-       HERO
-    ------------------------- */
 
-    .hero {
+    /* --------------------
+       INTRO
+    -------------------- */
+
+    .intro {
       max-width: 1100px;
       margin: auto;
-      padding: 115px 28px 80px;
+      padding: 110px 28px 75px;
     }
 
     .eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 18px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin-bottom: 20px;
     }
 
     h1 {
       font-family: "Newsreader", serif;
-      font-size: clamp(60px, 9vw, 110px);
+      font-size: clamp(65px, 10vw, 120px);
       font-weight: 400;
-      line-height: 0.95;
-      letter-spacing: -0.045em;
+      letter-spacing: -.055em;
+      line-height: .9;
     }
 
-    .intro {
-      max-width: 620px;
+    .description {
+      max-width: 570px;
       margin-top: 30px;
-      font-size: 17px;
+
+      font-size: 16px;
+      line-height: 1.7;
       color: var(--muted);
     }
 
-    /* -------------------------
-       CONTROLS
-    ------------------------- */
 
-    .controls {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 28px 35px;
+    /* --------------------
+       WRITING LIST
+    -------------------- */
 
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      align-items: center;
-
-      border-bottom: 1px solid var(--line);
-    }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .filter {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--muted);
-      padding: 8px 13px;
-      border-radius: 100px;
-      font: inherit;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .filter:hover,
-    .filter.active {
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
-    }
-
-    .search {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 100px;
-      outline: none;
-      width: 210px;
-      font: inherit;
-      font-size: 13px;
-    }
-
-    .search:focus {
-      border-color: var(--text);
-    }
-
-    /* -------------------------
-       WRITINGS
-    ------------------------- */
-
-    main {
+    .writings {
       max-width: 1100px;
       margin: auto;
       padding: 0 28px 120px;
     }
 
-    .writing-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0 55px;
-    }
-
-    .writing {
-      position: relative;
-      padding: 38px 0 42px;
+    .section-heading {
       border-bottom: 1px solid var(--line);
+      padding-bottom: 15px;
 
-      cursor: pointer;
-
-      opacity: 0;
-      transform: translateY(15px);
-
-      animation: appear 0.7s ease forwards;
-    }
-
-    .writing:nth-child(2) { animation-delay: 0.08s; }
-    .writing:nth-child(3) { animation-delay: 0.16s; }
-    .writing:nth-child(4) { animation-delay: 0.24s; }
-    .writing:nth-child(5) { animation-delay: 0.32s; }
-    .writing:nth-child(6) { animation-delay: 0.40s; }
-
-    @keyframes appear {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .writing:hover .arrow {
-      transform: translateX(7px);
-    }
-
-    .meta {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+
       font-size: 11px;
       color: var(--muted);
+
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: .12em;
     }
 
-    .writing h2 {
+
+    /* --------------------
+       WRITING CARD
+    -------------------- */
+
+    .writing {
+      display: grid;
+
+      grid-template-columns: 70px 1fr 100px;
+
+      gap: 25px;
+
+      padding: 38px 10px;
+
+      border-bottom: 1px solid var(--line);
+
+      text-decoration: none;
+      color: var(--text);
+
+      transition:
+        background .3s ease,
+        padding .3s ease;
+    }
+
+    .writing:hover {
+      background: var(--hover);
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .number {
+      font-family: "Newsreader", serif;
+      font-size: 17px;
+      color: var(--muted);
+    }
+
+    .writing-content h2 {
       font-family: "Newsreader", serif;
       font-size: 35px;
       font-weight: 400;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      margin-bottom: 13px;
+
+      line-height: 1.05;
+      letter-spacing: -.025em;
+
+      margin-bottom: 12px;
     }
 
-    .excerpt {
+    .writing-content p {
+      max-width: 620px;
+
       color: var(--muted);
       font-size: 14px;
-      max-width: 480px;
+      line-height: 1.65;
     }
 
-    .bottom {
-      margin-top: 23px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .meta {
+      text-align: right;
 
-    .tag {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
+
+      text-transform: uppercase;
+      letter-spacing: .08em;
+
+      padding-top: 5px;
     }
 
     .arrow {
-      font-size: 19px;
-      transition: transform 0.25s ease;
+      display: inline-block;
+
+      margin-left: 5px;
+
+      transition: transform .25s ease;
     }
 
-    /* -------------------------
-       EMPTY
-    ------------------------- */
-
-    .empty {
-      display: none;
-      padding: 80px 0;
-      text-align: center;
-      color: var(--muted);
+    .writing:hover .arrow {
+      transform: translateX(5px);
     }
 
-    /* -------------------------
+
+    /* --------------------
        FOOTER
-    ------------------------- */
+    -------------------- */
 
     footer {
       max-width: 1100px;
       margin: auto;
-      padding: 35px 28px 55px;
+
+      padding: 30px 28px 50px;
+
       border-top: 1px solid var(--line);
 
       display: flex;
       justify-content: space-between;
 
-      font-size: 12px;
       color: var(--muted);
+      font-size: 12px;
     }
 
-    /* -------------------------
+
+    /* --------------------
        MOBILE
-    ------------------------- */
+    -------------------- */
 
-    @media (max-width: 720px) {
-
-      header {
-        padding: 22px 20px 0;
-      }
-
-      .hero {
-        padding: 90px 20px 60px;
-      }
+    @media (max-width: 700px) {
 
       .intro {
-        font-size: 15px;
+        padding: 85px 20px 60px;
       }
 
-      .controls {
-        padding: 0 20px 25px;
-        flex-direction: column;
-        align-items: stretch;
+      header {
+        padding: 22px 20px;
       }
 
-      .search {
-        width: 100%;
-      }
-
-      main {
+      .writings {
         padding: 0 20px 80px;
       }
 
-      .writing-list {
-        grid-template-columns: 1fr;
+      .writing {
+        grid-template-columns: 35px 1fr;
+        gap: 15px;
+        padding: 30px 5px;
       }
 
-      .writing h2 {
-        font-size: 31px;
+      .writing:hover {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .meta {
+        grid-column: 2;
+        text-align: left;
+        padding-top: 0;
+      }
+
+      .writing-content h2 {
+        font-size: 30px;
       }
 
       footer {
-        padding: 30px 20px 45px;
-        flex-direction: column;
-        gap: 8px;
+        padding: 28px 20px 40px;
       }
     }
+
   </style>
 </head>
 
+
 <body>
 
-  <div class="background">
-    <div class="orb one"></div>
-    <div class="orb two"></div>
-  </div>
 
   <!-- HEADER -->
 
   <header>
-    <div class="topbar">
 
-      <a class="back" href="index.html">
+    <div class="top">
+
+      <a href="index.html" class="back">
         ← Pritam Dutta
       </a>
 
       <button class="theme"
               id="themeButton"
-              aria-label="Toggle dark mode">
+              aria-label="Toggle theme">
         ◐
       </button>
 
     </div>
+
   </header>
 
 
-  <!-- HERO -->
 
-  <section class="hero">
+  <!-- INTRO -->
+
+  <section class="intro">
 
     <div class="eyebrow">
-      Notes · Essays · Ideas
+      Essays · Notes · Reflections
     </div>
 
-    <h1>Writing.</h1>
+    <h1>
+      Writing.
+    </h1>
 
-    <p class="intro">
-      A collection of thoughts, observations, questions and ideas —
-      somewhere between science, people and the things I find
-      interesting.
+    <p class="description">
+      A collection of things I have written — ideas I have
+      been thinking about, questions I have asked, and
+      observations that stayed with me.
     </p>
 
   </section>
 
 
-  <!-- FILTERS -->
-
-  <section class="controls">
-
-    <div class="filters">
-
-      <button class="filter active" data-filter="all">
-        All
-      </button>
-
-      <button class="filter" data-filter="science">
-        Science
-      </button>
-
-      <button class="filter" data-filter="ideas">
-        Ideas
-      </button>
-
-      <button class="filter" data-filter="society">
-        Society
-      </button>
-
-      <button class="filter" data-filter="notes">
-        Notes
-      </button>
-
-    </div>
-
-    <input
-      class="search"
-      id="search"
-      type="search"
-      placeholder="Search writing..."
-      aria-label="Search writing"
-    >
-
-  </section>
-
 
   <!-- WRITINGS -->
 
-  <main>
+  <section class="writings">
 
-    <div class="writing-list" id="writingList">
+    <div class="section-heading">
+      <span>Selected writings</span>
+      <span>Archive</span>
+    </div>
 
 
-      <!-- ARTICLE 1 -->
+    <!-- =========================
+         WRITING 01
+         ========================= -->
 
-      <article class="writing"
-               data-category="ideas"
-               data-title="Impact without the I">
+    <a href="writing/impact-without-the-i.html"
+       class="writing">
 
-        <div class="meta">
-          <span>Essay</span>
-          <span>01</span>
-        </div>
+      <div class="number">
+        01
+      </div>
+
+      <div class="writing-content">
 
         <h2>
           Impact without the I.
         </h2>
 
-        <p class="excerpt">
-          We often talk about impact as something enormous.
-          But perhaps impact begins much closer to the ground —
-          in places where nobody is measuring it.
+        <p>
+          What does it really mean to make an impact?
+          Perhaps impact does not always need to be large,
+          measurable or celebrated. Sometimes it begins
+          with something very small.
         </p>
 
-        <div class="bottom">
-          <span class="tag">
-            Ideas · Society
-          </span>
+      </div>
 
-          <span class="arrow">
-            →
-          </span>
-        </div>
+      <div class="meta">
+        Essay<br>
+        2026
+        <span class="arrow">→</span>
+      </div>
 
-      </article>
+    </a>
 
 
-      <!-- ARTICLE 2 -->
 
-      <article class="writing"
-               data-category="science"
-               data-title="Why things rotate">
+    <!-- =========================
+         WRITING 02
+         ========================= -->
 
-        <div class="meta">
-          <span>Science</span>
-          <span>02</span>
-        </div>
+    <a href="writing/your-next-writing.html"
+       class="writing">
+
+      <div class="number">
+        02
+      </div>
+
+      <div class="writing-content">
 
         <h2>
-          Why things rotate.
+          Your next writing title.
         </h2>
 
-        <p class="excerpt">
-          A small note on angular momentum, symmetry and why
-          rotation appears everywhere from microscopic systems
-          to galaxies.
+        <p>
+          A short description of the piece goes here.
+          Keep this to one or two sentences so that the
+          reader knows what the writing explores.
         </p>
 
-        <div class="bottom">
-          <span class="tag">
-            Physics
-          </span>
+      </div>
 
-          <span class="arrow">
-            →
-          </span>
-        </div>
+      <div class="meta">
+        Reflection<br>
+        2026
+        <span class="arrow">→</span>
+      </div>
 
-      </article>
+    </a>
 
 
-      <!-- ARTICLE 3 -->
 
-      <article class="writing"
-               data-category="notes"
-               data-title="Things I noticed this week">
+    <!-- =========================
+         WRITING 03
+         ========================= -->
 
-        <div class="meta">
-          <span>Notes</span>
-          <span>03</span>
-        </div>
+    <a href="writing/another-writing.html"
+       class="writing">
+
+      <div class="number">
+        03
+      </div>
+
+      <div class="writing-content">
 
         <h2>
-          Things I noticed this week.
+          Another idea.
         </h2>
 
-        <p class="excerpt">
-          Small observations that would probably never deserve
-          an essay — but somehow stayed in my head.
+        <p>
+          Introduce the idea very briefly here. The actual
+          writing lives on its own page.
         </p>
 
-        <div class="bottom">
-          <span class="tag">
-            Personal Notes
-          </span>
+      </div>
 
-          <span class="arrow">
-            →
-          </span>
-        </div>
+      <div class="meta">
+        Notes<br>
+        2026
+        <span class="arrow">→</span>
+      </div>
 
-      </article>
+    </a>
 
 
-      <!-- ARTICLE 4 -->
 
-      <article class="writing"
-               data-category="science"
-               data-title="The beauty of approximation">
+    <!-- =========================
+         ADD MORE WRITINGS
+         ========================= -->
 
-        <div class="meta">
-          <span>Science</span>
-          <span>04</span>
-        </div>
+    <!--
+
+    <a href="writing/example.html"
+       class="writing">
+
+      <div class="number">
+        04
+      </div>
+
+      <div class="writing-content">
 
         <h2>
-          The beauty of approximation.
+          Example title.
         </h2>
 
-        <p class="excerpt">
-          Science rarely begins with perfect descriptions.
-          Sometimes understanding what we can safely ignore
-          is just as important as knowing what matters.
+        <p>
+          Short description of the writing.
         </p>
 
-        <div class="bottom">
-          <span class="tag">
-            Science · Thinking
-          </span>
+      </div>
 
-          <span class="arrow">
-            →
-          </span>
-        </div>
+      <div class="meta">
+        Essay<br>
+        2026
+        <span class="arrow">→</span>
+      </div>
 
-      </article>
+    </a>
 
-
-      <!-- ARTICLE 5 -->
-
-      <article class="writing"
-               data-category="society"
-               data-title="Small systems, large effects">
-
-        <div class="meta">
-          <span>Essay</span>
-          <span>05</span>
-        </div>
-
-        <h2>
-          Small systems, large effects.
-        </h2>
-
-        <p class="excerpt">
-          A system does not have to be large to matter.
-          Sometimes changing one small interaction changes
-          everything downstream.
-        </p>
-
-        <div class="bottom">
-          <span class="tag">
-            Society · Systems
-          </span>
-
-          <span class="arrow">
-            →
-          </span>
-        </div>
-
-      </article>
+    -->
 
 
-      <!-- ARTICLE 6 -->
+  </section>
 
-      <article class="writing"
-               data-category="ideas"
-               data-title="Questions are experiments">
-
-        <div class="meta">
-          <span>Reflection</span>
-          <span>06</span>
-        </div>
-
-        <h2>
-          Questions are experiments.
-        </h2>
-
-        <p class="excerpt">
-          A good question does something strange:
-          it changes the way you look at the answer.
-        </p>
-
-        <div class="bottom">
-          <span class="tag">
-            Ideas
-          </span>
-
-          <span class="arrow">
-            →
-          </span>
-        </div>
-
-      </article>
-
-
-    </div>
-
-    <div class="empty" id="empty">
-      Nothing found.
-    </div>
-
-  </main>
 
 
   <!-- FOOTER -->
@@ -715,168 +518,46 @@
     </span>
 
     <span>
-      Written slowly.
+      Ideas in progress.
     </span>
 
   </footer>
 
 
+
+  <!-- THEME -->
+
   <script>
 
-    /* -------------------------
-       THEME
-    ------------------------- */
-
-    const themeButton =
+    const button =
       document.getElementById("themeButton");
 
-    const savedTheme =
+    const saved =
       localStorage.getItem("theme");
 
-    if (savedTheme) {
-      document.documentElement.dataset.theme =
-        savedTheme;
+    if (saved) {
+      document.documentElement.dataset.theme = saved;
     }
 
-    themeButton.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
       const current =
         document.documentElement.dataset.theme;
 
       const next =
-        current === "dark" ? "light" : "dark";
+        current === "dark"
+          ? "light"
+          : "dark";
 
-      document.documentElement.dataset.theme =
-        next;
+      document.documentElement.dataset.theme = next;
 
       localStorage.setItem("theme", next);
 
     });
 
-
-    /* -------------------------
-       FILTER + SEARCH
-    ------------------------- */
-
-    const filters =
-      document.querySelectorAll(".filter");
-
-    const writings =
-      document.querySelectorAll(".writing");
-
-    const search =
-      document.getElementById("search");
-
-    const empty =
-      document.getElementById("empty");
-
-    let activeFilter = "all";
-
-
-    function updateResults() {
-
-      const query =
-        search.value.toLowerCase().trim();
-
-      let visible = 0;
-
-      writings.forEach(article => {
-
-        const category =
-          article.dataset.category;
-
-        const title =
-          article.dataset.title.toLowerCase();
-
-        const text =
-          article.innerText.toLowerCase();
-
-        const matchesFilter =
-          activeFilter === "all" ||
-          category === activeFilter;
-
-        const matchesSearch =
-          !query ||
-          title.includes(query) ||
-          text.includes(query);
-
-        if (matchesFilter && matchesSearch) {
-
-          article.style.display = "block";
-          visible++;
-
-        } else {
-
-          article.style.display = "none";
-
-        }
-
-      });
-
-      empty.style.display =
-        visible === 0 ? "block" : "none";
-    }
-
-
-    filters.forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        filters.forEach(b =>
-          b.classList.remove("active")
-        );
-
-        button.classList.add("active");
-
-        activeFilter =
-          button.dataset.filter;
-
-        updateResults();
-
-      });
-
-    });
-
-
-    search.addEventListener(
-      "input",
-      updateResults
-    );
-
-
-    /* -------------------------
-       ARTICLE CLICK
-       -------------------------
-       Replace this with links to
-       individual article pages.
-    */
-
-    writings.forEach(article => {
-
-      article.addEventListener("click", () => {
-
-        const title =
-          article.dataset.title;
-
-        console.log(
-          "Open article:",
-          title
-        );
-
-        /*
-          Example:
-
-          window.location.href =
-            "writing/impact-without-the-i.html";
-        */
-
-      });
-
-    });
-
   </script>
+
 
 </body>
 </html>
 ```
-
