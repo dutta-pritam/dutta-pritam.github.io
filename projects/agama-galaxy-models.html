@@ -1,39 +1,247 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Equilibrium galaxy models built with AGAMA's self-consistent modeling pipeline, fed into GADGET-4.">
-  <title>Equilibrium Galaxy Modeling with AGAMA — Pritam Dutta</title>
+
+  <meta name="description"
+        content="Equilibrium galaxy models built with AGAMA's self-consistent modeling pipeline and evolved with GADGET-4.">
+
+  <title>Equilibrium Galaxy Modeling — Pritam Dutta</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+        rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/style.css">
 </head>
-<body>
-  <canvas id="ripple" aria-hidden="true"></canvas>
 
-  <main>
+<body>
+
+  <main class="story">
+
     <a class="back" href="../index.html">Pritam Dutta</a>
 
-    <header class="page-header project-header">
-      <h1>Equilibrium Galaxy Modeling with AGAMA</h1>
-      <p class="meta">2026, Astrophysics, HPC, Galactic dynamics</p>
+    <header class="story-header">
+
+      <p class="eyebrow">2026 · Astrophysics · HPC</p>
+
+      <h1>
+        Building a galaxy<br>
+        that can stay still.
+      </h1>
+
+      <p class="intro">
+        An attempt to construct equilibrium galaxy models from first
+        principles, and then let them evolve under gravity.
+      </p>
+
     </header>
 
-    <div class="project-body">
-      <p>Equilibrium galaxy models built with AGAMA's self-consistent modeling (SCM) pipeline, feeding into GADGET-4 for N-body evolution.</p>
-      <p>The work sits on top of the underlying mathematics: the collisionless Boltzmann equation, action-angle variables, the Staeckel fudge, quasi-isothermal and double-power-law distribution functions, and multipole Poisson solvers.</p>
-      <p>I refactored the pipeline into two stages &mdash; a serial stage (<code>run_iterate.py</code>) that uses OpenMP to converge the SCM, and an MPI-parallel stage (<code>run_sample.py</code>) that handles memory-distributed particle sampling at the 10⁷-particle scale on a cluster.</p>
-    </div>
 
-    <nav class="project-footer-nav">
-      <a href="../index.html">All projects</a>
-    </nav>
+    <article class="story-content">
+
+      <section>
+        <p class="section-label">01</p>
+
+        <h2>It starts with a problem.</h2>
+
+        <p>
+          Before asking how a galaxy evolves, I wanted to ask a simpler
+          question:
+          <em>can we build one that is already in equilibrium?</em>
+        </p>
+
+        <p>
+          A galaxy is not just a collection of particles. Its stars move
+          through a gravitational potential, continuously responding to the
+          mass distribution around them. If the initial conditions are not
+          self-consistent, an N-body simulation can spend much of its early
+          evolution simply trying to settle itself.
+        </p>
+
+        <p>
+          So the goal was to construct the equilibrium first.
+        </p>
+      </section>
+
+
+      <section>
+        <p class="section-label">02</p>
+
+        <h2>Finding the right language.</h2>
+
+        <p>
+          I used
+          <strong>AGAMA</strong>
+          and its self-consistent modeling pipeline to construct the system.
+        </p>
+
+        <p>
+          Underneath the software is a collection of ideas from galactic
+          dynamics: the collisionless Boltzmann equation, action-angle
+          variables, the Staeckel approximation, distribution functions,
+          and multipole representations of the gravitational potential.
+        </p>
+
+        <p>
+          For the stellar components, I worked with
+          quasi-isothermal and double-power-law distribution functions.
+          The resulting density and potential are iteratively brought into
+          agreement.
+        </p>
+      </section>
+
+
+      <section class="quote-section">
+
+        <blockquote>
+          The interesting part is not generating particles.
+          <br>
+          It is making sure they belong to the galaxy you intended to build.
+        </blockquote>
+
+      </section>
+
+
+      <section>
+        <p class="section-label">03</p>
+
+        <h2>From equilibrium to particles.</h2>
+
+        <p>
+          Once the self-consistent model converges, the continuous
+          distribution has to become something an N-body code can actually
+          evolve.
+        </p>
+
+        <p>
+          I split the pipeline into two distinct stages.
+        </p>
+
+        <div class="steps">
+
+          <div class="step">
+            <span>01</span>
+            <div>
+              <h3>Converge</h3>
+              <p>
+                <code>run_iterate.py</code> performs the self-consistent
+                modeling stage, using OpenMP to accelerate the computation.
+              </p>
+            </div>
+          </div>
+
+          <div class="step">
+            <span>02</span>
+            <div>
+              <h3>Sample</h3>
+              <p>
+                <code>run_sample.py</code> samples the converged distribution
+                into particles and distributes the workload across MPI
+                processes.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <section>
+        <p class="section-label">04</p>
+
+        <h2>Then the scale changes.</h2>
+
+        <p>
+          A small equilibrium model is useful for understanding the physics.
+          But the computational problem becomes very different when the
+          system contains millions of particles.
+        </p>
+
+        <p>
+          The sampling stage was therefore designed around distributed
+          memory rather than treating the entire particle population as a
+          single in-memory object.
+        </p>
+
+        <p class="highlight">
+          The target is the
+          <span>10⁷-particle</span>
+          scale on a cluster.
+        </p>
+
+        <p>
+          The final particle realization can then be passed to
+          <strong>GADGET-4</strong>, where the equilibrium model becomes the
+          initial condition for a full N-body evolution.
+        </p>
+      </section>
+
+
+      <section>
+        <p class="section-label">05</p>
+
+        <h2>What I am really exploring.</h2>
+
+        <p>
+          The project sits somewhere between astrophysics and computational
+          science.
+        </p>
+
+        <p>
+          The physics determines what a valid galaxy looks like.
+          The numerical methods determine whether we can construct it.
+          And the architecture of the code determines how far we can scale it.
+        </p>
+
+        <p>
+          That intersection is what interests me most.
+        </p>
+      </section>
+
+
+      <section class="ending">
+
+        <p class="section-label">06</p>
+
+        <h2>And this is only the beginning.</h2>
+
+        <p>
+          The next step is to follow these carefully constructed systems
+          through time: measuring their stability, structure, and evolution
+          under gravity.
+        </p>
+
+        <p>
+          Eventually, the same pipeline can become a starting point for
+          more complicated galaxy models and larger cosmological
+          simulations.
+        </p>
+
+        <p class="final-line">
+          Build the equilibrium first.<br>
+          Then see what happens when you let gravity take over.
+        </p>
+
+      </section>
+
+    </article>
+
+
+    <footer class="story-footer">
+
+      <a href="../index.html">← All projects</a>
+
+    </footer>
+
   </main>
 
   <script src="../assets/ripple.js"></script>
+
 </body>
 </html>
+
