@@ -6,26 +6,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="description"
-        content="Equilibrium galaxy models built with AGAMA's self-consistent modeling pipeline and evolved with GADGET-4.">
+  <meta
+    name="description"
+    content="A from-scratch gravitational N-body simulation in Python, exploring numerical integration, orbital dynamics, conservation laws and computational scaling."
+  >
 
-  <title>Equilibrium Galaxy Modeling — Pritam Dutta</title>
+  <title>N-Body Simulation — Pritam Dutta</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
-        rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+    rel="stylesheet"
+  >
 
+  <!-- Main site stylesheet -->
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 
 
 <body>
 
-<main class="story">
+<main class="story nbody-project">
 
-  <a class="back" href="../index.html">Pritam Dutta</a>
+
+  <!-- =========================================
+       NAVIGATION
+       ========================================= -->
+
+  <a class="back" href="../index.html">
+    Pritam Dutta
+  </a>
 
 
   <!-- =========================================
@@ -34,35 +47,49 @@
 
   <header class="story-header">
 
-    <p class="eyebrow">2026 · Astrophysics · HPC</p>
+    <p class="eyebrow">
+      2026 · Computational Astrophysics · Numerical Methods
+    </p>
 
     <h1>
-      Building a galaxy<br>
-      that can stay still.
+      What happens<br>
+      when gravity<br>
+      is the only rule?
     </h1>
 
     <p class="intro">
-      An attempt to construct equilibrium galaxy models from first
-      principles, and then let them evolve under gravity.
+      A from-scratch gravitational N-body simulation built to understand
+      the mathematics, numerical methods and computational cost behind
+      many-body gravitational systems.
     </p>
 
   </header>
 
 
   <!-- =========================================
-       HERO SIMULATION
+       HERO VIDEO
        ========================================= -->
 
-  <figure class="hero-figure">
+  <figure class="hero-video">
 
-    <img
-      src="../assets/images/galaxy_initial.png"
-      alt="Initial equilibrium galaxy model generated with AGAMA"
-      loading="eager">
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      controls
+      preload="metadata"
+    >
+      <source
+        src="../assets/nbody/2_body_simulation_using_verlet.mp4"
+        type="video/mp4"
+      >
+
+      Your browser does not support the video element.
+    </video>
 
     <figcaption>
-      An equilibrium galaxy model generated from the self-consistent
-      modeling pipeline.
+      A two-body orbit evolved using the Verlet integrator.
     </figcaption>
 
   </figure>
@@ -72,113 +99,152 @@
 
 
     <!-- =========================================
-         01
+         01 — THE QUESTION
          ========================================= -->
 
     <section>
 
       <p class="section-label">01</p>
 
-      <h2>It starts with a problem.</h2>
+      <h2>It started with gravity.</h2>
 
       <p>
-        Before asking how a galaxy evolves, I wanted to ask a simpler
-        question:
-        <em>can we build one that is already in equilibrium?</em>
+        I wanted to understand what actually happens underneath an
+        N-body simulation rather than treating the solver as a black box.
       </p>
 
       <p>
-        A galaxy is not just a collection of particles. Its stars move
-        through a gravitational potential, continuously responding to the
-        mass distribution around them. If the initial conditions are not
-        self-consistent, an N-body simulation can spend much of its early
-        evolution simply trying to settle itself.
+        At its core, the problem is deceptively simple:
+        every body feels the gravitational force produced by every other
+        body.
+      </p>
+
+      <p class="equation">
+        F<sub>ij</sub> =
+        G
+        <span>m<sub>i</sub>m<sub>j</sub></span>
+        /
+        r<sub>ij</sub><sup>2</sup>
       </p>
 
       <p>
-        So the goal was to construct the equilibrium first.
+        From this single interaction comes a system whose behaviour can
+        become surprisingly complicated as the number of bodies grows.
       </p>
 
     </section>
 
 
     <!-- =========================================
-         SIMULATION IMAGE
-         ========================================= -->
-
-    <figure class="story-figure">
-
-      <img
-        src="../assets/images/galaxy-density.png"
-        alt="Density distribution of the equilibrium galaxy"
-        loading="lazy">
-
-      <figcaption>
-        Projected density distribution of the model.
-      </figcaption>
-
-    </figure>
-
-
-    <!-- =========================================
-         02
+         02 — TWO BODY
          ========================================= -->
 
     <section>
 
       <p class="section-label">02</p>
 
-      <h2>Finding the right language.</h2>
+      <h2>First, make two bodies behave.</h2>
 
       <p>
-        I used
-        <strong>AGAMA</strong>
-        and its self-consistent modeling pipeline to construct the system.
+        Before dealing with many interacting particles, I started with
+        the simplest system for which the dynamics are already known:
+        two bodies orbiting their common centre of mass.
       </p>
 
       <p>
-        Underneath the software is a collection of ideas from galactic
-        dynamics: the collisionless Boltzmann equation, action-angle
-        variables, the Staeckel approximation, distribution functions,
-        and multipole representations of the gravitational potential.
+        This became the first test of the numerical machinery.
+        If the integrator cannot preserve a simple orbit, there is little
+        reason to trust it when hundreds of bodies begin interacting.
+      </p>
+
+    </section>
+
+
+    <figure class="wide-figure">
+
+      <video
+        controls
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source
+          src="../assets/nbody/2_body_simulation_using_verlet.mp4"
+          type="video/mp4"
+        >
+      </video>
+
+      <figcaption>
+        Two-body dynamics using the Verlet scheme.
+      </figcaption>
+
+    </figure>
+
+
+    <!-- =========================================
+         03 — INTEGRATORS
+         ========================================= -->
+
+    <section>
+
+      <p class="section-label">03</p>
+
+      <h2>Then time itself becomes numerical.</h2>
+
+      <p>
+        The equations of motion are continuous, but a computer has to
+        advance the system in discrete time steps.
       </p>
 
       <p>
-        For the stellar components, I worked with quasi-isothermal and
-        double-power-law distribution functions. The resulting density
-        and potential are iteratively brought into agreement.
+        I implemented and compared several numerical approaches:
+        Euler, Leapfrog/Verlet, fourth-order Runge–Kutta and
+        Runge–Kutta–Fehlberg 45.
+      </p>
+
+      <p>
+        The comparison was not only about whether the particles followed
+        approximately correct trajectories. I was interested in what
+        happened to quantities that should remain conserved.
       </p>
 
     </section>
 
 
     <!-- =========================================
-         MULTIPLE FIGURES
+         INTEGRATOR / CONSERVATION FIGURES
          ========================================= -->
 
     <div class="figure-grid">
 
       <figure>
+
         <img
-          src="../assets/images/potential.png"
-          alt="Gravitational potential of the galaxy"
-          loading="lazy">
+          src="../assets/nbody/N=10.png"
+          alt="N-body simulation with ten bodies"
+          loading="lazy"
+        >
 
         <figcaption>
-          Gravitational potential.
+          A ten-body gravitational system.
         </figcaption>
+
       </figure>
 
 
       <figure>
+
         <img
-          src="../assets/images/velocity-dispersion.png"
-          alt="Velocity dispersion map of the galaxy"
-          loading="lazy">
+          src="../assets/nbody/N=10_Energy.png"
+          alt="Energy evolution of the ten-body simulation"
+          loading="lazy"
+        >
 
         <figcaption>
-          Velocity dispersion.
+          Energy evolution for the N = 10 system.
         </figcaption>
+
       </figure>
 
     </div>
@@ -191,262 +257,37 @@
     <section class="quote-section">
 
       <blockquote>
-        The interesting part is not generating particles.
-        <br>
-        It is making sure they belong to the galaxy you intended to build.
+        A simulation is only as useful as the physics
+        and numerics hiding underneath it.
       </blockquote>
 
     </section>
 
 
     <!-- =========================================
-         03
-         ========================================= -->
-
-    <section>
-
-      <p class="section-label">03</p>
-
-      <h2>From equilibrium to particles.</h2>
-
-      <p>
-        Once the self-consistent model converges, the continuous
-        distribution has to become something an N-body code can actually
-        evolve.
-      </p>
-
-      <p>
-        I split the pipeline into two distinct stages.
-      </p>
-
-
-      <div class="steps">
-
-        <div class="step">
-
-          <span>01</span>
-
-          <div>
-            <h3>Converge</h3>
-
-            <p>
-              <code>run_iterate.py</code> performs the self-consistent
-              modeling stage, using OpenMP to accelerate the computation.
-            </p>
-          </div>
-
-        </div>
-
-
-        <div class="step">
-
-          <span>02</span>
-
-          <div>
-            <h3>Sample</h3>
-
-            <p>
-              <code>run_sample.py</code> samples the converged distribution
-              into particles and distributes the workload across MPI
-              processes.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         PIPELINE FIGURE
-         ========================================= -->
-
-    <figure class="wide-figure">
-
-      <img
-        src="../assets/images/pipeline.png"
-        alt="AGAMA to GADGET-4 computational pipeline"
-        loading="lazy">
-
-      <figcaption>
-        From self-consistent modeling to particle realization and
-        subsequent N-body evolution.
-      </figcaption>
-
-    </figure>
-
-
-    <!-- =========================================
-         04
+         04 — CONSERVATION
          ========================================= -->
 
     <section>
 
       <p class="section-label">04</p>
 
-      <h2>Then the scale changes.</h2>
+      <h2>Trajectories are not enough.</h2>
 
       <p>
-        A small equilibrium model is useful for understanding the physics.
-        But the computational problem becomes very different when the
-        system contains millions of particles.
+        A trajectory can look perfectly reasonable while the numerical
+        solution slowly drifts away from the physical system it is
+        supposed to represent.
       </p>
 
       <p>
-        The sampling stage was therefore designed around distributed
-        memory rather than treating the entire particle population as a
-        single in-memory object.
-      </p>
-
-      <p class="highlight">
-        The target is the
-        <span>10⁷-particle</span>
-        scale on a cluster.
+        So I tracked the quantities that should remain conserved:
+        total energy and angular momentum.
       </p>
 
       <p>
-        The final particle realization can then be passed to
-        <strong>GADGET-4</strong>, where the equilibrium model becomes the
-        initial condition for a full N-body evolution.
-      </p>
-
-    </section>
-
-
-    <!-- =========================================
-         LARGE PARTICLE REALIZATION
-         ========================================= -->
-
-    <figure class="wide-figure">
-
-      <img
-        src="../assets/images/particle-realization.png"
-        alt="Large scale particle realization of the galaxy"
-        loading="lazy">
-
-      <figcaption>
-        Particle realization of the equilibrium model at large N.
-      </figcaption>
-
-    </figure>
-
-
-    <!-- =========================================
-         05
-         ========================================= -->
-
-    <section>
-
-      <p class="section-label">05</p>
-
-      <h2>What happens when gravity takes over?</h2>
-
-      <p>
-        The equilibrium model is only the beginning. Once the particles
-        are handed to an N-body solver, the system can be followed through
-        time.
-      </p>
-
-      <p>
-        This makes it possible to ask whether the constructed equilibrium
-        remains stable, how its structure changes, and whether numerical
-        effects introduce measurable deviations.
-      </p>
-
-    </section>
-
-
-    <!-- =========================================
-         EVOLUTION SEQUENCE
-         ========================================= -->
-
-    <div class="evolution">
-
-      <p class="evolution-label">N-body evolution</p>
-
-
-      <div class="evolution-grid">
-
-        <figure>
-
-          <img
-            src="../assets/images/evolution-000.png"
-            alt="Galaxy at initial time"
-            loading="lazy">
-
-          <figcaption>
-            <span>t = 0</span>
-            Initial condition.
-          </figcaption>
-
-        </figure>
-
-
-        <figure>
-
-          <img
-            src="../assets/images/evolution-001.png"
-            alt="Galaxy during early evolution"
-            loading="lazy">
-
-          <figcaption>
-            <span>t = 1</span>
-            Early evolution.
-          </figcaption>
-
-        </figure>
-
-
-        <figure>
-
-          <img
-            src="../assets/images/evolution-002.png"
-            alt="Galaxy during intermediate evolution"
-            loading="lazy">
-
-          <figcaption>
-            <span>t = 2</span>
-            Intermediate state.
-          </figcaption>
-
-        </figure>
-
-
-        <figure>
-
-          <img
-            src="../assets/images/evolution-003.png"
-            alt="Galaxy at later evolution"
-            loading="lazy">
-
-          <figcaption>
-            <span>t = 3</span>
-            Later evolution.
-          </figcaption>
-
-        </figure>
-
-      </div>
-
-    </div>
-
-
-    <!-- =========================================
-         DIAGNOSTICS
-         ========================================= -->
-
-    <section>
-
-      <p class="section-label">06</p>
-
-      <h2>Equilibrium has to be measured.</h2>
-
-      <p>
-        A galaxy that looks stable is not necessarily numerically stable.
-        I therefore use dynamical diagnostics to quantify the evolution
-        rather than relying only on visual inspection.
+        These became a way of looking beyond the animation and asking
+        whether the numerical method was actually behaving correctly.
       </p>
 
     </section>
@@ -457,12 +298,13 @@
       <figure>
 
         <img
-          src="../assets/images/energy-drift.png"
-          alt="Energy drift during the simulation"
-          loading="lazy">
+          src="../assets/nbody/Angular_Momentum_verlet.png"
+          alt="Angular momentum during the Verlet simulation"
+          loading="lazy"
+        >
 
         <figcaption>
-          Energy conservation.
+          Angular momentum during the Verlet integration.
         </figcaption>
 
       </figure>
@@ -471,12 +313,28 @@
       <figure>
 
         <img
-          src="../assets/images/lagrangian-radii.png"
-          alt="Evolution of Lagrangian radii"
-          loading="lazy">
+          src="../assets/nbody/Angular_Momentum_Drift_verlet.png"
+          alt="Angular momentum drift in the Verlet simulation"
+          loading="lazy"
+        >
 
         <figcaption>
-          Lagrangian radii.
+          Angular-momentum drift.
+        </figcaption>
+
+      </figure>
+
+
+      <figure>
+
+        <img
+          src="../assets/nbody/energy_drift_verlet_N25.png"
+          alt="Energy drift for a 25-body Verlet simulation"
+          loading="lazy"
+        >
+
+        <figcaption>
+          Energy drift for an N = 25 system.
         </figcaption>
 
       </figure>
@@ -485,75 +343,314 @@
 
 
     <!-- =========================================
-         07
+         05 — N BODY
          ========================================= -->
 
     <section>
 
-      <p class="section-label">07</p>
+      <p class="section-label">05</p>
 
-      <h2>What I am really exploring.</h2>
+      <h2>Two bodies become many.</h2>
 
       <p>
-        The project sits somewhere between astrophysics and computational
-        science.
+        The interesting part begins when the system stops having a simple
+        analytical picture.
       </p>
 
       <p>
-        The physics determines what a valid galaxy looks like.
-        The numerical methods determine whether we can construct it.
-        And the architecture of the code determines how far we can scale it.
+        With N bodies, every particle contributes to the gravitational
+        field experienced by every other particle.
+      </p>
+
+      <p class="highlight">
+        More particles do not just mean more particles.
+        <span>They mean more interactions.</span>
       </p>
 
       <p>
-        That intersection is what interests me most.
+        For a direct pairwise calculation, the computational cost grows
+        approximately as
+        <strong>O(N²)</strong>.
       </p>
 
     </section>
 
 
     <!-- =========================================
-         FINAL IMAGE
+         N BODY ANIMATION
          ========================================= -->
 
-    <figure class="final-figure">
+    <figure class="wide-figure simulation-video">
 
-      <img
-        src="../assets/images/galaxy-final.png"
-        alt="Final galaxy simulation"
-        loading="lazy">
+      <video
+        controls
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source
+          src="../assets/nbody/n_body_simulation_verlet.mp4"
+          type="video/mp4"
+        >
+      </video>
 
       <figcaption>
-        One realization, followed through time.
+        Many-body gravitational evolution using the Verlet integrator.
       </figcaption>
 
     </figure>
 
 
     <!-- =========================================
-         END
+         GIF / SECOND VISUAL
+         ========================================= -->
+
+    <figure class="wide-figure">
+
+      <img
+        src="../assets/nbody/nbody_simulation.gif"
+        alt="Animated N-body gravitational simulation"
+        loading="lazy"
+      >
+
+      <figcaption>
+        Another view of the many-body system evolving under gravity.
+      </figcaption>
+
+    </figure>
+
+
+    <!-- =========================================
+         06 — THE COMPUTATIONAL PROBLEM
+         ========================================= -->
+
+    <section>
+
+      <p class="section-label">06</p>
+
+      <h2>Then the computation becomes the problem.</h2>
+
+      <p>
+        The physics itself is compact. The number of interactions is not.
+      </p>
+
+      <p>
+        Every time step requires the gravitational influence of the
+        surrounding particles to be evaluated. As N grows, the direct
+        method quickly becomes dominated by these pairwise interactions.
+      </p>
+
+      <p>
+        This is where the project stops being only an astrophysics
+        exercise and becomes a computational problem.
+      </p>
+
+    </section>
+
+
+    <!-- =========================================
+         07 — ARCHITECTURE
+         ========================================= -->
+
+    <section>
+
+      <p class="section-label">07</p>
+
+      <h2>Building the machinery myself.</h2>
+
+      <p>
+        The project was structured so that the physical model,
+        numerical integrators, energy calculations, stability checks
+        and simulation driver could be developed independently.
+      </p>
+
+      <div class="steps">
+
+
+        <div class="step">
+
+          <span>01</span>
+
+          <div>
+
+            <h3>Body dynamics</h3>
+
+            <p>
+              Positions, velocities, masses and gravitational
+              accelerations form the underlying particle system.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step">
+
+          <span>02</span>
+
+          <div>
+
+            <h3>Integrators</h3>
+
+            <p>
+              Different time-integration schemes can be tested against
+              the same physical system.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step">
+
+          <span>03</span>
+
+          <div>
+
+            <h3>Diagnostics</h3>
+
+            <p>
+              Energy, angular momentum and stability provide numerical
+              checks beyond visual inspection.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step">
+
+          <span>04</span>
+
+          <div>
+
+            <h3>Visualization</h3>
+
+            <p>
+              Simulation states can be turned into trajectories,
+              animations and longer-running visualizations.
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================
+         08 — DATA
+         ========================================= -->
+
+    <section>
+
+      <p class="section-label">08</p>
+
+      <h2>The simulation is also data.</h2>
+
+      <p>
+        Each run produces a numerical record of the system rather than
+        just an image on the screen.
+      </p>
+
+      <p>
+        I used structured simulation data to preserve particle states
+        and make it possible to analyse the evolution after the run
+        itself had finished.
+      </p>
+
+      <p>
+        This separation between simulation and analysis becomes
+        increasingly important once the systems become too large to
+        understand from an animation alone.
+      </p>
+
+    </section>
+
+
+    <!-- =========================================
+         09 — WHAT NEXT
+         ========================================= -->
+
+    <section>
+
+      <p class="section-label">09</p>
+
+      <h2>The next bottleneck is obvious.</h2>
+
+      <p>
+        Direct summation is useful because it makes the physics explicit,
+        but it is not the final answer to the scaling problem.
+      </p>
+
+      <p>
+        The natural next step is to replace the direct
+        <strong>O(N²)</strong> calculation with hierarchical methods
+        such as the Barnes–Hut tree algorithm.
+      </p>
+
+      <p>
+        That would allow the same physical problem to be explored at
+        particle counts where direct pairwise computation becomes
+        increasingly expensive.
+      </p>
+
+    </section>
+
+
+    <!-- =========================================
+         FINAL VISUAL
+         ========================================= -->
+
+    <figure class="final-figure">
+
+      <img
+        src="../assets/nbody/N=10.png"
+        alt="Final N-body simulation visualization"
+        loading="lazy"
+      >
+
+      <figcaption>
+        A many-body system reduced to a numerical experiment:
+        positions, velocities, forces and time.
+      </figcaption>
+
+    </figure>
+
+
+    <!-- =========================================
+         ENDING
          ========================================= -->
 
     <section class="ending">
 
-      <p class="section-label">08</p>
+      <p class="section-label">10</p>
 
-      <h2>And this is only the beginning.</h2>
+      <h2>There is something satisfying about starting from zero.</h2>
 
       <p>
-        The next step is to follow these carefully constructed systems
-        through time: measuring their stability, structure, and evolution
-        under gravity.
+        No simulation engine was hiding the equations.
+        No integrator was hiding the time evolution.
+        No visualization library was deciding what the physics meant.
       </p>
 
       <p>
-        Eventually, the same pipeline can become a starting point for
-        more complicated galaxy models and larger cosmological simulations.
+        I wanted to understand the entire chain:
+        from Newtonian gravity to numerical integration,
+        from conservation laws to computational scaling.
       </p>
 
       <p class="final-line">
-        Build the equilibrium first.<br>
-        Then see what happens when you let gravity take over.
+        Start with gravity.<br>
+        Write down the equations.<br>
+        Then let the particles move.
       </p>
 
     </section>
@@ -568,7 +665,17 @@
 
   <footer class="story-footer">
 
-    <a href="../index.html">← All projects</a>
+    <a href="../index.html">
+      ← All projects
+    </a>
+
+    <a
+      href="https://github.com/Akshat-Chakarverty/n-body-simulation"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      View source ↗
+    </a>
 
   </footer>
 
