@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pritam Dutta — Portfolio</title>
-  
+  <meta name="description" content="The Robotics Assisted Farming Model enables the usage of aeroponics as well as hydroponics with the assistance of automation and artificial intelligence.">
+  <title>Robotics Assisted Farming — Pritam Dutta</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg-color: #fcfcfc;
       --text-main: #111827;
-      --text-secondary: #4b5563;
+      --text-secondary: #374151;
       --text-light: #9ca3af;
       --border-color: #e5e7eb;
-      --card-bg: #ffffff;
-      --accent-color: #476b8a; 
+      --accent-color: #476b8a;
     }
 
     * {
@@ -53,247 +53,193 @@
       padding: 60px 20px;
     }
 
-    /* Profile Header */
-    .profile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+    /* Navigation */
+    .back-link {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--text-main);
+    }
+
+    /* Header */
+    .project-header {
       margin-bottom: 40px;
     }
 
-    .profile-info h1 {
+    .project-header h1 {
       font-size: 1.8rem;
       font-weight: 600;
       margin-bottom: 8px;
     }
 
-    .subtitle {
-      color: var(--text-secondary);
+    .project-header .meta {
+      color: var(--text-light);
       font-size: 0.95rem;
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 20px;
     }
 
     .dot-gray {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       background-color: #d1d5db;
       border-radius: 50%;
       display: inline-block;
     }
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .action-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: inherit;
-      transition: background 0.2s;
-    }
-
-    .action-btn:hover {
-      background: #f3f4f6;
-    }
-
-    .profile-pic {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      flex-shrink: 0;
-    }
-
-    .profile-pic img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .status-dot {
-      position: absolute;
-      bottom: 2px;
-      right: 4px;
-      width: 12px;
-      height: 12px;
-      background-color: var(--accent-color);
-      border: 2px solid var(--bg-color);
-      border-radius: 50%;
-    }
-
-    /* Bio Section */
-    .bio {
+    /* Project Body */
+    .project-body {
       font-family: 'Newsreader', serif;
       font-size: 1.15rem;
-      color: #374151;
-      margin-bottom: 50px;
+      color: var(--text-secondary);
       line-height: 1.7;
     }
 
-    /* Projects Section */
-    .projects h2 {
+    .project-body p {
+      margin-bottom: 24px;
+    }
+
+    .project-body h3 {
+      font-family: 'Inter', sans-serif;
       font-size: 1.1rem;
       font-weight: 500;
-      margin-bottom: 20px;
       color: var(--text-main);
+      margin-top: 48px;
+      margin-bottom: 16px;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
 
-    .project-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .project-body ul {
+      margin-bottom: 24px;
+      padding-left: 24px;
     }
 
-    .project-card {
-      text-decoration: none;
-      display: block;
-      padding: 16px 20px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      transition: all 0.2s ease;
-      cursor: pointer;
+    .project-body li {
+      margin-bottom: 8px;
     }
 
-    .project-card:hover {
-      background: var(--card-bg);
-      border-color: var(--border-color);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-    }
-
-    .project-card.active {
-      background: var(--card-bg);
-      border-color: var(--border-color);
-      border-left: 4px solid var(--accent-color);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      padding-left: 17px; /* Adjust for border */
-    }
-
-    .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 6px;
-    }
-
-    .project-card h3 {
-      font-size: 1rem;
-      font-weight: 500;
+    .project-body strong {
+      font-weight: 600;
       color: var(--text-main);
     }
-    
-    .project-card.active h3 {
-      color: var(--accent-color);
+
+    /* Images */
+    .project-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin: 32px 0 12px 0;
+      display: block;
     }
 
-    .project-card .date {
+    .project-body .caption, 
+    .project-body em {
+      font-family: 'Inter', sans-serif;
       font-size: 0.85rem;
       color: var(--text-light);
-      font-family: 'Inter', monospace;
+      display: block;
+      margin-bottom: 32px;
+      font-style: normal;
     }
 
-    .project-card p {
+    /* Footer Nav */
+    .project-footer-nav {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .project-footer-nav a {
+      text-decoration: none;
+      color: var(--accent-color);
+      font-family: 'Inter', sans-serif;
       font-size: 0.95rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
     }
 
+    .project-footer-nav a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <!-- Network Canvas Background -->
   <canvas id="network-bg" aria-hidden="true"></canvas>
 
-  <div class="container">
-    
-    <!-- Header Section -->
-    <header class="profile-header">
-      <div class="profile-info">
-        <h1>Pritam Dutta</h1>
-        <p class="subtitle"><span class="dot-gray"></span> BS-MS · Indian Association for the Cultivation of Science</p>
-        
-        <div class="actions">
-          <button class="action-btn">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg> 
-            System
-          </button>
-          <button class="action-btn">Copy email</button>
-          <button class="action-btn" id="live-time">23:48:50</button>
-        </div>
-      </div>
-      
-      <div class="profile-pic">
-        <!-- Replace with your actual image path -->
-        <img src="https://ui-avatars.com/api/?name=Pritam+Dutta&background=random" alt="Pritam Dutta">
-        <span class="status-dot"></span>
-      </div>
+  <main class="container">
+    <nav>
+      <a class="back-link" href="../index.html">← Pritam Dutta</a>
+    </nav>
+
+    <header class="project-header">
+      <h1>Robotics Assisted Farming</h1>
+      <p class="meta"><span class="dot-gray"></span> Automation, Artificial Intelligence, Embedded Systems</p>
     </header>
 
-    <!-- Bio Section -->
-    <section class="bio">
-      <p>I'm a BS-MS student interested in computational science, robotics, and autonomous systems. I like building things, understanding them from first principles, and writing about what I learn. Feel free to reach out if you'd like to talk about research, projects, or ideas.</p>
-    </section>
-
-    <!-- Projects Section -->
-    <section class="projects">
-      <h2>Projects</h2>
+    <div class="project-body">
+      <p>Every big journey starts with a simple observation. For me, it was noticing the growing disconnect between traditional agriculture and modern technology. I wondered: what if we could merge artificial intelligence with soil-less farming to create a self-sustaining ecosystem? That thought became the seed for the <strong>Robotics Assisted Farming Model</strong>. My goal was to enable the usage of aeroponics as well as hydroponics with the assistance of automation and AI. To bring this vision to life, I began wiring together ATMEGA2560, Broadcom BCM2711, and ESP8266 microcontrollers with a vast network of sensors.</p>
       
-      <div class="project-list">
-        
-        <!-- Active Project Card (Like in image) -->
-        <a href="#" class="project-card active">
-          <div class="project-header">
-            <h3>Equilibrium Galaxy Modeling with AGAMA</h3>
-            <span class="date">2026-</span>
-          </div>
-          <p>Building equilibrium galaxy models with AGAMA's self-consistent modeling pipeline, fed into GADGET-4.</p>
-        </a>
+      <img src="ras.png" alt="The Physical Model prototype.">
+      <span class="caption">The Physical Model prototype.</span>
 
-        <!-- Project 2 -->
-        <a href="#" class="project-card">
-          <div class="project-header">
-            <h3>Hydrogen Line Radio Astronomy</h3>
-            <span class="date">2026-</span>
-          </div>
-          <p>Debugging a hydrogen-line radio astronomy pipeline built on a HackRF SDR and the Virgo library.</p>
-        </a>
+      <h3>Building the Core (Key Features)</h3>
+      <p>Working on the initial prototype, I wanted it to be as comprehensive and autonomous as possible. I focused heavily on integrating these core features into the build:</p>
+      <ul>
+        <li><strong>Dual Systems:</strong> I engineered it to run hydroponics using centrifugal pumps and a reliable water drainage system, alongside an aeroponic system equipped with a water mist creating mechanism.</li>
+        <li><strong>Auto Seeding:</strong> To remove manual labor, I built an X and Y-axis moving mechanism using BO motors, achieving a seeding accuracy of over 85%.</li>
+        <li><strong>Plant Disease Detection:</strong> To give the system "eyes," I implemented a Convolutional Neural Network and NDVI in Python, utilizing OpenCV and TensorFlow to actively identify plant diseases.</li>
+        <li><strong>Auto Nutritional Maintenance:</strong> I integrated pH, TDS, humidity, and temperature sensors to constantly monitor and provide nutrition at an equilibrium state using peristaltic pumps.</li>
+        <li><strong>Mobile Based UI:</strong> Finally, I coded a user-friendly mobile application to provide real-time information, live farm footage, and suggestive measures right to the user's phone.</li>
+      </ul>
 
-        <!-- Project 3 -->
-        <a href="#" class="project-card">
-          <div class="project-header">
-            <h3>N-body Simulation</h3>
-            <span class="date">2026-</span>
-          </div>
-          <p>A from-scratch gravitational N-body simulator using numerical integration, scientific data analysis, and HDF5 storage.</p>
-        </a>
-        
-        <!-- Newly Added Project from Previous Prompt -->
-        <a href="projects/robotics-farming.html" class="project-card">
-          <div class="project-header">
-            <h3>Robotics Assisted Farming</h3>
-            <span class="date">2023-</span>
-          </div>
-          <p>A self-sustaining aeroponics & hydroponics ecosystem integrated with CNN-based disease detection, automated seeding, and an active mobile UI.</p>
-        </a>
+      <h3>The Turning Point: Incubation at ACIC MIET</h3>
+      <p>As the prototype took shape, its potential became undeniable. I designed the system to be highly versatile—targeted for use in Agricultural Farms, Farming Research Labs, and even at home. To maintain optimal growing conditions, I included an Inbuilt Lighting System and an Auto Cooling System, while utilizing a dedicated Database to securely store all operational data. This comprehensive approach caught the attention of the <strong>ACIC MIET</strong> (Atal Community Innovation Centre - Meerut Institute of Engineering and Technology). Being accepted for incubation there was a massive milestone. It provided me with the mentorship, workspace, and resources needed to take the project from a raw prototype to a professional model.</p>
+      
+      <img src="acic_miet_incubation.jpg" alt="Incubation and development phase at ACIC MIET.">
+      <em>Developing and refining the project during the incubation phase at ACIC MIET.</em>
 
-      </div>
-    </section>
-  </div>
+      <h3>Refining the Tech Specs & Connectivity</h3>
+      <p>During my time at the incubation center, the hardware was heavily optimized to ensure robust performance and stability:</p>
+      <ul>
+        <li><strong>Microcontrollers:</strong> Atmega 2560, Esp8266 (SOC), BSM2711.</li>
+        <li><strong>Sensors:</strong> DS18B20, DHT11, LIQUID PH SENSOR, TDS SENSOR.</li>
+        <li><strong>Dimensions:</strong> Height 28.5 inch, Width 15 inch, Length 20 inch.</li>
+        <li><strong>Network & Hardware:</strong> The model was upgraded to be fully supported via WIFI 802.11N IEEE, effortlessly operating a built-in camera, peristaltic pumps, BO motors, centrifugal pumps, and servo motors.</li>
+      </ul>
+
+      <h3>Taking Control</h3>
+      <p>To make testing and manual overrides easy during live demonstrations, I built a manual control board consisting of six primary buttons for quick system overrides and mode switching:</p>
+      <ul>
+        <li><strong>Button 1:</strong> Reset</li>
+        <li><strong>Button 2:</strong> Aeroponics Mode</li>
+        <li><strong>Button 3:</strong> Hydroponics Mode</li>
+        <li><strong>Button 4:</strong> Sowing Mode</li>
+        <li><strong>Button 5:</strong> Plant 1 (Low Nutri)</li>
+        <li><strong>Button 6:</strong> Plant 2 (High Nutri)</li>
+      </ul>
+
+      <p>For more detailed technical data, pinouts, and hardware configurations from this phase, please refer to the Robotics-Assisted-Farming-datasheet.pdf.</p>
+
+      <h3>The Grand Stage</h3>
+      <p>All the hard work, late nights, and iterations at ACIC MIET finally culminated into one major event. I proudly packed up the finalized Robotics Assisted Farming Model and took it to the National Science Exhibition 2023, presenting this automated future of agriculture to experts, judges, and fellow innovators on a national stage.</p>
+
+      <img src="IMG-1.jpg" alt="The National Science Exhibition 2023">
+      <span class="caption">At the National Science Exhibition 2023 with the Model.</span>
+
+    </div>
+    
+    <nav class="project-footer-nav">
+      <a href="../index.html">All projects</a>
+    </nav>
+  </main>
 
   <!-- Background Particle Network Script -->
   <script>
@@ -362,12 +308,6 @@
       requestAnimationFrame(animate);
     }
     animate();
-
-    // Clock update script
-    setInterval(() => {
-      const date = new Date();
-      document.getElementById('live-time').innerText = date.toLocaleTimeString('en-GB');
-    }, 1000);
   </script>
 </body>
 </html>
