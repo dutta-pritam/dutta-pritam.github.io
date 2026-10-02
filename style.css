@@ -421,3 +421,578 @@ footer.site-footer {
     animation: none;
   }
 }
+
+/* =========================================================
+   N-BODY PROJECT
+   ========================================================= */
+
+.story {
+  max-width: 760px;
+  margin: 0 auto;
+
+  padding: 42px 28px 110px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.story .back {
+  display: inline-block;
+
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+
+  color: inherit;
+  text-decoration: none;
+
+  margin-bottom: 115px;
+
+  transition: opacity 0.2s ease;
+}
+
+.story .back:hover {
+  opacity: 0.5;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.story-header {
+  margin-bottom: 120px;
+}
+
+.eyebrow,
+.section-label {
+  font-family: "Inter", sans-serif;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  opacity: 0.45;
+}
+
+.eyebrow {
+  margin-bottom: 30px;
+}
+
+.story-header h1 {
+  font-family: "Newsreader", serif;
+
+  font-size: clamp(52px, 8vw, 88px);
+  font-weight: 400;
+
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+
+  margin: 0 0 38px;
+}
+
+.intro {
+  max-width: 610px;
+
+  font-family: "Newsreader", serif;
+
+  font-size: 25px;
+  line-height: 1.45;
+
+  opacity: 0.62;
+
+  margin: 0;
+}
+
+
+/* =========================================================
+   STORY TYPOGRAPHY
+   ========================================================= */
+
+.story-content section {
+  margin-bottom: 145px;
+}
+
+.section-label {
+  margin-bottom: 25px;
+}
+
+.story-content h2 {
+  font-family: "Newsreader", serif;
+
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 400;
+
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+
+  margin: 0 0 34px;
+}
+
+.story-content p {
+  max-width: 650px;
+
+  font-family: "Newsreader", serif;
+
+  font-size: 20px;
+  line-height: 1.67;
+
+  margin: 0 0 25px;
+}
+
+.story-content strong {
+  font-weight: 500;
+}
+
+.story-content em {
+  font-style: italic;
+}
+
+
+/* =========================================================
+   EQUATION
+   ========================================================= */
+
+.equation {
+  font-family: "Newsreader", serif !important;
+
+  font-size: 32px !important;
+
+  text-align: center;
+
+  margin: 55px auto !important;
+
+  letter-spacing: 0.01em;
+}
+
+.equation span {
+  font-size: 0.9em;
+}
+
+
+/* =========================================================
+   HERO VIDEO
+   ========================================================= */
+
+.hero-video {
+  margin: 0 -100px 155px;
+}
+
+.hero-video video {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  background: #000;
+
+  border-radius: 2px;
+}
+
+.hero-video figcaption,
+.wide-figure figcaption,
+.final-figure figcaption {
+  margin-top: 13px;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  opacity: 0.45;
+}
+
+
+/* =========================================================
+   WIDE FIGURES
+   ========================================================= */
+
+.wide-figure {
+  margin: 0 -100px 150px;
+}
+
+.wide-figure img,
+.wide-figure video {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  border-radius: 2px;
+}
+
+.simulation-video video {
+  background: #000;
+}
+
+
+/* =========================================================
+   NORMAL FIGURES
+   ========================================================= */
+
+.story-figure {
+  margin: 0 40px 150px;
+}
+
+.story-figure img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================================================
+   IMAGE GRID
+   ========================================================= */
+
+.figure-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 28px;
+
+  margin: -30px 0 150px;
+}
+
+.figure-grid figure {
+  margin: 0;
+}
+
+.figure-grid img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  border-radius: 2px;
+}
+
+.figure-grid figcaption {
+  margin-top: 12px;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  opacity: 0.45;
+}
+
+
+/* =========================================================
+   DIAGNOSTICS
+   ========================================================= */
+
+.diagnostics {
+  margin-top: -40px;
+}
+
+.diagnostics figure:last-child {
+  grid-column: 1 / -1;
+
+  max-width: 70%;
+}
+
+
+/* =========================================================
+   QUOTE
+   ========================================================= */
+
+.quote-section {
+  padding: 30px 0;
+
+  margin-bottom: 150px !important;
+}
+
+.quote-section blockquote {
+  margin: 0;
+
+  font-family: "Newsreader", serif;
+
+  font-size: clamp(30px, 4.5vw, 46px);
+  line-height: 1.2;
+
+  letter-spacing: -0.025em;
+
+  opacity: 0.68;
+}
+
+
+/* =========================================================
+   HIGHLIGHT
+   ========================================================= */
+
+.highlight {
+  margin: 65px 0 !important;
+
+  font-family: "Inter", sans-serif !important;
+
+  font-size: clamp(23px, 3.5vw, 32px) !important;
+
+  line-height: 1.35 !important;
+
+  letter-spacing: -0.025em;
+}
+
+.highlight span {
+  display: block;
+
+  font-family: "Newsreader", serif;
+
+  font-size: 1.3em;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   STEPS
+   ========================================================= */
+
+.steps {
+  margin-top: 60px;
+
+  border-top: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.step {
+  display: grid;
+
+  grid-template-columns: 55px 1fr;
+
+  gap: 25px;
+
+  padding: 30px 0;
+
+  border-bottom: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.step > span {
+  font-family: "Inter", sans-serif;
+
+  font-size: 11px;
+
+  opacity: 0.4;
+}
+
+.step h3 {
+  font-family: "Inter", sans-serif;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  margin: 0 0 10px;
+}
+
+.step p {
+  font-size: 18px;
+
+  margin: 0;
+
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   CODE
+   ========================================================= */
+
+.story-content code {
+  font-family: "Inter", sans-serif;
+
+  font-size: 0.76em;
+
+  padding: 3px 6px;
+
+  background: rgba(127, 127, 127, 0.08);
+
+  border-radius: 4px;
+}
+
+
+/* =========================================================
+   FINAL IMAGE
+   ========================================================= */
+
+.final-figure {
+  margin: -20px -100px 155px;
+}
+
+.final-figure img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  border-radius: 2px;
+}
+
+
+/* =========================================================
+   ENDING
+   ========================================================= */
+
+.ending {
+  margin-bottom: 100px !important;
+}
+
+.final-line {
+  margin-top: 70px !important;
+
+  font-size: clamp(29px, 4.5vw, 40px) !important;
+
+  line-height: 1.27 !important;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.story-footer {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 35px;
+
+  border-top: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.story-footer a {
+  font-family: "Inter", sans-serif;
+
+  font-size: 12px;
+
+  color: inherit;
+  text-decoration: none;
+
+  opacity: 0.5;
+
+  transition: opacity 0.2s ease;
+}
+
+.story-footer a:hover {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .story {
+    padding: 28px 22px 75px;
+  }
+
+
+  .story .back {
+    margin-bottom: 80px;
+  }
+
+
+  .story-header {
+    margin-bottom: 95px;
+  }
+
+
+  .story-header h1 {
+    font-size: 53px;
+
+    line-height: 0.96;
+  }
+
+
+  .intro {
+    font-size: 21px;
+  }
+
+
+  .story-content section {
+    margin-bottom: 105px;
+  }
+
+
+  .story-content p {
+    font-size: 19px;
+
+    line-height: 1.62;
+  }
+
+
+  .hero-video,
+  .wide-figure,
+  .final-figure {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+
+  .hero-video {
+    margin-bottom: 110px;
+  }
+
+
+  .figure-grid {
+    grid-template-columns: 1fr;
+
+    gap: 45px;
+
+    margin-bottom: 110px;
+  }
+
+
+  .diagnostics figure:last-child {
+    grid-column: auto;
+
+    max-width: 100%;
+  }
+
+
+  .quote-section {
+    margin-bottom: 110px !important;
+  }
+
+
+  .quote-section blockquote {
+    font-size: 32px;
+  }
+
+
+  .step {
+    grid-template-columns: 40px 1fr;
+
+    gap: 15px;
+  }
+
+
+  .step p {
+    font-size: 17px;
+  }
+
+
+  .equation {
+    font-size: 26px !important;
+  }
+
+
+  .story-footer {
+    align-items: flex-start;
+
+    gap: 20px;
+  }
+
+}
+
+
