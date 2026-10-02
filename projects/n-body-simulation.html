@@ -1,690 +1,401 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta
-    name="description"
-    content="A from-scratch gravitational N-body simulation in Python, exploring numerical integration, orbital dynamics, conservation laws and computational scaling."
-  >
-
+  <meta name="description" content="A from-scratch gravitational N-body simulation in Python, exploring numerical integration, orbital dynamics, conservation laws and computational scaling.">
   <title>N-Body Simulation — Pritam Dutta</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
-    rel="stylesheet"
-  >
+  <style>
+    :root {
+      --bg-color: #fafafa;
+      --text-main: #1a1a1a;
+      --text-muted: #666666;
+      --border-color: #eaeaea;
+      --font-sans: 'Inter', sans-serif;
+      --font-serif: 'Newsreader', serif;
+    }
 
-  <!-- Main site stylesheet -->
-  <link rel="stylesheet" href="../assets/style.css">
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-serif);
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+      font-size: 1.1rem;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--text-main);
+    }
+
+    .back-link {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+      display: inline-block;
+    }
+
+    .story-header {
+      margin-bottom: 50px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+      display: inline-block;
+      padding: 4px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    h1 {
+      font-size: 2rem;
+      line-height: 1.2;
+      margin-top: 0;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .intro {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+
+    /* Small Images and Videos */
+    figure {
+      margin: 40px 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    video, img {
+      max-width: 320px; /* Kept small as requested */
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border-color);
+    }
+
+    figcaption {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      max-width: 300px;
+    }
+
+    .figure-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .figure-grid figure {
+      margin: 10px 0;
+    }
+
+    p {
+      margin-bottom: 1.2em;
+    }
+
+    .section-label {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: -30px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .equation {
+      text-align: center;
+      font-family: monospace;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    blockquote {
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--text-main);
+      border-left: 3px solid var(--border-color);
+      margin: 40px 0;
+      padding-left: 20px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .step {
+      display: flex;
+      gap: 15px;
+      align-items: baseline;
+    }
+
+    .step span {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 25px;
+    }
+
+    .step h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.1rem;
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    .story-footer {
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+    }
+
+  </style>
 </head>
-
-
 <body>
 
-<main class="story nbody-project">
+<div class="container">
 
+  <!-- NAVIGATION -->
+  <a class="back-link" href="../index.html">← Pritam Dutta</a>
 
-  <!-- =========================================
-       NAVIGATION
-       ========================================= -->
-
-  <a class="back" href="../index.html">
-    Pritam Dutta
-  </a>
-
-
-  <!-- =========================================
-       INTRO
-       ========================================= -->
-
+  <!-- INTRO -->
   <header class="story-header">
-
-    <p class="eyebrow">
-      2026 · Computational Astrophysics · Numerical Methods
-    </p>
-
-    <h1>
-      What happens<br>
-      when gravity<br>
-      is the only rule?
-    </h1>
-
-    <p class="intro">
-      A from-scratch gravitational N-body simulation built to understand
-      the mathematics, numerical methods and computational cost behind
-      many-body gravitational systems.
-    </p>
-
+    <span class="eyebrow">2026 · Computational Astrophysics</span>
+    <h1>What happens when gravity is the only rule?</h1>
+    <p class="intro">A from-scratch gravitational N-body simulation built to understand the mathematics, numerical methods and computational cost behind many-body gravitational systems.</p>
   </header>
 
-
-  <!-- =========================================
-       HERO VIDEO
-       ========================================= -->
-
-  <figure class="hero-video">
-
-    <video
-      autoplay
-      muted
-      loop
-      playsinline
-      controls
-      preload="metadata"
-    >
-      <source
-        src="../assets/nbody/2_body_simulation_using_verlet.mp4"
-        type="video/mp4"
-      >
-
-      Your browser does not support the video element.
+  <!-- HERO VIDEO -->
+  <figure>
+    <video autoplay muted loop playsinline controls preload="metadata">
+      <source src="../assets/nbody/2_body_simulation_using_verlet.mp4" type="video/mp4">
     </video>
-
-    <figcaption>
-      A two-body orbit evolved using the Verlet integrator.
-    </figcaption>
-
+    <figcaption>A two-body orbit evolved using the Verlet integrator.</figcaption>
   </figure>
 
-
   <article class="story-content">
-
-
-    <!-- =========================================
-         01 — THE QUESTION
-         ========================================= -->
-
+    
+    <!-- 01 -->
     <section>
-
       <p class="section-label">01</p>
-
       <h2>It started with gravity.</h2>
-
-      <p>
-        I wanted to understand what actually happens underneath an
-        N-body simulation rather than treating the solver as a black box.
-      </p>
-
-      <p>
-        At its core, the problem is deceptively simple:
-        every body feels the gravitational force produced by every other
-        body.
-      </p>
-
-      <p class="equation">
-        F<sub>ij</sub> =
-        G
-        <span>m<sub>i</sub>m<sub>j</sub></span>
-        /
-        r<sub>ij</sub><sup>2</sup>
-      </p>
-
-      <p>
-        From this single interaction comes a system whose behaviour can
-        become surprisingly complicated as the number of bodies grows.
-      </p>
-
+      <p>I wanted to understand what actually happens underneath an N-body simulation rather than treating the solver as a black box. At its core, the problem is deceptively simple: every body feels the gravitational force produced by every other body.</p>
+      <p class="equation">F<sub>ij</sub> = G(m<sub>i</sub>m<sub>j</sub>) / r<sub>ij</sub><sup>2</sup></p>
+      <p>From this single interaction comes a system whose behaviour can become surprisingly complicated as the number of bodies grows.</p>
     </section>
 
-
-    <!-- =========================================
-         02 — TWO BODY
-         ========================================= -->
-
+    <!-- 02 -->
     <section>
-
       <p class="section-label">02</p>
-
       <h2>First, make two bodies behave.</h2>
-
-      <p>
-        Before dealing with many interacting particles, I started with
-        the simplest system for which the dynamics are already known:
-        two bodies orbiting their common centre of mass.
-      </p>
-
-      <p>
-        This became the first test of the numerical machinery.
-        If the integrator cannot preserve a simple orbit, there is little
-        reason to trust it when hundreds of bodies begin interacting.
-      </p>
-
+      <p>Before dealing with many interacting particles, I started with the simplest system for which the dynamics are already known: two bodies orbiting their common centre of mass. This became the first test of the numerical machinery.</p>
     </section>
 
-
-    <figure class="wide-figure">
-
-      <video
-        controls
-        muted
-        loop
-        playsinline
-        preload="metadata"
-      >
-        <source
-          src="../assets/nbody/2_body_simulation_using_verlet.mp4"
-          type="video/mp4"
-        >
+    <figure>
+      <video controls muted loop playsinline preload="metadata">
+        <source src="../assets/nbody/2_body_simulation_using_verlet.mp4" type="video/mp4">
       </video>
-
-      <figcaption>
-        Two-body dynamics using the Verlet scheme.
-      </figcaption>
-
+      <figcaption>Two-body dynamics using the Verlet scheme.</figcaption>
     </figure>
 
-
-    <!-- =========================================
-         03 — INTEGRATORS
-         ========================================= -->
-
+    <!-- 03 -->
     <section>
-
       <p class="section-label">03</p>
-
       <h2>Then time itself becomes numerical.</h2>
-
-      <p>
-        The equations of motion are continuous, but a computer has to
-        advance the system in discrete time steps.
-      </p>
-
-      <p>
-        I implemented and compared several numerical approaches:
-        Euler, Leapfrog/Verlet, fourth-order Runge–Kutta and
-        Runge–Kutta–Fehlberg 45.
-      </p>
-
-      <p>
-        The comparison was not only about whether the particles followed
-        approximately correct trajectories. I was interested in what
-        happened to quantities that should remain conserved.
-      </p>
-
+      <p>The equations of motion are continuous, but a computer has to advance the system in discrete time steps. I implemented and compared several numerical approaches: Euler, Leapfrog/Verlet, fourth-order Runge–Kutta and Runge–Kutta–Fehlberg 45.</p>
     </section>
-
-
-    <!-- =========================================
-         INTEGRATOR / CONSERVATION FIGURES
-         ========================================= -->
 
     <div class="figure-grid">
-
       <figure>
-
-        <img
-          src="../assets/nbody/N=10.png"
-          alt="N-body simulation with ten bodies"
-          loading="lazy"
-        >
-
-        <figcaption>
-          A ten-body gravitational system.
-        </figcaption>
-
+        <img src="../assets/nbody/N=10.png" alt="N-body simulation with ten bodies" loading="lazy">
+        <figcaption>A ten-body gravitational system.</figcaption>
       </figure>
-
-
       <figure>
-
-        <img
-          src="../assets/nbody/N=10_Energy.png"
-          alt="Energy evolution of the ten-body simulation"
-          loading="lazy"
-        >
-
-        <figcaption>
-          Energy evolution for the N = 10 system.
-        </figcaption>
-
+        <img src="../assets/nbody/N=10_Energy.png" alt="Energy evolution of the ten-body simulation" loading="lazy">
+        <figcaption>Energy evolution for the N = 10 system.</figcaption>
       </figure>
-
     </div>
 
+    <blockquote>
+      A simulation is only as useful as the physics and numerics hiding underneath it.
+    </blockquote>
 
-    <!-- =========================================
-         QUOTE
-         ========================================= -->
-
-    <section class="quote-section">
-
-      <blockquote>
-        A simulation is only as useful as the physics
-        and numerics hiding underneath it.
-      </blockquote>
-
-    </section>
-
-
-    <!-- =========================================
-         04 — CONSERVATION
-         ========================================= -->
-
+    <!-- 04 -->
     <section>
-
       <p class="section-label">04</p>
-
       <h2>Trajectories are not enough.</h2>
-
-      <p>
-        A trajectory can look perfectly reasonable while the numerical
-        solution slowly drifts away from the physical system it is
-        supposed to represent.
-      </p>
-
-      <p>
-        So I tracked the quantities that should remain conserved:
-        total energy and angular momentum.
-      </p>
-
-      <p>
-        These became a way of looking beyond the animation and asking
-        whether the numerical method was actually behaving correctly.
-      </p>
-
+      <p>A trajectory can look perfectly reasonable while the numerical solution slowly drifts away from the physical system it is supposed to represent. So I tracked the quantities that should remain conserved: total energy and angular momentum.</p>
     </section>
 
-
-    <div class="figure-grid diagnostics">
-
+    <div class="figure-grid">
       <figure>
-
-        <img
-          src="../assets/nbody/Angular_Momentum_verlet.png"
-          alt="Angular momentum during the Verlet simulation"
-          loading="lazy"
-        >
-
-        <figcaption>
-          Angular momentum during the Verlet integration.
-        </figcaption>
-
+        <img src="../assets/nbody/Angular_Momentum_verlet.png" alt="Angular momentum during the Verlet simulation" loading="lazy">
+        <figcaption>Angular momentum during the Verlet integration.</figcaption>
       </figure>
-
-
       <figure>
-
-        <img
-          src="../assets/nbody/Angular_Momentum_Drift_verlet.png"
-          alt="Angular momentum drift in the Verlet simulation"
-          loading="lazy"
-        >
-
-        <figcaption>
-          Angular-momentum drift.
-        </figcaption>
-
+        <img src="../assets/nbody/Angular_Momentum_Drift_verlet.png" alt="Angular momentum drift in the Verlet simulation" loading="lazy">
+        <figcaption>Angular-momentum drift.</figcaption>
       </figure>
-
-
       <figure>
-
-        <img
-          src="../assets/nbody/energy_drift_verlet_N25.png"
-          alt="Energy drift for a 25-body Verlet simulation"
-          loading="lazy"
-        >
-
-        <figcaption>
-          Energy drift for an N = 25 system.
-        </figcaption>
-
+        <img src="../assets/nbody/energy_drift_verlet_N25.png" alt="Energy drift for a 25-body Verlet simulation" loading="lazy">
+        <figcaption>Energy drift for an N = 25 system.</figcaption>
       </figure>
-
     </div>
 
-
-    <!-- =========================================
-         05 — N BODY
-         ========================================= -->
-
+    <!-- 05 -->
     <section>
-
       <p class="section-label">05</p>
-
       <h2>Two bodies become many.</h2>
-
-      <p>
-        The interesting part begins when the system stops having a simple
-        analytical picture.
-      </p>
-
-      <p>
-        With N bodies, every particle contributes to the gravitational
-        field experienced by every other particle.
-      </p>
-
-      <p class="highlight">
-        More particles do not just mean more particles.
-        <span>They mean more interactions.</span>
-      </p>
-
-      <p>
-        For a direct pairwise calculation, the computational cost grows
-        approximately as
-        <strong>O(N²)</strong>.
-      </p>
-
+      <p>The interesting part begins when the system stops having a simple analytical picture. With N bodies, every particle contributes to the gravitational field experienced by every other particle.</p>
+      <p>More particles do not just mean more particles. <strong>They mean more interactions.</strong> For a direct pairwise calculation, the computational cost grows approximately as O(N²).</p>
     </section>
 
+    <div class="figure-grid">
+      <figure>
+        <video controls muted loop playsinline preload="metadata">
+          <source src="../assets/nbody/n_body_simulation_verlet.mp4" type="video/mp4">
+        </video>
+        <figcaption>Many-body evolution (Verlet).</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/nbody/nbody_simulation.gif" alt="Animated N-body gravitational simulation" loading="lazy">
+        <figcaption>Another view of the system.</figcaption>
+      </figure>
+    </div>
 
-    <!-- =========================================
-         N BODY ANIMATION
-         ========================================= -->
-
-    <figure class="wide-figure simulation-video">
-
-      <video
-        controls
-        muted
-        loop
-        playsinline
-        preload="metadata"
-      >
-        <source
-          src="../assets/nbody/n_body_simulation_verlet.mp4"
-          type="video/mp4"
-        >
-      </video>
-
-      <figcaption>
-        Many-body gravitational evolution using the Verlet integrator.
-      </figcaption>
-
-    </figure>
-
-
-    <!-- =========================================
-         GIF / SECOND VISUAL
-         ========================================= -->
-
-    <figure class="wide-figure">
-
-      <img
-        src="../assets/nbody/nbody_simulation.gif"
-        alt="Animated N-body gravitational simulation"
-        loading="lazy"
-      >
-
-      <figcaption>
-        Another view of the many-body system evolving under gravity.
-      </figcaption>
-
-    </figure>
-
-
-    <!-- =========================================
-         06 — THE COMPUTATIONAL PROBLEM
-         ========================================= -->
-
+    <!-- 06 -->
     <section>
-
       <p class="section-label">06</p>
-
       <h2>Then the computation becomes the problem.</h2>
-
-      <p>
-        The physics itself is compact. The number of interactions is not.
-      </p>
-
-      <p>
-        Every time step requires the gravitational influence of the
-        surrounding particles to be evaluated. As N grows, the direct
-        method quickly becomes dominated by these pairwise interactions.
-      </p>
-
-      <p>
-        This is where the project stops being only an astrophysics
-        exercise and becomes a computational problem.
-      </p>
-
+      <p>The physics itself is compact. The number of interactions is not. Every time step requires the gravitational influence of the surrounding particles to be evaluated. As N grows, the direct method quickly becomes dominated by these pairwise interactions.</p>
     </section>
 
-
-    <!-- =========================================
-         07 — ARCHITECTURE
-         ========================================= -->
-
+    <!-- 07 -->
     <section>
-
       <p class="section-label">07</p>
-
       <h2>Building the machinery myself.</h2>
-
-      <p>
-        The project was structured so that the physical model,
-        numerical integrators, energy calculations, stability checks
-        and simulation driver could be developed independently.
-      </p>
-
+      <p>The project was structured so that the physical model, numerical integrators, energy calculations, stability checks and simulation driver could be developed independently.</p>
+      
       <div class="steps">
-
-
         <div class="step">
-
           <span>01</span>
-
           <div>
-
             <h3>Body dynamics</h3>
-
-            <p>
-              Positions, velocities, masses and gravitational
-              accelerations form the underlying particle system.
-            </p>
-
+            <p>Positions, velocities, masses and gravitational accelerations form the underlying particle system.</p>
           </div>
-
         </div>
-
-
         <div class="step">
-
           <span>02</span>
-
           <div>
-
             <h3>Integrators</h3>
-
-            <p>
-              Different time-integration schemes can be tested against
-              the same physical system.
-            </p>
-
+            <p>Different time-integration schemes can be tested against the same physical system.</p>
           </div>
-
         </div>
-
-
         <div class="step">
-
           <span>03</span>
-
           <div>
-
             <h3>Diagnostics</h3>
-
-            <p>
-              Energy, angular momentum and stability provide numerical
-              checks beyond visual inspection.
-            </p>
-
+            <p>Energy, angular momentum and stability provide numerical checks beyond visual inspection.</p>
           </div>
-
         </div>
-
-
         <div class="step">
-
           <span>04</span>
-
           <div>
-
             <h3>Visualization</h3>
-
-            <p>
-              Simulation states can be turned into trajectories,
-              animations and longer-running visualizations.
-            </p>
-
+            <p>Simulation states can be turned into trajectories, animations and visualizations.</p>
           </div>
-
         </div>
-
-
       </div>
-
     </section>
 
-
-    <!-- =========================================
-         08 — DATA
-         ========================================= -->
-
+    <!-- 08 & 09 -->
     <section>
-
-      <p class="section-label">08</p>
-
-      <h2>The simulation is also data.</h2>
-
-      <p>
-        Each run produces a numerical record of the system rather than
-        just an image on the screen.
-      </p>
-
-      <p>
-        I used structured simulation data to preserve particle states
-        and make it possible to analyse the evolution after the run
-        itself had finished.
-      </p>
-
-      <p>
-        This separation between simulation and analysis becomes
-        increasingly important once the systems become too large to
-        understand from an animation alone.
-      </p>
-
+      <p class="section-label">08 & 09</p>
+      <h2>The simulation is also data, and the next bottleneck.</h2>
+      <p>Each run produces a numerical record of the system rather than just an image on the screen. This separation between simulation and analysis becomes increasingly important once the systems become too large.</p>
+      <p>Direct summation is useful, but the natural next step is to replace the direct O(N²) calculation with hierarchical methods such as the Barnes–Hut tree algorithm.</p>
     </section>
 
-
-    <!-- =========================================
-         09 — WHAT NEXT
-         ========================================= -->
-
-    <section>
-
-      <p class="section-label">09</p>
-
-      <h2>The next bottleneck is obvious.</h2>
-
-      <p>
-        Direct summation is useful because it makes the physics explicit,
-        but it is not the final answer to the scaling problem.
-      </p>
-
-      <p>
-        The natural next step is to replace the direct
-        <strong>O(N²)</strong> calculation with hierarchical methods
-        such as the Barnes–Hut tree algorithm.
-      </p>
-
-      <p>
-        That would allow the same physical problem to be explored at
-        particle counts where direct pairwise computation becomes
-        increasingly expensive.
-      </p>
-
-    </section>
-
-
-    <!-- =========================================
-         FINAL VISUAL
-         ========================================= -->
-
-    <figure class="final-figure">
-
-      <img
-        src="../assets/nbody/N=10.png"
-        alt="Final N-body simulation visualization"
-        loading="lazy"
-      >
-
-      <figcaption>
-        A many-body system reduced to a numerical experiment:
-        positions, velocities, forces and time.
-      </figcaption>
-
+    <figure>
+      <img src="../assets/nbody/N=10.png" alt="Final N-body simulation visualization" loading="lazy">
+      <figcaption>A many-body system reduced to a numerical experiment.</figcaption>
     </figure>
 
-
-    <!-- =========================================
-         ENDING
-         ========================================= -->
-
-    <section class="ending">
-
+    <!-- 10 -->
+    <section>
       <p class="section-label">10</p>
-
       <h2>There is something satisfying about starting from zero.</h2>
-
-      <p>
-        No simulation engine was hiding the equations.
-        No integrator was hiding the time evolution.
-        No visualization library was deciding what the physics meant.
-      </p>
-
-      <p>
-        I wanted to understand the entire chain:
-        from Newtonian gravity to numerical integration,
-        from conservation laws to computational scaling.
-      </p>
-
-      <p class="final-line">
-        Start with gravity.<br>
-        Write down the equations.<br>
-        Then let the particles move.
-      </p>
-
+      <p>No simulation engine was hiding the equations. No integrator was hiding the time evolution. No visualization library was deciding what the physics meant.</p>
+      <p>Start with gravity. Write down the equations. Then let the particles move.</p>
     </section>
-
 
   </article>
 
-
-  <!-- =========================================
-       FOOTER
-       ========================================= -->
-
+  <!-- FOOTER -->
   <footer class="story-footer">
-
-    <a href="../index.html">
-      ← All projects
-    </a>
-
-    <a
-      href="https://github.com/Akshat-Chakarverty/n-body-simulation"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      View source ↗
-    </a>
-
+    <a href="../index.html">← All projects</a>
+    <a href="https://github.com/Akshat-Chakarverty/n-body-simulation" target="_blank" rel="noopener noreferrer">View source ↗</a>
   </footer>
 
-
-</main>
-
-
-<script src="../assets/ripple.js"></script>
+</div>
 
 </body>
 </html>
-
