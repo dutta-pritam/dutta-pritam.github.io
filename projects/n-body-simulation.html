@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A from-scratch gravitational N-body simulation in Python, exploring numerical integration, orbital dynamics, conservation laws and computational scaling.">
+  <meta name="description" content="A from-scratch gravitational N-body simulation in Python, exploring numerical integration, orbital dynamics, conservation laws, MPI scaling, and star clusters.">
   <title>N-Body Simulation — Pritam Dutta</title>
 
   <!-- Fonts -->
@@ -107,7 +107,7 @@
     }
 
     video, img {
-      max-width: 320px; /* Kept small as requested */
+      max-width: 320px;
       width: 100%;
       height: auto;
       border-radius: 8px;
@@ -220,7 +220,7 @@
   <header class="story-header">
     <span class="eyebrow">2026 · Computational Astrophysics</span>
     <h1>What happens when gravity is the only rule?</h1>
-    <p class="intro">A from-scratch gravitational N-body simulation built to understand the mathematics, numerical methods and computational cost behind many-body gravitational systems.</p>
+    <p class="intro">A from-scratch gravitational N-body simulation built to understand the mathematics, numerical methods, scaling with MPI, and the formation of star clusters.</p>
   </header>
 
   <!-- HERO VIDEO -->
@@ -239,7 +239,6 @@
       <h2>It started with gravity.</h2>
       <p>I wanted to understand what actually happens underneath an N-body simulation rather than treating the solver as a black box. At its core, the problem is deceptively simple: every body feels the gravitational force produced by every other body.</p>
       <p class="equation">F<sub>ij</sub> = G(m<sub>i</sub>m<sub>j</sub>) / r<sub>ij</sub><sup>2</sup></p>
-      <p>From this single interaction comes a system whose behaviour can become surprisingly complicated as the number of bodies grows.</p>
     </section>
 
     <!-- 02 -->
@@ -274,10 +273,6 @@
       </figure>
     </div>
 
-    <blockquote>
-      A simulation is only as useful as the physics and numerics hiding underneath it.
-    </blockquote>
-
     <!-- 04 -->
     <section>
       <p class="section-label">04</p>
@@ -286,10 +281,6 @@
     </section>
 
     <div class="figure-grid">
-      <figure>
-        <img src="../assets/nbody/Angular_Momentum_verlet.png" alt="Angular momentum during the Verlet simulation" loading="lazy">
-        <figcaption>Angular momentum during the Verlet integration.</figcaption>
-      </figure>
       <figure>
         <img src="../assets/nbody/Angular_Momentum_Drift_verlet.png" alt="Angular momentum drift in the Verlet simulation" loading="lazy">
         <figcaption>Angular-momentum drift.</figcaption>
@@ -300,12 +291,11 @@
       </figure>
     </div>
 
-    <!-- 05 -->
+    <!-- 05 & 06 -->
     <section>
-      <p class="section-label">05</p>
-      <h2>Two bodies become many.</h2>
-      <p>The interesting part begins when the system stops having a simple analytical picture. With N bodies, every particle contributes to the gravitational field experienced by every other particle.</p>
-      <p>More particles do not just mean more particles. <strong>They mean more interactions.</strong> For a direct pairwise calculation, the computational cost grows approximately as O(N²).</p>
+      <p class="section-label">05 & 06</p>
+      <h2>Two bodies become many, and computation becomes the problem.</h2>
+      <p>The interesting part begins when the system stops having a simple analytical picture. With N bodies, every particle contributes to the gravitational field experienced by every other particle. The computational cost grows approximately as O(N²).</p>
     </section>
 
     <div class="figure-grid">
@@ -321,70 +311,54 @@
       </figure>
     </div>
 
-    <!-- 06 -->
-    <section>
-      <p class="section-label">06</p>
-      <h2>Then the computation becomes the problem.</h2>
-      <p>The physics itself is compact. The number of interactions is not. Every time step requires the gravitational influence of the surrounding particles to be evaluated. As N grows, the direct method quickly becomes dominated by these pairwise interactions.</p>
-    </section>
-
     <!-- 07 -->
     <section>
       <p class="section-label">07</p>
       <h2>Building the machinery myself.</h2>
       <p>The project was structured so that the physical model, numerical integrators, energy calculations, stability checks and simulation driver could be developed independently.</p>
-      
-      <div class="steps">
-        <div class="step">
-          <span>01</span>
-          <div>
-            <h3>Body dynamics</h3>
-            <p>Positions, velocities, masses and gravitational accelerations form the underlying particle system.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span>02</span>
-          <div>
-            <h3>Integrators</h3>
-            <p>Different time-integration schemes can be tested against the same physical system.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span>03</span>
-          <div>
-            <h3>Diagnostics</h3>
-            <p>Energy, angular momentum and stability provide numerical checks beyond visual inspection.</p>
-          </div>
-        </div>
-        <div class="step">
-          <span>04</span>
-          <div>
-            <h3>Visualization</h3>
-            <p>Simulation states can be turned into trajectories, animations and visualizations.</p>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- 08 & 09 -->
     <section>
       <p class="section-label">08 & 09</p>
-      <h2>The simulation is also data, and the next bottleneck.</h2>
-      <p>Each run produces a numerical record of the system rather than just an image on the screen. This separation between simulation and analysis becomes increasingly important once the systems become too large.</p>
-      <p>Direct summation is useful, but the natural next step is to replace the direct O(N²) calculation with hierarchical methods such as the Barnes–Hut tree algorithm.</p>
+      <h2>The simulation is also data.</h2>
+      <p>Each run produces a numerical record of the system rather than just an image on the screen. Direct summation is useful, but the natural next step to handle the scaling bottleneck is adopting distributed computing and hierarchical methods.</p>
     </section>
 
-    <figure>
-      <img src="../assets/nbody/N=10.png" alt="Final N-body simulation visualization" loading="lazy">
-      <figcaption>A many-body system reduced to a numerical experiment.</figcaption>
-    </figure>
-
-    <!-- 10 -->
+    <!-- 10 (NEW SECTION: MPI & Star Clusters) -->
     <section>
       <p class="section-label">10</p>
+      <h2>Scaling up with MPI and Star Clusters.</h2>
+      <p>To push past the limits of a single thread, we introduced <strong>MPI (Message Passing Interface)</strong> to distribute the computational load across multiple processes. This structural shift allowed us to move beyond simple multi-body toy models and start simulating dense star clusters.</p>
+      <p>By leveraging parallelization, we successfully scaled the simulation up to <strong>20,000 stars</strong>, allowing us to observe macro-scale gravitational dynamics, cluster formations, and deep gravitational interactions that are otherwise impossible to compute quickly on a single node.</p>
+    </section>
+
+    <div class="figure-grid">
+      <figure>
+        <video controls muted loop playsinline preload="metadata">
+          <source src="../assets/nbody/5000_stars.mp4" type="video/mp4">
+        </video>
+        <figcaption>Cluster dynamics with 5,000 stars.</figcaption>
+      </figure>
+      <figure>
+        <video controls muted loop playsinline preload="metadata">
+          <source src="../assets/nbody/10000_stars.mp4" type="video/mp4">
+        </video>
+        <figcaption>Scaling up to 10,000 stars.</figcaption>
+      </figure>
+      <figure>
+        <video controls muted loop playsinline preload="metadata">
+          <source src="../assets/nbody/20000_stars.mp4" type="video/mp4">
+        </video>
+        <figcaption>Massive cluster simulation with 20,000 stars.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 11 -->
+    <section>
+      <p class="section-label">11</p>
       <h2>There is something satisfying about starting from zero.</h2>
-      <p>No simulation engine was hiding the equations. No integrator was hiding the time evolution. No visualization library was deciding what the physics meant.</p>
-      <p>Start with gravity. Write down the equations. Then let the particles move.</p>
+      <p>No simulation engine was hiding the equations. No integrator was hiding the time evolution. No library decided how to scale to thousands of bodies. Start with gravity. Write down the equations. Distribute the workload. Then let the particles move.</p>
     </section>
 
   </article>
