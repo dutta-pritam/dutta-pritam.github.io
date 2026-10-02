@@ -11,6 +11,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    /* Added some basic inline styling for the story media elements */
+    .project-body figure {
+      margin: 2rem 0;
+    }
+    .project-body img, .project-body video {
+      max-width: 100%;
+      border-radius: 8px;
+      background: #f4f4f4;
+    }
+    .project-body figcaption {
+      font-family: 'Newsreader', serif;
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+    .project-body h2 {
+      margin-top: 2.5rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+  </style>
 </head>
 <body>
   <canvas id="ripple" aria-hidden="true"></canvas>
@@ -24,7 +47,43 @@
     </header>
 
     <div class="project-body">
-      <p>Hands-on experience building STM32-based flight computers and working on small-scale rocket motor development.</p>
+      <p>Hands-on experience building STM32-based flight computers and working on small-scale rocket motor development. But the journey here wasn't just about soldering PCBs—it was a trial by fire.</p>
+
+      <h2>The Schoolyard Origins</h2>
+      <p>Long before custom avionics and telemetry dashboards, this started as a high school obsession. We were mixing basic propellants, packing them into makeshift tubes, and praying they would go up instead of sideways. It was raw, scrappy engineering, but the thrill of seeing something you built break gravity for the first time was unparalleled.</p>
+      
+      <figure>
+        <img src="../assets/images/school-launch.jpg" alt="A small rocket on a makeshift launchpad on a school field">
+        <figcaption>Our very first successful launch on the school grounds. We spent weeks calculating the center of pressure for this airframe.</figcaption>
+      </figure>
+
+      <h2>Brain Power: The STM32 Era & Melagen Labs</h2>
+      <p>As the airframes got bigger, the rockets started disappearing into the clouds. We needed data, and commercial altimeters were too limiting. I began developing custom flight computers based on the STM32 architecture to log altitude, acceleration, and actively deploy dual-stage recovery systems. The complexity of the embedded C code scaled with our ambitions.</p>
+      
+      <p>That rigorous engineering caught the attention of <strong>Melagen Labs</strong>. Pitching our vision to them was a turning point. Their seed funding changed everything—we went from hardware store builds to precision-machined casings, aerospace-grade sensors, and proper data acquisition systems.</p>
+
+      <figure>
+        <img src="../assets/images/stm32-pcb.jpg" alt="A custom green PCB with an STM32 microcontroller">
+        <figcaption>The first iteration of our custom STM32 flight computer, integrating IMU sensors and pyro-channels for parachute deployment.</figcaption>
+      </figure>
+
+      <figure>
+        <video controls width="100%">
+          <source src="../assets/videos/melagen-static-fire.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>A major static fire test funded by Melagen Labs, successfully capturing our first high-fidelity thrust curve.</figcaption>
+      </figure>
+
+      <h2>The "Room Bursting" Propulsion Anomaly</h2>
+      <p>Of course, development isn't without its explosions. Propulsion is an unforgiving science. When pushing the limits of our new solid propellant mix, we ran a localized bench test to check ignition timings. We severely underestimated the exhaust velocity and chamber pressure.</p>
+      
+      <p>The motor didn't just fire; it aggressively over-pressurized. The force blew the testing rig completely apart, shattered the room's glass fixtures, and covered every square inch of the lab in a thick layer of soot. It was a chaotic, heart-pounding day. But as we dug through the debris, we found the STM32 board intact. Analyzing the surviving telemetry taught us more about internal ballistics, thermal shock, and structural limits than any textbook ever could have.</p>
+
+      <figure>
+        <img src="../assets/images/room-aftermath.jpg" alt="A soot-covered room with a blown apart testing rig">
+        <figcaption>The aftermath of the propulsion anomaly. The avionics survived to log the data, but the test room needed serious renovations.</figcaption>
+      </figure>
     </div>
 
     <nav class="project-footer-nav">
