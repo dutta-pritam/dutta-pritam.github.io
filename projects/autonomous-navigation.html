@@ -10,17 +10,159 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    :root {
+      --text-main: #111111;
+      --text-muted: #666666;
+      --bg-color: #ffffff;
+      --border-color: #eaeaea;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Network Background Canvas */
+    #network-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    /* Styled like the pill buttons in the screenshot */
+    .back {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 3rem;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .back:hover {
+      background-color: #f9f9f9;
+      color: var(--text-main);
+    }
+
+    .back::before {
+      content: "←";
+      margin-right: 6px;
+    }
+
+    .project-header h1 {
+      font-size: 2rem;
+      font-weight: 500;
+      margin: 0 0 0.4rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .project-header .meta {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Body text matching the "I'm a BS-MS student..." serif text */
+    .project-body p, 
+    .project-body li {
+      font-family: 'Newsreader', serif;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #333333;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-body ul {
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+
+    .project-body li {
+      margin-bottom: 0.5rem;
+    }
+
+    .project-body h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .media-container {
+      margin: 2.5rem 0;
+    }
+
+    .project-video {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      background-color: #fcfcfc;
+    }
+
+    .media-caption {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.85rem !important;
+      color: var(--text-muted) !important;
+      text-align: center;
+      margin-top: 0.75rem !important;
+    }
+
+    .project-footer-nav {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .project-footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .project-footer-nav a:hover {
+      color: var(--text-main);
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="ripple" aria-hidden="true"></canvas>
+  <!-- Network Background Canvas -->
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
 
   <main>
     <a class="back" href="../index.html">Pritam Dutta</a>
 
     <header class="page-header project-header">
       <h1>Autonomous Navigation</h1>
-      <p class="meta">2026, Robotics, Path Planning, SLAM, Python</p>
+      <p class="meta">2026 · Robotics, Path Planning, SLAM, Python</p>
     </header>
 
     <div class="project-body">
@@ -30,7 +172,6 @@
       
       <p>I also scaled up the obstacle count from 18 to 100 to rigorously stress-test the planner in high-density clutter.</p>
 
-      <!-- Video / Simulation Demonstration Section -->
       <h2>Simulation Output</h2>
       <div class="media-container">
         <video controls autoplay muted loop playsinline class="project-video">
@@ -62,6 +203,70 @@
     </nav>
   </main>
 
-  <script src="../assets/ripple.js"></script>
+  <!-- Network Animation Script (Mimics the background from your screenshot) -->
+  <script>
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, nodes;
+
+    function init() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      nodes = [];
+      for (let i = 0; i < 40; i++) {
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 2 + 1
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Update positions
+      nodes.forEach(node => {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > width) node.vx *= -1;
+        if (node.y < 0 || node.y > height) node.vy *= -1;
+      });
+
+      // Draw lines between close nodes
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 150) {
+            ctx.strokeStyle = `rgba(100, 110, 130, ${1 - dist / 150})`;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      ctx.fillStyle = '#4a5568';
+      nodes.forEach(node => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', init);
+    init();
+    draw();
+  </script>
 </body>
 </html>
