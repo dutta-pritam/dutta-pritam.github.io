@@ -13,28 +13,37 @@
 
   <style>
     :root {
-      --bg-color: #fafafa;
-      --text-main: #1a1a1a;
+      --text-main: #111111;
       --text-muted: #666666;
+      --bg-color: #ffffff;
       --border-color: #eaeaea;
-      --font-sans: 'Inter', sans-serif;
-      --font-serif: 'Newsreader', serif;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: var(--font-serif);
-      line-height: 1.7;
       margin: 0;
       padding: 0;
-      font-size: 1.1rem;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Network Background Canvas */
+    #network-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     .container {
       max-width: 680px;
       margin: 0 auto;
-      padding: 60px 20px;
+      padding: 4rem 1.5rem;
     }
 
     a {
@@ -47,11 +56,24 @@
       color: var(--text-main);
     }
 
+    /* Styled like the pill buttons in the screenshot */
     .back-link {
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      margin-bottom: 40px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 3rem;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .back-link:hover {
+      background-color: #f9f9f9;
+      color: var(--text-main);
     }
 
     .story-header {
@@ -59,19 +81,15 @@
     }
 
     .eyebrow {
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       font-size: 0.85rem;
       color: var(--text-muted);
       margin-bottom: 15px;
       display: inline-block;
-      padding: 4px 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      background: #fff;
     }
 
     h1, h2, h3 {
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       color: var(--text-main);
       font-weight: 500;
     }
@@ -85,11 +103,20 @@
     }
 
     h2 {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       margin-top: 40px;
       margin-bottom: 15px;
       padding-top: 40px;
       border-top: 1px solid var(--border-color);
+    }
+
+    /* Body text matching the screenshot's serif style */
+    p, li {
+      font-family: 'Newsreader', serif;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #333333;
+      margin-bottom: 1.25rem;
     }
 
     .intro {
@@ -97,9 +124,9 @@
       color: var(--text-muted);
     }
 
-    /* Small Images and Videos */
+    /* Media Styling */
     figure {
-      margin: 40px 0;
+      margin: 2.5rem 0;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -107,39 +134,43 @@
     }
 
     video, img {
-      max-width: 320px;
-      width: 100%;
+      max-width: 100%;
       height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border-radius: 12px;
       border: 1px solid var(--border-color);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      background-color: #fcfcfc;
     }
 
     figcaption {
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: 12px;
-      max-width: 300px;
+      max-width: 80%;
     }
 
     .figure-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
-      justify-content: center;
+      margin: 2.5rem 0;
     }
 
     .figure-grid figure {
-      margin: 10px 0;
+      margin: 0;
+      width: 100%;
     }
 
-    p {
-      margin-bottom: 1.2em;
+    /* At smaller screens, stack the grid */
+    @media (max-width: 600px) {
+      .figure-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .section-label {
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: -30px;
@@ -150,15 +181,16 @@
     .equation {
       text-align: center;
       font-family: monospace;
-      background: #fff;
+      background: transparent;
       padding: 15px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       font-size: 1rem;
     }
 
     blockquote {
+      font-family: 'Newsreader', serif;
       font-style: italic;
       font-size: 1.4rem;
       color: var(--text-main);
@@ -167,210 +199,250 @@
       padding-left: 20px;
     }
 
-    .steps {
-      display: grid;
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .step {
-      display: flex;
-      gap: 15px;
-      align-items: baseline;
-    }
-
-    .step span {
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      min-width: 25px;
-    }
-
-    .step h3 {
-      margin: 0 0 5px 0;
-      font-size: 1.1rem;
-    }
-
-    .step p {
-      margin: 0;
-      font-size: 1rem;
-      color: var(--text-muted);
-    }
-
     .story-footer {
       margin-top: 60px;
       padding-top: 30px;
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
     }
 
+    .story-footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
+  <!-- Network Background Canvas -->
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
 
-  <!-- NAVIGATION -->
-  <a class="back-link" href="../index.html">← Pritam Dutta</a>
+  <div class="container">
 
-  <!-- INTRO -->
-  <header class="story-header">
-    <span class="eyebrow">2026 · Computational Astrophysics</span>
-    <h1>What happens when gravity is the only rule?</h1>
-    <p class="intro">A from-scratch gravitational N-body simulation built to understand the mathematics, numerical methods, scaling with MPI, and the formation of star clusters.</p>
-  </header>
+    <!-- NAVIGATION -->
+    <a class="back-link" href="../index.html">← Pritam Dutta</a>
 
-  <!-- HERO VIDEO -->
-  <figure>
-    <video autoplay muted loop playsinline controls preload="metadata">
-      <source src="../assets/nbody/2_body_simulation_using_verlet.mp4" type="video/mp4">
-    </video>
-    <figcaption>A two-body orbit evolved using the Verlet integrator.</figcaption>
-  </figure>
+    <!-- INTRO -->
+    <header class="story-header">
+      <span class="eyebrow">2026 · Computational Astrophysics</span>
+      <h1>What happens when gravity is the only rule?</h1>
+      <p class="intro">A from-scratch gravitational N-body simulation built to understand the mathematics, numerical methods, scaling with MPI, and the formation of star clusters.</p>
+    </header>
 
-  <article class="story-content">
-    
-    <!-- 01 -->
-    <section>
-      <p class="section-label">01</p>
-      <h2>It started with gravity.</h2>
-      <p>I wanted to understand what actually happens underneath an N-body simulation rather than treating the solver as a black box. At its core, the problem is deceptively simple: every body feels the gravitational force produced by every other body.</p>
-      <p class="equation">F<sub>ij</sub> = G(m<sub>i</sub>m<sub>j</sub>) / r<sub>ij</sub><sup>2</sup></p>
-    </section>
-
-    <!-- 02 -->
-    <section>
-      <p class="section-label">02</p>
-      <h2>First, make two bodies behave.</h2>
-      <p>Before dealing with many interacting particles, I started with the simplest system for which the dynamics are already known: two bodies orbiting their common centre of mass. This became the first test of the numerical machinery.</p>
-    </section>
-
+    <!-- HERO VIDEO -->
     <figure>
-      <video controls muted loop playsinline preload="metadata">
+      <video autoplay muted loop playsinline controls preload="metadata">
         <source src="../assets/nbody/2_body_simulation_using_verlet.mp4" type="video/mp4">
       </video>
-      <figcaption>Two-body dynamics using the Verlet scheme.</figcaption>
+      <figcaption>A two-body orbit evolved using the Verlet integrator.</figcaption>
     </figure>
 
-    <!-- 03 -->
-    <section>
-      <p class="section-label">03</p>
-      <h2>Then time itself becomes numerical.</h2>
-      <p>The equations of motion are continuous, but a computer has to advance the system in discrete time steps. I implemented and compared several numerical approaches: Euler, Leapfrog/Verlet, fourth-order Runge–Kutta and Runge–Kutta–Fehlberg 45.</p>
-    </section>
-
-    <div class="figure-grid">
-      <figure>
-        <img src="../assets/nbody/N=10.png" alt="N-body simulation with ten bodies" loading="lazy">
-        <figcaption>A ten-body gravitational system.</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/nbody/N=10_Energy.png" alt="Energy evolution of the ten-body simulation" loading="lazy">
-        <figcaption>Energy evolution for the N = 10 system.</figcaption>
-      </figure>
-    </div>
-
-    <!-- 04 -->
-    <section>
-      <p class="section-label">04</p>
-      <h2>Trajectories are not enough.</h2>
-      <p>A trajectory can look perfectly reasonable while the numerical solution slowly drifts away from the physical system it is supposed to represent. So I tracked the quantities that should remain conserved: total energy and angular momentum.</p>
-    </section>
-
-    <div class="figure-grid">
-      <figure>
-        <img src="../assets/nbody/Angular_Momentum_Drift_verlet.png" alt="Angular momentum drift in the Verlet simulation" loading="lazy">
-        <figcaption>Angular-momentum drift.</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/nbody/energy_drift_verlet_N25.png" alt="Energy drift for a 25-body Verlet simulation" loading="lazy">
-        <figcaption>Energy drift for an N = 25 system.</figcaption>
-      </figure>
-    </div>
-
-    <!-- 05 & 06 -->
-    <section>
-      <p class="section-label">05 & 06</p>
-      <h2>Two bodies become many, and computation becomes the problem.</h2>
-      <p>The interesting part begins when the system stops having a simple analytical picture. With N bodies, every particle contributes to the gravitational field experienced by every other particle. The computational cost grows approximately as O(N²).</p>
-    </section>
-
-    <div class="figure-grid">
-      <figure>
-        <video controls muted loop playsinline preload="metadata">
-          <source src="../assets/nbody/n_body_simulation_verlet.mp4" type="video/mp4">
-        </video>
-        <figcaption>Many-body evolution (Verlet).</figcaption>
-      </figure>
-      <figure>
-        <img src="../assets/nbody/nbody_simulation.gif" alt="Animated N-body gravitational simulation" loading="lazy">
-        <figcaption>Another view of the system.</figcaption>
-      </figure>
-    </div>
-
-    <!-- 07 -->
-    <section>
-      <p class="section-label">07</p>
-      <h2>Building the machinery myself.</h2>
-      <p>The project was structured so that the physical model, numerical integrators, energy calculations, stability checks and simulation driver could be developed independently.</p>
-    </section>
-
-    <!-- 08 & 09 -->
-    <section>
-      <p class="section-label">08 & 09</p>
-      <h2>The simulation is also data.</h2>
-      <p>Each run produces a numerical record of the system rather than just an image on the screen. Direct summation is useful, but the natural next step to handle the scaling bottleneck is adopting distributed computing and hierarchical methods.</p>
-    </section>
-
-    <!-- 10 (NEW SECTION: MPI & Star Clusters) -->
-    <section>
-      <p class="section-label">10</p>
-      <h2>Scaling up with MPI and Star Clusters.</h2>
-      <p>To push past the limits of a single thread, we introduced <strong>MPI (Message Passing Interface)</strong> to distribute the computational load across multiple processes. This structural shift allowed us to move beyond simple multi-body toy models and start simulating dense star clusters.</p>
-      <p>By leveraging parallelization, we successfully scaled the simulation up to <strong>20,000 stars</strong>, allowing us to observe macro-scale gravitational dynamics, cluster formations, and deep gravitational interactions that are otherwise impossible to compute quickly on a single node.</p>
-    </section>
-
-    <div class="figure-grid">
-      <figure>
-        <video controls muted loop playsinline preload="metadata">
-          <source src="../assets/nbody/simulation.mp4" type="video/mp4">
-        </video>
-        <figcaption>Massive cluster simulation with 2,000 stars.</figcaption>
-      </figure>
-      <figure>
-        <video controls muted loop playsinline preload="metadata">
-          <source src="../assets/nbody/n=5000_simulation.mp4" type="video/mp4">
-        </video>
-        <figcaption>Cluster dynamics with 5,000 stars.</figcaption>
-      </figure>
-      <figure>
-        <video controls muted loop playsinline preload="metadata">
-          <source src="../assets/nbody/N=10000_simulation.mp4" type="video/mp4">
-        </video>
-        <figcaption>Scaling up to 10,000 stars.</figcaption>
-      </figure>
+    <article class="story-content">
       
-    </div>
+      <!-- 01 -->
+      <section>
+        <p class="section-label">01</p>
+        <h2>It started with gravity.</h2>
+        <p>I wanted to understand what actually happens underneath an N-body simulation rather than treating the solver as a black box. At its core, the problem is deceptively simple: every body feels the gravitational force produced by every other body.</p>
+        <p class="equation">F<sub>ij</sub> = G(m<sub>i</sub>m<sub>j</sub>) / r<sub>ij</sub><sup>2</sup></p>
+      </section>
 
-    <!-- 11 -->
-    <section>
-      <p class="section-label">11</p>
-      <h2>There is something satisfying about starting from zero.</h2>
-      <p>No simulation engine was hiding the equations. No integrator was hiding the time evolution. No library decided how to scale to thousands of bodies. Start with gravity. Write down the equations. Distribute the workload. Then let the particles move.</p>
-    </section>
+      <!-- 02 -->
+      <section>
+        <p class="section-label">02</p>
+        <h2>First, make two bodies behave.</h2>
+        <p>Before dealing with many interacting particles, I started with the simplest system for which the dynamics are already known: two bodies orbiting their common centre of mass. This became the first test of the numerical machinery.</p>
+      </section>
 
-  </article>
+      <figure>
+        <video controls muted loop playsinline preload="metadata">
+          <source src="../assets/nbody/2_body_simulation_using_verlet.mp4" type="video/mp4">
+        </video>
+        <figcaption>Two-body dynamics using the Verlet scheme.</figcaption>
+      </figure>
 
-  <!-- FOOTER -->
-  <footer class="story-footer">
-    <a href="../index.html">← All projects</a>
-    <a href="https://github.com/Akshat-Chakarverty/n-body-simulation" target="_blank" rel="noopener noreferrer">View source ↗</a>
-  </footer>
+      <!-- 03 -->
+      <section>
+        <p class="section-label">03</p>
+        <h2>Then time itself becomes numerical.</h2>
+        <p>The equations of motion are continuous, but a computer has to advance the system in discrete time steps. I implemented and compared several numerical approaches: Euler, Leapfrog/Verlet, fourth-order Runge–Kutta and Runge–Kutta–Fehlberg 45.</p>
+      </section>
 
-</div>
+      <div class="figure-grid">
+        <figure>
+          <img src="../assets/nbody/N=10.png" alt="N-body simulation with ten bodies" loading="lazy">
+          <figcaption>A ten-body gravitational system.</figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/nbody/N=10_Energy.png" alt="Energy evolution of the ten-body simulation" loading="lazy">
+          <figcaption>Energy evolution for the N = 10 system.</figcaption>
+        </figure>
+      </div>
 
+      <!-- 04 -->
+      <section>
+        <p class="section-label">04</p>
+        <h2>Trajectories are not enough.</h2>
+        <p>A trajectory can look perfectly reasonable while the numerical solution slowly drifts away from the physical system it is supposed to represent. So I tracked the quantities that should remain conserved: total energy and angular momentum.</p>
+      </section>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="../assets/nbody/Angular_Momentum_Drift_verlet.png" alt="Angular momentum drift in the Verlet simulation" loading="lazy">
+          <figcaption>Angular-momentum drift.</figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/nbody/energy_drift_verlet_N25.png" alt="Energy drift for a 25-body Verlet simulation" loading="lazy">
+          <figcaption>Energy drift for an N = 25 system.</figcaption>
+        </figure>
+      </div>
+
+      <!-- 05 & 06 -->
+      <section>
+        <p class="section-label">05 & 06</p>
+        <h2>Two bodies become many, and computation becomes the problem.</h2>
+        <p>The interesting part begins when the system stops having a simple analytical picture. With N bodies, every particle contributes to the gravitational field experienced by every other particle. The computational cost grows approximately as O(N²).</p>
+      </section>
+
+      <div class="figure-grid">
+        <figure>
+          <video controls muted loop playsinline preload="metadata">
+            <source src="../assets/nbody/n_body_simulation_verlet.mp4" type="video/mp4">
+          </video>
+          <figcaption>Many-body evolution (Verlet).</figcaption>
+        </figure>
+        <figure>
+          <img src="../assets/nbody/nbody_simulation.gif" alt="Animated N-body gravitational simulation" loading="lazy">
+          <figcaption>Another view of the system.</figcaption>
+        </figure>
+      </div>
+
+      <!-- 07 -->
+      <section>
+        <p class="section-label">07</p>
+        <h2>Building the machinery myself.</h2>
+        <p>The project was structured so that the physical model, numerical integrators, energy calculations, stability checks and simulation driver could be developed independently.</p>
+      </section>
+
+      <!-- 08 & 09 -->
+      <section>
+        <p class="section-label">08 & 09</p>
+        <h2>The simulation is also data.</h2>
+        <p>Each run produces a numerical record of the system rather than just an image on the screen. Direct summation is useful, but the natural next step to handle the scaling bottleneck is adopting distributed computing and hierarchical methods.</p>
+      </section>
+
+      <!-- 10 (NEW SECTION: MPI & Star Clusters) -->
+      <section>
+        <p class="section-label">10</p>
+        <h2>Scaling up with MPI and Star Clusters.</h2>
+        <p>To push past the limits of a single thread, we introduced <strong>MPI (Message Passing Interface)</strong> to distribute the computational load across multiple processes. This structural shift allowed us to move beyond simple multi-body toy models and start simulating dense star clusters.</p>
+        <p>By leveraging parallelization, we successfully scaled the simulation up to <strong>20,000 stars</strong>, allowing us to observe macro-scale gravitational dynamics, cluster formations, and deep gravitational interactions that are otherwise impossible to compute quickly on a single node.</p>
+      </section>
+
+      <div class="figure-grid">
+        <figure>
+          <video controls muted loop playsinline preload="metadata">
+            <source src="../assets/nbody/simulation.mp4" type="video/mp4">
+          </video>
+          <figcaption>Massive cluster simulation with 2,000 stars.</figcaption>
+        </figure>
+        <figure>
+          <video controls muted loop playsinline preload="metadata">
+            <source src="../assets/nbody/n=5000_simulation.mp4" type="video/mp4">
+          </video>
+          <figcaption>Cluster dynamics with 5,000 stars.</figcaption>
+        </figure>
+        <figure>
+          <video controls muted loop playsinline preload="metadata">
+            <source src="../assets/nbody/N=10000_simulation.mp4" type="video/mp4">
+          </video>
+          <figcaption>Scaling up to 10,000 stars.</figcaption>
+        </figure>
+      </div>
+
+      <!-- 11 -->
+      <section>
+        <p class="section-label">11</p>
+        <h2>There is something satisfying about starting from zero.</h2>
+        <p>No simulation engine was hiding the equations. No integrator was hiding the time evolution. No library decided how to scale to thousands of bodies. Start with gravity. Write down the equations. Distribute the workload. Then let the particles move.</p>
+      </section>
+
+    </article>
+
+    <!-- FOOTER -->
+    <footer class="story-footer">
+      <a href="../index.html">← All projects</a>
+      <a href="https://github.com/Akshat-Chakarverty/n-body-simulation" target="_blank" rel="noopener noreferrer">View source ↗</a>
+    </footer>
+
+  </div>
+
+  <!-- Network Animation Script -->
+  <script>
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, nodes;
+
+    function init() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      nodes = [];
+      for (let i = 0; i < 40; i++) {
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 2 + 1
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Update positions
+      nodes.forEach(node => {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > width) node.vx *= -1;
+        if (node.y < 0 || node.y > height) node.vy *= -1;
+      });
+
+      // Draw lines between close nodes
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 150) {
+            ctx.strokeStyle = `rgba(100, 110, 130, ${1 - dist / 150})`;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      ctx.fillStyle = '#4a5568';
+      nodes.forEach(node => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', init);
+    init();
+    draw();
+  </script>
 </body>
 </html>
