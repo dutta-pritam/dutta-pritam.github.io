@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A differential-drive robot simulator with LiDAR, occupancy-grid mapping, and A* path planning.">
+  <meta name="description" content="A differential-drive robot simulator with LiDAR, occupancy-grid mapping, and A* path planning by Pritam Dutta.">
   <title>Autonomous Navigation — Pritam Dutta</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,13 +20,41 @@
 
     <header class="page-header project-header">
       <h1>Autonomous Navigation</h1>
-      <p class="meta">2026, Robotics, Path planning, SLAM, Python</p>
+      <p class="meta">2026, Robotics, Path Planning, SLAM, Python</p>
     </header>
 
     <div class="project-body">
-      <p>A Python and matplotlib simulation of a differential-drive robot navigating a field of obstacles.</p>
-      <p>It began from an earlier &ldquo;Phase 1C&rdquo; script &mdash; a random obstacle field, wheel encoders, and a 180-ray LiDAR sweep rendered as a live animation &mdash; which I extended in two directions: path planning toward a goal using the LiDAR returns, and SLAM-style occupancy-grid mapping built up from those same scans.</p>
-      <p>I also raised the obstacle count from 18 to 100 to stress-test the planner in denser environments.</p>
+      <p>A Python and matplotlib simulation of a differential-drive robot navigating an obstacle-dense field.</p>
+      
+      <p>It began from an earlier &ldquo;Phase 1C&rdquo; script &mdash; featuring a random obstacle field, wheel encoders, and a 180-ray LiDAR sweep rendered as a live animation &mdash; which I extended in two major directions: real-time path planning toward a dynamic goal using LiDAR returns, and SLAM-style occupancy-grid mapping built up from those same scans.</p>
+      
+      <p>I also scaled up the obstacle count from 18 to 100 to rigorously stress-test the planner in high-density clutter.</p>
+
+      <!-- Video / Simulation Demonstration Section -->
+      <h2>Simulation Output</h2>
+      <div class="media-container">
+        <video controls autoplay muted loop playsinline class="project-video">
+          <source src="../assets/videos/autonomous_nav_sim.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="media-caption">Live simulation showing LiDAR raycasting, real-time occupancy grid updates, and A* path replanning through 100 random obstacles.</p>
+      </div>
+
+      <h2>Core Features</h2>
+      <ul>
+        <li><strong>Differential-Drive Kinematics:</strong> Accurate modeling of robot velocity, heading updates, and wheel encoder noise.</li>
+        <li><strong>180-Ray LiDAR Simulation:</strong> High-resolution raycasting to detect boundary intersections and obstacle ranges within a 360-degree field of view.</li>
+        <li><strong>Occupancy-Grid Mapping:</strong> Probabilistic grid updates mapping free vs. occupied space based on sensor returns over time.</li>
+        <li><strong>A* Path Planning & Replanning:</strong> Dynamic route calculation that reacts instantly to newly discovered obstacles in dense environments.</li>
+      </ul>
+
+      <h2>Implementation & Architecture</h2>
+      <p>The simulator is implemented purely in Python using <code>NumPy</code> for vectorized math operations and <code>Matplotlib</code> for the real-time frame rendering loop. The architecture decouples the sensor layer, mapping layer, and planning layer:</p>
+      <ul>
+        <li><strong>Perception:</strong> Casts rays from the robot's current pose, computing intersections with circular obstacle geometries.</li>
+        <li><strong>Mapping:</strong> Translates sensor hits into discrete grid cells using Bresenham's line algorithm to mark free space along the ray and occupied space at the endpoint.</li>
+        <li><strong>Planning:</strong> Periodically feeds the updated occupancy map into an optimized A* graph search algorithm to chart the shortest collision-free trajectory to the target coordinates.</li>
+      </ul>
     </div>
 
     <nav class="project-footer-nav">
