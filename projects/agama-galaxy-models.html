@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="description"
-        content="Equilibrium galaxy models built with AGAMA's self-consistent modeling pipeline and prepared for N-body evolution.">
+        content="Equilibrium galaxy modeling with AGAMA, self-consistent distribution functions, particle sampling, and preparation for large-scale N-body evolution.">
 
-  <title>Equilibrium Galaxy Modeling — Pritam Dutta</title>
+  <title>Equilibrium Galaxy Modeling with AGAMA — Pritam Dutta</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,9 +17,9 @@
 
   <style>
 
-    /* ================================
+    /* =========================================================
        BASE
-    ================================= */
+    ========================================================= */
 
     * {
       box-sizing: border-box;
@@ -31,12 +31,12 @@
 
     body {
       margin: 0;
-      background: #ffffff;
-      color: #171717;
+      background: #fff;
+      color: #181818;
 
       font-family: "Inter", sans-serif;
-      font-size: 16px;
-      line-height: 1.75;
+      font-size: 15px;
+      line-height: 1.65;
     }
 
     a {
@@ -45,162 +45,321 @@
     }
 
 
-    /* ================================
-       BACKGROUND
-    ================================= */
+    /* =========================================================
+       SUBTLE BACKGROUND
+    ========================================================= */
 
-    body::before,
-    body::after {
+    body::before {
       content: "";
       position: fixed;
-      z-index: -1;
+      inset: 0;
+      z-index: -10;
       pointer-events: none;
 
-      width: 260px;
-      height: 260px;
-
-      opacity: 0.16;
-
       background:
-        radial-gradient(circle at 20% 30%, #506b82 0 4px, transparent 5px),
-        radial-gradient(circle at 65% 15%, #506b82 0 3px, transparent 4px),
-        radial-gradient(circle at 70% 70%, #506b82 0 4px, transparent 5px),
-        radial-gradient(circle at 35% 80%, #506b82 0 3px, transparent 4px);
+        radial-gradient(circle at 8% 20%,
+          rgba(75, 105, 130, 0.10) 0 3px,
+          transparent 4px),
+
+        radial-gradient(circle at 17% 48%,
+          rgba(75, 105, 130, 0.08) 0 3px,
+          transparent 4px),
+
+        radial-gradient(circle at 87% 28%,
+          rgba(75, 105, 130, 0.10) 0 3px,
+          transparent 4px),
+
+        radial-gradient(circle at 77% 75%,
+          rgba(75, 105, 130, 0.08) 0 3px,
+          transparent 4px);
+
+      opacity: .8;
+    }
+
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+
+    .page {
+      width: 760px;
+      max-width: calc(100% - 36px);
+
+      margin: 0 auto;
+      padding: 42px 0 100px;
+    }
+
+
+    /* =========================================================
+       HEADER — MATCHING PORTFOLIO
+    ========================================================= */
+
+    .header {
+      position: relative;
+
+      min-height: 205px;
+
+      padding-right: 150px;
+    }
+
+    .name {
+      margin: 0;
+
+      font-family: "Inter", sans-serif;
+      font-size: 29px;
+      font-weight: 500;
+
+      letter-spacing: -0.035em;
+    }
+
+    .affiliation {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      margin-top: 6px;
+
+      font-size: 18px;
+      color: #707070;
+    }
+
+    .status {
+      position: relative;
+
+      width: 15px;
+      height: 15px;
+
+      border: 3px solid #eef1f3;
+      border-radius: 50%;
+    }
+
+    .status::after {
+      content: "";
+
+      position: absolute;
+
+      width: 5px;
+      height: 5px;
+
+      top: 2px;
+      left: 2px;
+
+      border-radius: 50%;
+
+      background: #68839a;
+    }
+
+
+    /* =========================================================
+       PROFILE
+    ========================================================= */
+
+    .profile {
+      position: absolute;
+
+      top: -20px;
+      right: 0;
+
+      width: 118px;
+      height: 118px;
+
+      border-radius: 50%;
+
+      background: #fff;
+
+      box-shadow:
+        0 8px 28px rgba(0, 0, 0, .08);
+
+      padding: 9px;
+    }
+
+    .profile img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
 
       border-radius: 50%;
     }
 
-    body::before {
-      top: 20px;
-      left: -60px;
-    }
+    .profile-dot {
+      position: absolute;
 
-    body::after {
-      right: -70px;
-      bottom: 40px;
-    }
+      right: 3px;
+      bottom: 3px;
 
+      width: 15px;
+      height: 15px;
 
-    /* ================================
-       MAIN
-    ================================= */
+      border: 3px solid white;
+      border-radius: 50%;
 
-    .page {
-      width: min(760px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 28px 0 80px;
+      background: #58748b;
     }
 
 
-    /* ================================
-       TOP
-    ================================= */
+    /* =========================================================
+       HEADER BUTTONS
+    ========================================================= */
 
-    .back {
-      display: inline-block;
+    .actions {
+      display: flex;
+      gap: 10px;
 
-      margin-bottom: 80px;
+      margin-top: 53px;
+    }
 
+    .pill {
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 40px;
+
+      padding: 7px 14px;
+
+      border: 1px solid #e5e5e5;
+      border-radius: 22px;
+
+      background: rgba(255,255,255,.8);
+
+      font-family: "Inter", sans-serif;
       font-size: 14px;
       color: #666;
 
-      transition: color 0.2s ease;
+      cursor: pointer;
+
+      transition:
+        border-color .2s ease,
+        color .2s ease,
+        background .2s ease;
     }
 
-    .back:hover {
-      color: #385c78;
+    button.pill {
+      font-family: inherit;
+    }
+
+    .pill:hover {
+      color: #385d78;
+      border-color: #ccd6dd;
+      background: #fafcfd;
     }
 
 
-    /* ================================
-       HEADER
-    ================================= */
+    /* =========================================================
+       PROJECT INTRO
+    ========================================================= */
 
-    .project-header {
-      margin-bottom: 85px;
+    .project-top {
+      margin-top: 40px;
+      margin-bottom: 58px;
     }
 
-    .eyebrow {
-      margin: 0 0 22px;
+    .project-meta {
+      margin: 0 0 8px;
 
       font-size: 13px;
-      letter-spacing: 0.04em;
-
-      color: #777;
+      color: #888;
     }
 
-    h1 {
-      margin: 0;
+    .project-title {
+      margin: 0 0 13px;
 
-      font-family: "Newsreader", serif;
-      font-size: clamp(48px, 8vw, 78px);
-      font-weight: 400;
-      line-height: 0.98;
-      letter-spacing: -0.035em;
-
-      color: #171717;
-    }
-
-    .intro {
-      max-width: 610px;
-
-      margin-top: 32px;
-
-      font-size: 18px;
-      line-height: 1.7;
-
-      color: #666;
-    }
-
-
-    /* ================================
-       CONTENT
-    ================================= */
-
-    .content section {
-      margin-bottom: 105px;
-    }
-
-    .section-label {
-      margin: 0 0 14px;
-
-      font-size: 12px;
+      font-family: "Inter", sans-serif;
+      font-size: 25px;
       font-weight: 500;
-      letter-spacing: 0.08em;
 
-      color: #7d8b96;
-    }
-
-    h2 {
-      margin: 0 0 28px;
-
-      font-family: "Newsreader", serif;
-      font-size: clamp(34px, 5vw, 46px);
-      font-weight: 400;
-      line-height: 1.1;
       letter-spacing: -0.025em;
     }
 
-    p {
+    .project-description {
+      max-width: 680px;
+
+      margin: 0;
+
+      font-family: "Newsreader", serif;
+      font-size: 20px;
+      line-height: 1.7;
+
+      color: #333;
+    }
+
+
+    /* =========================================================
+       DIVIDER
+    ========================================================= */
+
+    .divider {
+      height: 1px;
+      width: 100%;
+
+      margin: 0 0 45px;
+
+      background: #e6e6e6;
+    }
+
+
+    /* =========================================================
+       CONTENT
+    ========================================================= */
+
+    .content {
+      font-family: "Newsreader", serif;
+
+      font-size: 18px;
+      line-height: 1.78;
+
+      color: #252525;
+    }
+
+    .content section {
+      margin-bottom: 70px;
+    }
+
+    .section-label {
+      margin: 0 0 9px;
+
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+
+      letter-spacing: .05em;
+
+      color: #7f8990;
+    }
+
+    .content h2 {
+      margin: 0 0 21px;
+
+      font-family: "Inter", sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+
+      letter-spacing: -0.02em;
+
+      color: #202020;
+    }
+
+    .content p {
       margin: 0 0 22px;
     }
 
-    strong {
+    .content strong {
+      font-family: "Inter", sans-serif;
+      font-size: .92em;
       font-weight: 500;
     }
 
-    em {
+    .content em {
       font-family: "Newsreader", serif;
-      font-size: 1.08em;
     }
 
 
-    /* ================================
-       IMAGES
-    ================================= */
+    /* =========================================================
+       IMAGE
+    ========================================================= */
 
     .simulation {
-      margin: 95px 0 110px;
+      margin: 65px 0 78px;
     }
 
     .simulation img {
@@ -209,213 +368,245 @@
       width: 100%;
       height: auto;
 
-      border-radius: 7px;
+      border-radius: 6px;
 
       box-shadow:
-        0 12px 35px rgba(0, 0, 0, 0.07);
+        0 10px 30px rgba(0,0,0,.06);
     }
 
     .simulation figcaption {
-      margin-top: 13px;
+      margin-top: 11px;
 
+      font-family: "Inter", sans-serif;
       font-size: 12px;
       line-height: 1.5;
 
-      color: #888;
+      color: #8a8a8a;
     }
 
 
-    /* ================================
+    /* =========================================================
        QUOTE
-    ================================= */
+    ========================================================= */
 
     .quote {
-      margin: 110px 0;
+      margin: 75px 0;
+      padding: 5px 0 5px 25px;
 
-      padding: 20px 0 20px 28px;
-
-      border-left: 2px solid #58758c;
+      border-left: 2px solid #5d7890;
     }
 
     .quote p {
       margin: 0;
 
       font-family: "Newsreader", serif;
-      font-size: clamp(25px, 4vw, 35px);
-      line-height: 1.35;
-
-      color: #303030;
-    }
-
-
-    /* ================================
-       PIPELINE
-    ================================= */
-
-    .steps {
-      margin-top: 42px;
-
-      border-top: 1px solid #e7e7e7;
-    }
-
-    .step {
-      display: grid;
-      grid-template-columns: 55px 1fr;
-
-      gap: 20px;
-
-      padding: 25px 0;
-
-      border-bottom: 1px solid #e7e7e7;
-    }
-
-    .step-number {
-      font-size: 12px;
-      color: #84909a;
-    }
-
-    .step h3 {
-      margin: 0 0 7px;
-
-      font-family: "Newsreader", serif;
       font-size: 25px;
-      font-weight: 400;
+      line-height: 1.45;
+
+      color: #444;
     }
 
-    .step p {
-      margin: 0;
 
-      font-size: 15px;
-      color: #707070;
+    /* =========================================================
+       PIPELINE
+    ========================================================= */
+
+    .pipeline {
+      margin: 35px 0 10px;
+
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .pipeline-item {
+      display: grid;
+
+      grid-template-columns: 52px 1fr;
+
+      padding: 22px 0;
+
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .pipeline-number {
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      color: #89939a;
+    }
+
+    .pipeline-title {
+      margin-bottom: 5px;
+
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .pipeline-text {
+      margin: 0 !important;
+
+      font-size: 16px;
+      line-height: 1.65;
+
+      color: #686868;
     }
 
     code {
       padding: 2px 5px;
 
-      border-radius: 4px;
+      border-radius: 3px;
 
-      background: #f4f4f4;
+      background: #f5f5f5;
 
-      font-size: 0.9em;
+      font-family: monospace;
+      font-size: .82em;
     }
 
 
-    /* ================================
+    /* =========================================================
        SCALE
-    ================================= */
+    ========================================================= */
 
     .scale {
-      margin: 50px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
 
-      padding: 35px 0;
+      margin: 40px 0;
+
+      padding: 24px 0;
 
       border-top: 1px solid #e5e5e5;
       border-bottom: 1px solid #e5e5e5;
-
-      text-align: center;
     }
 
     .scale-number {
-      display: block;
-
       font-family: "Newsreader", serif;
-      font-size: clamp(70px, 13vw, 110px);
-      line-height: 1;
+      font-size: 48px;
 
-      letter-spacing: -0.05em;
+      letter-spacing: -.04em;
     }
 
-    .scale-label {
-      display: block;
-
-      margin-top: 8px;
-
+    .scale-text {
+      font-family: "Inter", sans-serif;
       font-size: 13px;
-      color: #888;
+
+      color: #858585;
     }
 
 
-    /* ================================
-       FINAL
-    ================================= */
+    /* =========================================================
+       LINKS
+    ========================================================= */
 
-    .ending {
-      padding-top: 20px;
+    .project-links {
+      display: flex;
+      gap: 10px;
+
+      margin-top: 30px;
     }
 
-    .final-line {
-      margin-top: 55px;
+    .project-link {
+      display: inline-block;
 
-      font-family: "Newsreader", serif;
-      font-size: clamp(28px, 4vw, 38px);
-      line-height: 1.3;
+      padding: 8px 14px;
 
-      color: #3d6079;
+      border: 1px solid #e5e5e5;
+      border-radius: 20px;
+
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+
+      color: #606060;
+
+      transition: .2s ease;
+    }
+
+    .project-link:hover {
+      color: #385d78;
+      border-color: #cbd5dc;
     }
 
 
-    /* ================================
+    /* =========================================================
        FOOTER
-    ================================= */
+    ========================================================= */
 
     footer {
       display: flex;
       justify-content: space-between;
 
-      margin-top: 120px;
-      padding-top: 25px;
+      margin-top: 100px;
+      padding-top: 22px;
 
       border-top: 1px solid #e5e5e5;
 
+      font-family: "Inter", sans-serif;
       font-size: 13px;
+
       color: #777;
     }
 
     footer a:hover {
-      color: #385c78;
+      color: #385d78;
     }
 
 
-    /* ================================
+    /* =========================================================
        MOBILE
-    ================================= */
+    ========================================================= */
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
 
       .page {
-        width: min(100% - 30px, 760px);
-        padding-top: 20px;
+        max-width: calc(100% - 28px);
+        padding-top: 28px;
       }
 
-      .back {
-        margin-bottom: 55px;
+      .header {
+        padding-right: 0;
       }
 
-      .project-header {
-        margin-bottom: 65px;
+      .profile {
+        position: relative;
+
+        top: auto;
+        right: auto;
+
+        margin: 25px 0 0;
+
+        width: 90px;
+        height: 90px;
       }
 
-      .intro {
-        font-size: 16px;
+      .actions {
+        flex-wrap: wrap;
+        margin-top: 25px;
       }
 
-      .content section {
-        margin-bottom: 80px;
+      .project-top {
+        margin-top: 50px;
       }
 
-      .simulation {
-        margin: 70px 0 80px;
+      .project-title {
+        font-size: 22px;
       }
 
-      .quote {
-        margin: 80px 0;
+      .project-description {
+        font-size: 18px;
+      }
+
+      .content {
+        font-size: 17px;
+      }
+
+      .quote p {
+        font-size: 22px;
       }
 
       footer {
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
-
     }
 
   </style>
@@ -427,61 +618,97 @@
   <main class="page">
 
 
-    <!-- ================================
-         BACK
-    ================================= -->
-
-    <a class="back" href="../index.html">
-      ← Pritam Dutta
-    </a>
-
-
-    <!-- ================================
+    <!-- =====================================================
          HEADER
-    ================================= -->
+    ====================================================== -->
 
-    <header class="project-header">
+    <header class="header">
 
-      <p class="eyebrow">
-        2026 · Astrophysics · HPC
-      </p>
-
-      <h1>
-        Building a galaxy<br>
-        that can stay still.
+      <h1 class="name">
+        Pritam Dutta
       </h1>
 
-      <p class="intro">
-        An attempt to construct equilibrium galaxy models from
-        first principles, using AGAMA's self-consistent modeling
-        pipeline and preparing them for N-body evolution.
-      </p>
+      <div class="affiliation">
+
+        <span class="status"></span>
+
+        <span>
+          BS-MS · Indian Association for the Cultivation of Science
+        </span>
+
+      </div>
+
+
+      <!-- PROFILE -->
+
+      <div class="profile">
+
+        <img
+          src="../assets/profile.jpg"
+          alt="Pritam Dutta"
+        >
+
+        <span class="profile-dot"></span>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="actions">
+
+        <span class="pill">
+          ◐ System
+        </span>
+
+        <button
+          class="pill"
+          onclick="copyEmail()"
+        >
+          Copy email
+        </button>
+
+        <span
+          class="pill"
+          id="clock"
+        >
+          00:00:00
+        </span>
+
+      </div>
 
     </header>
 
 
-    <!-- ================================
-         IMAGE 1
-    ================================= -->
+    <!-- =====================================================
+         PROJECT HEADER
+    ====================================================== -->
 
-    <figure class="simulation">
+    <section class="project-top">
 
-      <img
-        src="galaxy-render.png"
-        alt="Galaxy simulation rendered from the equilibrium model"
-        loading="eager"
-      >
+      <p class="project-meta">
+        2026 · Astrophysics · Computational Science
+      </p>
 
-      <figcaption>
-        A rendered realization of the simulated galaxy.
-      </figcaption>
+      <h2 class="project-title">
+        Equilibrium Galaxy Modeling with AGAMA
+      </h2>
 
-    </figure>
+      <p class="project-description">
+        Building self-consistent galaxy models with AGAMA and
+        preparing particle realizations for large-scale
+        N-body evolution with GADGET-4.
+      </p>
+
+    </section>
 
 
-    <!-- ================================
-         STORY
-    ================================= -->
+    <div class="divider"></div>
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
 
     <article class="content">
 
@@ -495,32 +722,51 @@
         </p>
 
         <h2>
-          It starts with a problem.
+          Starting from equilibrium
         </h2>
 
         <p>
-          Before asking how a galaxy evolves, I wanted to ask a simpler
-          question:
-          <em>can we build one that is already in equilibrium?</em>
+          When setting up an N-body simulation of a galaxy, the
+          initial conditions matter as much as the integrator that
+          evolves them. A system that is not dynamically consistent
+          can immediately begin rearranging itself, producing
+          transient behaviour that comes from the construction of
+          the initial state rather than the physical question being
+          studied.
         </p>
 
         <p>
-          A galaxy is not just a collection of particles. Its stars move
-          through a gravitational potential, continuously responding to
-          the mass distribution around them.
+          I wanted to approach the problem from the other direction:
+          instead of beginning with an arbitrary collection of
+          particles, construct a galaxy whose density, gravitational
+          potential, and phase-space distribution are mutually
+          consistent.
         </p>
 
         <p>
-          If the initial conditions are not self-consistent, an N-body
-          simulation can spend much of its early evolution simply trying
-          to settle itself.
-        </p>
-
-        <p>
-          So the goal was to construct the equilibrium first.
+          This became the motivation for working with
+          <strong>AGAMA</strong>.
         </p>
 
       </section>
+
+
+      <!-- IMAGE 1 -->
+
+      <figure class="simulation">
+
+        <img
+          src="../assets/images/agama-render.png"
+          alt="Rendered equilibrium galaxy model"
+          loading="lazy"
+        >
+
+        <figcaption>
+          One of the rendered galaxy realizations produced during the
+          modeling process.
+        </figcaption>
+
+      </figure>
 
 
       <!-- 02 -->
@@ -532,25 +778,36 @@
         </p>
 
         <h2>
-          Finding the right language.
+          Building the model
         </h2>
 
         <p>
-          I used <strong>AGAMA</strong> and its self-consistent modeling
-          pipeline to construct the system.
+          AGAMA provides a framework for constructing stellar systems
+          through distribution functions and self-consistent
+          gravitational potentials. Rather than prescribing the
+          positions and velocities of every particle independently,
+          the model begins with a description of the underlying
+          phase-space distribution.
         </p>
 
         <p>
-          Underneath the software is a collection of ideas from galactic
-          dynamics: distribution functions, gravitational potentials,
-          action-angle variables, and numerical representations of
-          stellar systems.
+          The important distinction is that the density distribution
+          and the gravitational field are not treated as unrelated
+          pieces. The mass distribution produces a potential, while
+          the potential determines how the distribution function
+          behaves.
         </p>
 
         <p>
-          The resulting density and potential are iteratively brought
-          into agreement, producing a model that is internally
-          self-consistent.
+          The self-consistent modeling procedure repeatedly updates
+          these components until the system converges toward a
+          compatible density and potential.
+        </p>
+
+        <p>
+          This makes the resulting model substantially more useful
+          as an N-body initial condition than simply placing particles
+          into a visually plausible shape.
         </p>
 
       </section>
@@ -578,37 +835,39 @@
         </p>
 
         <h2>
-          From equilibrium to particles.
+          From a distribution to particles
         </h2>
 
         <p>
-          Once the self-consistent model converges, the continuous
-          distribution has to become something an N-body code can
-          actually evolve.
+          A continuous distribution function is useful for defining
+          the equilibrium system, but eventually it has to become a
+          finite set of particles that an N-body code can evolve.
         </p>
 
         <p>
-          I split the pipeline into two distinct stages.
+          I therefore think about the workflow as two connected
+          computational stages.
         </p>
 
 
-        <div class="steps">
+        <div class="pipeline">
 
-          <div class="step">
+          <div class="pipeline-item">
 
-            <span class="step-number">
+            <span class="pipeline-number">
               01
             </span>
 
             <div>
 
-              <h3>
-                Converge
-              </h3>
+              <div class="pipeline-title">
+                Self-consistent modeling
+              </div>
 
-              <p>
-                The self-consistent modeling stage iteratively brings
-                the density and gravitational potential into agreement.
+              <p class="pipeline-text">
+                Construct the density and gravitational potential,
+                iterate the model, and bring the components toward
+                equilibrium.
               </p>
 
             </div>
@@ -616,21 +875,45 @@
           </div>
 
 
-          <div class="step">
+          <div class="pipeline-item">
 
-            <span class="step-number">
+            <span class="pipeline-number">
               02
             </span>
 
             <div>
 
-              <h3>
-                Sample
-              </h3>
+              <div class="pipeline-title">
+                Particle sampling
+              </div>
 
-              <p>
-                The converged distribution is sampled into particles
-                that can be passed to an N-body simulation.
+              <p class="pipeline-text">
+                Sample the converged distribution function into
+                particles with positions and velocities suitable
+                for subsequent N-body evolution.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="pipeline-item">
+
+            <span class="pipeline-number">
+              03
+            </span>
+
+            <div>
+
+              <div class="pipeline-title">
+                Large-scale evolution
+              </div>
+
+              <p class="pipeline-text">
+                Pass the particle realization into a dedicated
+                N-body framework such as GADGET-4 and follow the
+                system through time.
               </p>
 
             </div>
@@ -640,23 +923,6 @@
         </div>
 
       </section>
-
-
-      <!-- IMAGE 2 -->
-
-      <figure class="simulation">
-
-        <img
-          src="spiral-render.png"
-          alt="Spiral galaxy simulation render"
-          loading="lazy"
-        >
-
-        <figcaption>
-          A rendered spiral structure from the simulation.
-        </figcaption>
-
-      </figure>
 
 
       <!-- 04 -->
@@ -668,19 +934,26 @@
         </p>
 
         <h2>
-          Then the scale changes.
+          Where the computational problem appears
         </h2>
 
         <p>
-          A small equilibrium model is useful for understanding the
-          physics. But the computational problem becomes very different
-          when the system contains millions of particles.
+          Constructing a small model is only one part of the problem.
+          The computational cost changes considerably when the goal
+          becomes a high-resolution particle realization.
         </p>
 
         <p>
-          The sampling stage therefore has to be designed around
-          distributed computation rather than treating the entire
-          particle population as a single in-memory object.
+          At that point, memory usage, particle generation, parallel
+          execution, file formats, and communication between processes
+          become part of the scientific problem itself.
+        </p>
+
+        <p>
+          The sampling stage is therefore being designed with
+          distributed computation in mind rather than assuming that
+          the entire particle population can exist comfortably in a
+          single process.
         </p>
 
 
@@ -690,20 +963,39 @@
             10⁷
           </span>
 
-          <span class="scale-label">
-            target particles on a cluster
+          <span class="scale-text">
+            target particle scale
           </span>
 
         </div>
 
 
         <p>
-          The final particle realization can then be passed to
-          <strong>GADGET-4</strong>, where the equilibrium model becomes
-          the initial condition for a full N-body evolution.
+          The longer-term target is to construct realizations at
+          approximately the <strong>10⁷-particle scale</strong> on
+          cluster hardware and then use them as initial conditions
+          for large N-body experiments.
         </p>
 
       </section>
+
+
+      <!-- IMAGE 2 -->
+
+      <figure class="simulation">
+
+        <img
+          src="../assets/images/spiral-render.png"
+          alt="Spiral galaxy simulation render"
+          loading="lazy"
+        >
+
+        <figcaption>
+          A spiral structure generated from the simulated galaxy
+          system.
+        </figcaption>
+
+      </figure>
 
 
       <!-- 05 -->
@@ -715,23 +1007,32 @@
         </p>
 
         <h2>
-          What I am really exploring.
+          From a static model to an evolving galaxy
         </h2>
 
         <p>
-          The project sits somewhere between astrophysics and
-          computational science.
+          An equilibrium model is not the final result. It is the
+          starting point for asking what happens when the system is
+          allowed to evolve under gravity.
         </p>
 
         <p>
-          The physics determines what a valid galaxy looks like.
-          The numerical methods determine whether we can construct it.
-          And the architecture of the code determines how far we can
-          scale it.
+          Once the particle realization is passed to
+          <strong>GADGET-4</strong>, the problem changes from
+          constructing the initial state to measuring how that state
+          responds over time.
         </p>
 
         <p>
-          That intersection is what interests me most.
+          This opens the possibility of studying structural evolution,
+          stability, relaxation, morphology, and the response of
+          different components of the galaxy to gravitational
+          interactions.
+        </p>
+
+        <p>
+          The rendered simulations are therefore only the visible
+          part of a much larger numerical pipeline.
         </p>
 
       </section>
@@ -739,32 +1040,111 @@
 
       <!-- 06 -->
 
-      <section class="ending">
+      <section>
 
         <p class="section-label">
           06
         </p>
 
         <h2>
-          And this is only the beginning.
+          Why I find the problem interesting
         </h2>
 
         <p>
-          The next step is to follow these carefully constructed systems
-          through time: measuring their stability, structure, and
-          evolution under gravity.
+          This project sits at an intersection I find particularly
+          interesting: physical modeling, numerical methods, and
+          high-performance computing.
         </p>
 
         <p>
-          Eventually, the same pipeline can become a starting point for
-          more complicated galaxy models and larger cosmological
-          simulations.
+          The astrophysics tells us what a valid galaxy should look
+          like. Numerical methods give us a way to construct and
+          evolve it. Computational architecture determines how large
+          the experiment can become.
         </p>
 
-        <p class="final-line">
-          Build the equilibrium first.<br>
-          Then see what happens when you let gravity take over.
+        <p>
+          Working on the same problem from all three directions has
+          made the project as much about computational science as it
+          is about galactic dynamics.
         </p>
+
+      </section>
+
+
+      <!-- 07 -->
+
+      <section>
+
+        <p class="section-label">
+          07
+        </p>
+
+        <h2>
+          What comes next
+        </h2>
+
+        <p>
+          The immediate goal is to make the complete pipeline robust:
+          generate a self-consistent model, sample it efficiently,
+          validate the resulting realization, and evolve it without
+          introducing numerical artefacts that dominate the physical
+          behaviour.
+        </p>
+
+        <p>
+          Beyond that, I want to move toward larger particle counts,
+          more complex galaxy components, and eventually simulations
+          where the initial equilibrium model becomes one part of a
+          broader cosmological experiment.
+        </p>
+
+        <p>
+          The idea is simple, even if the computation is not:
+          construct the system carefully enough that when gravity
+          takes over, the interesting thing is the evolution itself.
+        </p>
+
+      </section>
+
+
+      <!-- LINKS -->
+
+      <section>
+
+        <p class="section-label">
+          Project
+        </p>
+
+        <h2>
+          Code and related work
+        </h2>
+
+        <p>
+          The project is part of my broader work in computational
+          astrophysics, numerical simulation, and scientific
+          computing.
+        </p>
+
+        <div class="project-links">
+
+          <a
+            class="project-link"
+            href="https://github.com/dutta-pritam"
+            target="_blank"
+            rel="noopener"
+          >
+            GitHub ↗
+          </a>
+
+          <a
+            class="project-link"
+            href="../index.html"
+          >
+            All projects →
+          </a>
+
+        </div>
 
       </section>
 
@@ -772,9 +1152,9 @@
     </article>
 
 
-    <!-- ================================
+    <!-- =====================================================
          FOOTER
-    ================================= -->
+    ====================================================== -->
 
     <footer>
 
@@ -788,8 +1168,65 @@
 
     </footer>
 
-
   </main>
+
+
+  <script>
+
+    /* =====================================================
+       CLOCK
+    ===================================================== */
+
+    function updateClock() {
+
+      const now = new Date();
+
+      let hours = now.getHours();
+
+      const minutes =
+        String(now.getMinutes()).padStart(2, "0");
+
+      const seconds =
+        String(now.getSeconds()).padStart(2, "0");
+
+      const ampm = hours >= 12 ? "PM" : "AM";
+
+      hours = hours % 12 || 12;
+
+      document.getElementById("clock").textContent =
+        `${hours}:${minutes}:${seconds} ${ampm}`;
+
+    }
+
+    updateClock();
+
+    setInterval(updateClock, 1000);
+
+
+    /* =====================================================
+       COPY EMAIL
+    ===================================================== */
+
+    function copyEmail() {
+
+      const email = "YOUR_EMAIL@example.com";
+
+      navigator.clipboard.writeText(email);
+
+      const button =
+        document.querySelector("button.pill");
+
+      const oldText = button.textContent;
+
+      button.textContent = "Copied";
+
+      setTimeout(() => {
+        button.textContent = oldText;
+      }, 1500);
+
+    }
+
+  </script>
 
 </body>
 </html>
